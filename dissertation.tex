@@ -1,0 +1,66 @@
+\documentclass[a4paper,11pt,onecolumn,final,openright]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage{subfigure}
+\usepackage[english]{babel}
+%\usepackage{natbib}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{color}  
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage{fancyvrb}
+\usepackage{verbatimbox}
+\usepackage{threeparttable}
+\usepackage{acronym}
+\usepackage{listings}
+\usepackage{textcomp}
+\usepackage{appendix} 
+
+%%%%%%%%%%%%%%% LUA SCRIPTING FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
+\lstdefinelanguage{Lua} 
+{ 
+        morekeywords={and,break,do,else,elseif,end,false,for,function,if,in,local,nil,not,or,repeat,return,then,true,until,while,_G,_ENV,io,read,write}, 
+        sensitive=false, 
+        morecomment=[l]{--}, 
+        morecomment=[s]{--[[}{]]}, 
+        morestring=[b]", 
+        morestring=[b]' 
+} 
+
+\lstdefinestyle{myLuastyle}
+{
+  language         = Lua,
+  basicstyle       = \footnotesize,
+  showstringspaces = false,
+  upquote          = true,
+  breaklines       = true,
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Reset footnote number each chapter
+\makeatletter
+\@addtoreset{footnote}{chapter}
+\makeatother
+
+\begin{document} 
+\input{cover}
+\input{chapters/1-}
+\input{chapters/2-}
+\input{chapters/3-}
+\input{chapters/4-}
+\input{chapters/5-}
+\input{chapters/6-}
+\newpage
+\input{appendix}
+
+
+\bibliographystyle{ieeetr}
+\bibliography{references}
+\addcontentsline{toc}{chapter}{{\small Bibliography}}
+
+\end{document}

@@ -1,0 +1,18 @@
+\newpage
+% Instead of \appendix you can use the following (and not forget to use the \end{appendices} in the end)
+% The difference that in the TOC it writes i.e. Appendix A instead of A
+% The word Appendix also appears in the side index of the pdf viewer
+% while with \appendix only the title apperas
+\begin{appendices}
+%\appendix
+% the intro page
+\appendixpage
+\noappendicestocpagenum
+\addappheadtotoc
+\addcontentsline{toc}{chapter}{\appendixname}
+
+\chapter{-}
+\label{app:ch:-}
+
+% In case you started with \begin{appendices}
+\end{appendices}
