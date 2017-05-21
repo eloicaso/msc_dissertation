@@ -1,0 +1,33 @@
+\begin{lstlisting}[language=diff,caption={Battlemesh experiment code}]
+3,9d2
+<    #Filter filter1:
+<    filter all_ok
+<    {
+<        accept "all ok";
+<    }
+<
+13c6
+<    router id 192.168.1.200;
+---
+>    router id 192.168.1.100;
+17a11,17
+>    #Functions Section:
+>    #End of Functions --
+>  
+>    #Filters Section:
+>    include "/etc/bird4/filters/filter1";
+>    #End of Filters --
+>  
+19c19
+<    protocol kernel {
+---
+>    protocol kernel kernel1 {
+46c45
+<    source address 192.168.1.200;
+---
+>    source address 192.168.1.100;
+57c57
+<    neighbor 192.168.1.201 as 1002;
+---
+>    neighbor 192.168.1.101 as 1002;
+\end{lstlisting}

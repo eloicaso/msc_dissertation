@@ -1,0 +1,112 @@
+\begin{lstlisting}[language=bash,caption={Bird4.conf Configuration}]
+#Bird4 configuration using UCI:
+
+log "/tmp/bird4.log" all;
+
+#Router ID
+router id 10.139.173.161;
+
+#Secondary tables
+table aux;
+table bgpTable;
+
+#Functions Section:
+include "/etc/bird4/functions/function-20170507-1038";
+#End of Functions --
+
+#Filters Section:
+include "/etc/bird4/filters/filter-20170507-0951";
+#End of Filters --
+
+#kernel1 configuration:
+protocol kernel kernel1 {
+#   disabled;
+    learn;
+    persist;
+    scan time 10;
+    import all;
+    export all;
+}
+
+#Kernel_BGP configuration:
+protocol kernel Kernel_BGP {
+#   disabled;
+    table bgpTable;
+    kernel table 251;
+    learn;
+    persist;
+    scan time 10;
+    import all;
+    export all;
+}
+
+#static1 configration:
+protocol static {
+    table aux;
+}
+
+#device1 configuration:
+protocol device {
+#   disabled;
+    scan time 10;
+}
+
+#direct1 configuration:
+protocol direct {
+#   disabled;
+    interface "br-lan","br-wan", "br-mgmt";
+}
+
+#pipe1 configuration:
+protocol pipe pipe1 {
+#   disabled;
+    table aux;
+    peer table bgpTable;
+    mode transparent;
+    import all;
+    export all;
+}
+
+#BGP_COMMON template:
+template bgp BGP_COMMON {
+    local as 92099;
+#    next hop self;
+#    next hop keep;
+    igp table bgpTable;
+#    rr client;
+}
+
+#BGPImportALL configuration:
+protocol bgp BGPImportALL from BGP_COMMON {
+    import filter ebgp_in;
+    export filter ebgp_out;
+#    rr client;
+    import limit 3000 action warn;
+    neighbor 172.25.35.25 as 59361;
+}
+
+
+========================================
+BGP Filters and Functions:
+
+root@LEDE-eloi:~# cat /etc/bird4/filters/filter-20170507-0951
+filter ebgp_in {
+
+        krt_prefsrc = 10.139.173.161;
+
+        if match_guifi_prefix() then accept;
+        reject;
+}
+
+filter ebgp_out {
+
+        if match_guifi_prefix() then accept;
+        reject;
+        
+
+root@LEDE-eloi:~# cat /etc/bird4/functions/function-20170507-1038
+function match_guifi_prefix()
+{
+        return net ~ [ 10.0.0.0/8{9,32} ];
+}
+\end{lstlisting}

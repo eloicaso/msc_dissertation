@@ -7,23 +7,24 @@
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage{multirow}
 \usepackage{booktabs}
 \usepackage{url}
 \usepackage{xcolor}  
 \usepackage{verbatim}
 \usepackage{hyperref}
+\usepackage{parcolumns}
 \usepackage{fancyvrb}
 \usepackage{verbatimbox}
 \usepackage{threeparttable}
 \usepackage{acronym}
 \usepackage{listings}
 \usepackage{textcomp}
-\usepackage{appendix} 
+\usepackage[title]{appendix} 
 
 %%%%%%%%%%%%%%% LUA SCRIPTING FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
 \lstdefinelanguage{Lua} 
 {
+        basicstyle       = \footnotesize,
         backgroundcolor=\color{white!95!black},
         morekeywords={and,break,do,else,elseif,end,false,for,function,if,in,local,nil,not,or,repeat,return,then,true,until,while,_G,_ENV,io,read,write}, 
         sensitive=false, 
@@ -45,7 +46,13 @@
 
 %%%%%%%%%%%%%%% DIFF FILES FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
 \lstdefinelanguage{diff}{
-  backgroundcolor=\color{white!95!black}, 
+  backgroundcolor=\color{white!95!black},
+  basicstyle=\footnotesize,
+  showstringspaces=false,
+  upquote=true,
+  breaklines=true,
+  frame=tb,
+  captionpos=b,
   morecomment=[f][\color{blue}]{@@},     % group identifier
   morecomment=[f][\color{green!50!black}][0]>,         % deleted lines 
   morecomment=[f][\color{red!60!black}][0]<,       % added lines
@@ -53,10 +60,10 @@
   morecomment=[f][\color{magenta}]{+++},
 }
 
-
+%%%%%%%%%%%%%%% BASH FILES FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
 \lstdefinelanguage{bash}{
   backgroundcolor=\color{white!95!black},
-  basicstyle={\small\ttfamily},
+  basicstyle={\footnotesize\ttfamily},
   breakatwhitespace=true,
   breaklines=true,
   captionpos=b,
@@ -84,7 +91,7 @@
 %\input{chapters/5-}
 %\input{chapters/6-}
 \newpage
-%\input{appendix}
+\input{appendix}
 
 
 \bibliographystyle{ieeetr}

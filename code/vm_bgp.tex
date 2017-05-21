@@ -1,0 +1,26 @@
+\begin{lstlisting}[language=bash,caption={UCI Configuration}]
+root@LEDE-eloi:~# birdcl4 show protocols all
+[...]
+BGPImportALL BGP      master   up     2017-05-10  Established
+  Preference:     100
+  Input filter:   ebgp_in
+  Output filter:  ebgp_out
+  Import limit:   3000 [HIT]
+    Action:       warn
+  Routes:         2999 imported, 1 exported, 2999 preferred
+  Route change stats:     received   rejected   filtered    ignored   accepted
+    Import updates:        1208383          0          0         88    1208295
+    Import withdraws:       337268          0        ---        300     336968
+    Export updates:        1208298    1208295          2        ---          1
+    Export withdraws:       336968        ---        ---        ---          0
+  BGP state:          Established
+    Neighbor address: 172.25.35.25
+    Neighbor AS:      59361
+    Neighbor ID:      10.90.224.65
+    Neighbor caps:    refresh AS4
+    Session:          external AS4
+    Source address:   172.25.35.26
+    Route limit:      2999/3000
+    Hold timer:       160/180
+    Keepalive timer:  29/60
+\end{lstlisting}

@@ -1,0 +1,75 @@
+\begin{lstlisting}[language=bash,caption={UCI Configuration}]
+config bird 'bird'
+        option use_UCI_config '1'
+        option UCI_config_file '/tmp/bird4.conf'
+        option UCI_config_File '/tmp/bird4.conf'
+
+config global 'global'
+        option log_file '/tmp/bird4.log'
+        option router_id '10.139.173.161'
+        option log 'all'
+
+config table
+        option name 'aux'
+
+config kernel 'kernel1'
+        option import 'all'
+        option export 'all'
+        option scan_time '10'
+        option learn '1'
+        option disabled '0'
+
+config device 'device1'
+        option scan_time '10'
+        option disabled '0'
+
+config bgp_template 'BGP_COMMON'
+        option receive_limit_action 'warn'
+        option local_as '92099'
+        option igp_table 'bgpTable'
+        option export_limit_action 'warn'
+        option import_limit_action 'warn'
+        option next_hop_self '0'
+        option next_hop_keep '0'
+        option rr_client '0'
+
+config table
+        option name 'bgpTable'
+
+config bgp 'BGPImportALL'
+        option receive_limit_action 'warn'
+        option template 'BGP_COMMON'
+        option neighbor_as '59361'
+        option neighbor_address '172.25.35.25'
+        option export_limit_action 'warn'
+        option import_limit_action 'warn'
+        option import_limit '3000'
+        option import 'filter ebgp_in'
+        option export 'filter ebgp_out'
+        option next_hop_self '0'
+
+config kernel 'Kernel_BGP'
+        option disabled '0'
+        option table 'bgpTable'
+        option kernel_table '251'
+        option scan_time '10'
+        option learn '1'
+        option import 'all'
+        option export 'all'
+
+config pipe 'pipe1'
+        option disabled '0'
+        option peer_table 'bgpTable'
+        option table 'aux'
+        option import 'all'
+        option export 'all'
+        option mode 'transparent'
+
+config direct 'direct1'
+        option disabled '0'
+        option interface '"br-lan","br-wan", "br-mgmt"'
+
+config static 'static1'
+        option disabled '0'
+        option table 'aux'
+\end{lstlisting}
