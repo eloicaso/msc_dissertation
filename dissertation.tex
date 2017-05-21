@@ -10,7 +10,7 @@
 \usepackage{multirow}
 \usepackage{booktabs}
 \usepackage{url}
-\usepackage{color}  
+\usepackage{xcolor}  
 \usepackage{verbatim}
 \usepackage{hyperref}
 \usepackage{fancyvrb}
@@ -23,7 +23,8 @@
 
 %%%%%%%%%%%%%%% LUA SCRIPTING FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
 \lstdefinelanguage{Lua} 
-{ 
+{
+        backgroundcolor=\color{white!95!black},
         morekeywords={and,break,do,else,elseif,end,false,for,function,if,in,local,nil,not,or,repeat,return,then,true,until,while,_G,_ENV,io,read,write}, 
         sensitive=false, 
         morecomment=[l]{--}, 
@@ -34,12 +35,39 @@
 
 \lstdefinestyle{myLuastyle}
 {
+  backgroundcolor=\color{white!95!black},
   language         = Lua,
   basicstyle       = \footnotesize,
   showstringspaces = false,
   upquote          = true,
   breaklines       = true,
 }
+
+%%%%%%%%%%%%%%% DIFF FILES FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
+\lstdefinelanguage{diff}{
+  backgroundcolor=\color{white!95!black}, 
+  morecomment=[f][\color{blue}]{@@},     % group identifier
+  morecomment=[f][\color{green!50!black}][0]>,         % deleted lines 
+  morecomment=[f][\color{red!60!black}][0]<,       % added lines
+  morecomment=[f][\color{black}]{---}, % Diff header lines (must appear after +,-)
+  morecomment=[f][\color{magenta}]{+++},
+}
+
+
+\lstdefinelanguage{bash}{
+  backgroundcolor=\color{white!95!black},
+  basicstyle={\small\ttfamily},
+  breakatwhitespace=true,
+  breaklines=true,
+  captionpos=b,
+  frame=tb,
+  resetmargins=true,
+  sensitive=true,
+  stepnumber=1,
+  tabsize=4,
+  upquote=true
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Reset footnote number each chapter
@@ -49,14 +77,14 @@
 
 \begin{document} 
 \input{cover}
-\input{chapters/1-}
-\input{chapters/2-}
-\input{chapters/3-}
-\input{chapters/4-}
-\input{chapters/5-}
-\input{chapters/6-}
+\input{chapters/1-introduction}
+\input{chapters/2-architecture}
+\input{chapters/3-implementation}
+%\input{chapters/4-}
+%\input{chapters/5-}
+%\input{chapters/6-}
 \newpage
-\input{appendix}
+%\input{appendix}
 
 
 \bibliographystyle{ieeetr}

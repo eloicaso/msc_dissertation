@@ -1,3 +1,121 @@
-\chapter{Implementation}
+\chapter{Package improvements implementation}
 \label{ch:implementation}
 \pagestyle{headings}
+
+
+\section{Administration requirements}
+
+\section{Changes in the code}
+
+\subsection{Apply code standards}
+
+\subsection{init.d script and service management}
+
+\subsection{UCI Configuration improvements}
+
+\subsection{LUCI UI improvements}
+
+\subsubsection{Status Page}
+
+\subsubsection{Log Page}
+
+\subsubsection{Filters \& Functions Page}
+
+\subsubsection{BGP and Classic protocols Pages}
+
+\subsection{Align documentation and upgrade to Markdown}
+
+\newpage
+\section{Package Testing}
+Testing an integration/translation Package, and this one specifically, is a rather complex task to evaluate as Bird configuration files are modular and desired settings can be achieved in different ways. Even more, although a \textit{it works/it does not work} policy could be accepted, it does not mean that there are not other possible implementations that could work in a better way. For example, filters and functions can be either written in the \textit{.conf} file or included using \textbf{\%include} mechanism, being the second one a better approach as it enhances code readability as well as it avoids bloating the configuration file unnecessarily.
+
+
+With this introduction in mind, the following sections will explain how this package has been tested following Bird's configuration base requirements and service behaviour and some \textit{future work} ideas to achieve automatic and unit tests.
+
+\subsection{Configuration Composition Tests (future work)}
+To perform configuration integrity tests in current package, it is required to repeat the execution of \textit{/etc/bird\{4|6\}/init.d/bird4 restart} in order to trigger the UCI-bird.conf translation from a target UCI file. The code to do this translation has been refactored in an functional manner to allow future unit tests or, at least, make it easier to integrate in an automated test framework or process. For example, an automated CI/CD build process could build an update of the package, push it into a test node, execute the translation process and compare it against the previous (or a stable) version as well as check its correctness by querying Bird's status.
+
+\subsubsection{Reviewing v0.2 against v0.3}
+Testing the outputs from the old and new packages, and taking into account that there are some manual changes in the old one, the following example is configured as follows:
+
+\begin{itemize}
+\item Router IDs follow node's IP Address
+\item Kernel, Device and Static Protocols have been set by default
+\item A Static Route has been added  (identical)
+\item BGP Template and Instance have been configured following v0.2 scheme with matching settings to avoid Bird failures
+\item BGP Instance AS and Neighbours are dummy values
+\item A BGP Filter called "all\_ok" (accept all routes) has been added using each version's process.
+\end{itemize}
+
+In the new package, we have instantaneous configuration correctness feedback as we can check Bird's status in the Status Page. 
+In the old package, after executing \textit{/etc/bird\{4|6\}/init.d/bird4 start}, Bird will fail and it is required to move the Filter "all\_ok" to the top of the document. Bird will start correctly after this modification.
+
+After checking that both daemons are running, we can then perform a \textit{diff} between the configuration files and look for any noticeable difference
+
+\lstinputlisting[language=diff, caption={diff of bird4.conf in v0.2 (<) and v0.3 (>)}]{code/conf2vs3.diff}
+
+As shown in this \textit{diff} snippet, almost all the translated configuration is identical apart from:
+
+\begin{itemize}
+\item Different Router IDs and BGP neighbours (expected)
+\item Kernel Protocol definition (minor change in the API)
+\item BGP Filter definition (major change in the API)
+\end{itemize}
+
+\subsection{Bird Daemon Errors}
+Bird Daemon provides an error exit code together with different text outputs in order to highlight errors in the configuration. Although most of the times it can be easily spotted using Bird's feedback, there are also instances where the Daemon's documentation may be required to fix them.
+
+\subsubsection{Bird Daemon Error output examples}
+Most common errors that an administrator could face are:
+
+\begin{itemize}
+\item A configured field has incorrect syntax.
+Bird will give you hints about what is wrong most of the times: wrong IP address format \textit{bird: /tmp/bird4.conf, line 7: Invalid IPv4 address 1921.68.1.1}. But some \textit{rare} times the message is less helpful and you may need to check the contents of the file and understand the error.
+
+As an example of this: \textit{bird4: Failed - bird: /tmp/bird4.conf, line 65: syntax error}. We need to check the bird4.conf file and see that in line 65:
+
+\begin{lstlisting}[language=bash, caption={Bird4.conf contents}]
+64:    protocol bgp BGPExample {
+65:        import Filter NonExistingFilter;
+66:    }
+\end{lstlisting}
+
+We will need to find out that the shown filter used in the \textbf{import} field of BGP Protocol, does not exist.
+
+\item Non-compatible configuration.
+The other set of common errors is non-compatible fields in a Protocol.
+
+As an example of this: \textit{bird: /tmp/bird4.conf, line 76: Only internal neighbor can be RR client}. We need to remove the Route Reflector Client setting from the BGP Instance to fix this behaviour.
+
+\item Missing filter or function
+If you include a filter name in any of the Protocols or if any of your filters use a non-existing function, Bird will fail to start showing an error as follows: \textit{bird: /tmp/bird4.conf, line 71: No such filter}.
+
+\item Syntax errors in a filter or function.
+This error follows the same approach as the first bullet: \textit{bird: /etc/bird4/filters/filter-20170507-0951, line 4: syntax error}. You are required to go to command line and fix the problem checking the configuration and filter or function files.
+
+\item Filter calling to non-existing functions.
+If your filter executes a command that is not defined by Bird's syntax, it will handle it as a function. If that function does not exist in any of the handled files, it will show this error: \textit{bird: /tmp/bird4.conf, You can't call something which is not a function. Really.}
+
+\item Filters not accepting/rejecting routes.
+Bird Daemon filters must return an \textit{accept} or \textit{reject} policy per route received. If any of your filters does not return any policy per route, it will be silently ignored and substituted with an "accept".
+
+As an example of this issue:
+\begin{lstlisting}[language=bash, caption={Filter printing message}]
+filter doNothing
+{
+    print "HelloWorld";
+}
+\end{lstlisting}
+
+Bird Daemon will succeed starting up but, if we check the log information in the Log Page, this error message will be shown:
+\begin{lstlisting}[language=bash, caption={Filter printing message}]
+<ERR> Filter doNothing did not return accept nor reject. Make up your mind
+<INFO> HelloWorld
+}
+\end{lstlisting}
+
+\end{itemize}
+
+\subsection{Simple BGP Instance Tests}
+
+\subsection{Full Network Virtual Environment}
