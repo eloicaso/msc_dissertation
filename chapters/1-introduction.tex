@@ -10,15 +10,39 @@
 
 
 
-\section{Description of the problem and motivation}
+\section{Motivation and description of the problem}
 \label{sec:bdotp}
+This project aims to simplify and enhance management and monitoring capabilities of network administrators' using Bird Daemon software on top of an OpenWRT/LEDE-based Firmware. This project is a second iteration in the development of an existing configuration integration package already being used by OpenWRT/LEDE's community.
 
+\subsection{Motivation}
+Back in 2014, while working on my BSc. dissertation in the UPC, the department and, specifically, the investigation team I was working with, gave me the opportunity to participate in the GSoC\footnote{Google Summer of Code (\href{https://www.google-melange.com/archive/gsoc/2014/orgs/freifunk/projects/eloicaso.html}{2014})} under the umbrella of Freifunk to develop a package that would help sharing routes between BMX6 mesh networks and BGP infrastructure networks using Bird Daemon in the \textit{frontier} nodes and letting the powerful filtering capabilities available to make the \textit{translation/sharing} process possible.
+
+That project was successful and the result was an integration package using OpenWRT's well-known UCI/LUCI mechanism to configure Bird through a Web UI even without deep knowledge of Bird's syntax. GSoC's time-frame though was not enough to polish the package and add some secondary protocols and the package stopped getting maintenance from myself later that year. However, it has been an OSS project that has been on my \textit{backlog} of things I want to keep improving and also been queried some times by Víctor Oncins as it is really helpful for network administrators but it is not mature enough for complex production environments available in Guifi.net.
+
+Therefore, I have been really lucky to have the opportunity to retake this package as my MSc. project and work together Víctor as this has meant that I have had direct feedback from administrators using the tool in production environments as a daily job and to improve it in the most critical parts of it.
+
+\subsection{Bird Daemon}
+Bird Daemon, from now onwards Bird, is an open source Internet Routing service (daemon) that allows network administrators to simplify route sharing configuration, management and monitoring by using Routing tables and a powerful filtering language\footnote{Bird Daemon: \href{http://bird.network.cz/}{website}}.
+
+\subsection{OpenWRT/LEDE's configuration integration package}
+Bird-OpenWRT Package, from now onwards \textit{the Package}, is an open source OpenWRT/LEDE-specific solution (\textit{.ipk}) integrated by four separated packages (two for Bird IPv4 (\textit{bird4-uci}) and IPv6 (\textit{bird6-uci}) UCI integration and the other two for Web UI management (\textit{luci-app-bird4} and \textit{luci-app-bird6}) providing Bird Daemon a user-friendly configuration scheme (UCI) and a graphical interface in OpenWRT/LEDE-based routers.
 
 \subsection{Bird Daemon administration issues}
 \label{subsec:bdai}
-
+As part of the GSoC project, the solution provided was not mature enough to fulfil all the requirements:
+\begin{itemize}
+    \item Tight time-frame forcing to prioritise the key capabilities to implement.
+    \item Some key protocols were not enabled in the final solution because they were not relevant for GSoC's scope.
+    \item Some basic processes require manual (terminal) changes
+    \item No possible way to edit Filters or Functions files through Web UI.
+    \item No Bird Daemon Status feedback (i.e. no way to know if bird is running or failed to start through Web UI).
+    \item No possible way to see Bird Daemon's Log information through Web UI.
+    \item Bird's API changed (from Bird 1.4.3 to 1.6.3) making bird crash using base Package configuration
+    \item No possible way of monitoring Bird's current status (i.e. full information for BGP connections)
+\end{itemize}
 \section{Scope of the project}
 \label{sec:sotp}
+In this document, it is covered the 
 
 \subsection{Deviations from the original plan}
 

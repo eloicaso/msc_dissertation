@@ -2,8 +2,30 @@
 \label{ch:implementation}
 \pagestyle{headings}
 
-
 \section{Administration requirements}
+One of the administrator's main tasks while managing networks is, if necessary, to facilitate the coexistence of different Routing protocols in the same network section. Hence the requirement of rich tools as Quagga or Bird to act as facilitators of this route transference between them.
+
+Administrators require:
+\begin{itemize}
+    \item A full-featured tool with an easy and intuitive UI to manage and monitor protocol health and data efficiently and avoiding any handmade/custom edit, reducing configuration's complexity.
+    \item Use LEDE/OpenWRT-based firmwares widely used in the target network.
+    \item A Routing protocols management tool that, at least, supports BGP Static Routing Protocol and it is able to share routes with BMX6 Dynamic Routing Protocol in a manageable way.
+    \item Use Bird Daemon instead of Quagga to make us of its proven efficiency, low resource consumption and powerful filter capabilities, which is critical to some of the widely used commodity hardware in Guifi.net.
+    \item Use and improve Bird Daemon's configuration integration package (bird-uci and luci-app-bird) available in the official Routing Repository of LEDE/OpenWRT.
+    \item Avoid project-specific customisations in the integration package that would not benefit all the community. If required, add those custom enhancements in a development branch.
+    \item Update Package's documentation and create new topics to cover Web UI interface and any manual process not covered by package's improvements.
+    \item Update Bird integration package in order to be compliant to the latest API (v1.6.3 when this document was written).
+    \item Enhance Web UI to support user-friendly configuration and visualisation of the following:
+    \begin{itemize}
+        \item Bird Daemon service status
+        \item Bird Daemon events information (Logs)
+        \item Filters and Functions editing using an embedded HTML text editor
+        \item Update old Web UI pages to 
+    \end{itemize}
+    \item Do theoretical viability investigation to use uBus Daemon as a mechanism to communicate with Bird Daemon and get health information and current-status information for handled protocol using JSON messages.
+\end{itemize}
+
+
 
 \section{Changes in the code}
 
@@ -29,8 +51,8 @@
 \section{Package Testing}
 Testing an integration/translation Package, and this one specifically, is a rather complex task to evaluate as Bird configuration files are modular and desired settings can be achieved in different ways. Even more, although a \textit{it works/it does not work} policy could be accepted, it does not mean that there are not other possible implementations that could work in a better way. For example, filters and functions can be either written in the \textit{.conf} file or included using \textbf{\%include} mechanism, being the second one a better approach as it enhances code readability as well as it avoids bloating the configuration file unnecessarily.
 
-
 With this introduction in mind, the following sections will explain how this package has been tested following Bird's configuration base requirements and service behaviour and some \textit{future work} ideas to achieve automatic and unit tests.
+
 
 \subsection{Configuration Translation Tests (future work)}
 To perform configuration integrity tests in current package, it is required to repeat the execution of \texttt{/etc/bird\{4|6\}/init.d/bird4 restart} in order to trigger the UCI-bird.conf translation from a target UCI file. The code to do this translation has been refactored in an functional manner to allow future unit tests or, at least, make it easier to integrate in an automated test framework or process. For example, an automated CI/CD build process could build an update of the package, push it into a test node, execute the translation process and compare it against the previous (or a stable) version as well as check its correctness by querying Bird's status.
@@ -137,3 +159,4 @@ As a health check, we can query Bird of its last reconfiguration, reboot time or
 \input{code/vm_birds}
 
 \subsection{Full Network Virtual Environment}
+% wait until we get confirmation that we can actually do it. Remove it otherwise.
