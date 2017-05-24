@@ -15,14 +15,14 @@
 This project aims to simplify and enhance management and monitoring capabilities of network administrators' using Bird Daemon software on top of an OpenWRT/LEDE-based Firmware. This project is a second iteration in the development of an existing configuration integration package already being used by OpenWRT/LEDE's community.
 
 \subsection{Motivation}
-Back in 2014, while working on my BSc. dissertation in the UPC, the department and, specifically, the investigation team I was working with, gave me the opportunity to participate in the GSoC\footnote{Google Summer of Code (\href{https://www.google-melange.com/archive/gsoc/2014/orgs/freifunk/projects/eloicaso.html}{2014})} under the umbrella of Freifunk to develop a package that would help sharing routes between BMX6 mesh networks and BGP infrastructure networks using Bird Daemon in the \textit{frontier} nodes and letting the powerful filtering capabilities available to make the \textit{translation/sharing} process possible.
+Back in 2014, while working on my BSc. dissertation in the \textit{Universitat Politècnica de Catalunya}, the department and, specifically, the investigation team I was working with, gave me the opportunity to participate in a GSoC\footnote{Google Summer of Code (\href{https://www.google-melange.com/archive/gsoc/2014/orgs/freifunk/projects/eloicaso.html}{2014})} project under the umbrella of Freifunk, to design, develop and present  a package that would help simplifying the configuration of Bird Daemon as a software able to share routes between BMX6 meshs and BGP infrastructure networks deployed in \textit{frontier} nodes deployed in the Catalan community network Guifi.net.
 
-That project was successful and the result was an integration package using OpenWRT's well-known UCI/LUCI mechanism to configure Bird through a Web UI even without deep knowledge of Bird's syntax. GSoC's time-frame though was not enough to polish the package and add some secondary protocols and the package stopped getting maintenance from myself later that year. However, it has been an OSS project that has been on my \textit{backlog} of things I want to keep improving and also been queried some times by Víctor Oncins as it is really helpful for network administrators but it is not mature enough for complex production environments available in Guifi.net.
+That project was successful and the result was an integration package using OpenWRT's well-known UCI/LUCI configuration mechanism to set up Bird through a user-friendly Web UI even without deep knowledge of Bird's syntax. GSoC's time frame though was not enough to polish the package and add some secondary protocols and the package stopped getting maintenance from myself later that year. However, it has been an OSS project that has been on my \textit{backlog} of things I want to keep improving and also been queried some times by Víctor Oncins as it is really helpful for network administrators but it is not mature enough for complex production environments available in Guifi.net.
 
 Therefore, I have been really lucky to have the opportunity to retake this package as my MSc. project and work together Víctor as this has meant that I have had direct feedback from administrators using the tool in production environments as a daily job and to improve it in the most critical parts of it.
 
 \subsection{Bird Daemon}
-Bird Daemon, from now onwards Bird, is an open source Internet Routing service (daemon) that allows network administrators to simplify route sharing configuration, management and monitoring by using Routing tables and a powerful filtering language\footnote{Bird Daemon: \href{http://bird.network.cz/}{website}}.
+Bird Daemon, from now onwards Bird, is an open source Internet Routing service (daemon) that allows network administrators to simplify route sharing configuration, management and monitoring by using Routing tables and a powerful filtering language\footnote{Bird Daemon: \href{http://bird.network.cz/}{Link}}.
 
 \subsection{OpenWRT/LEDE's configuration integration package}
 Bird-OpenWRT Package, from now onwards \textit{the Package}, is an open source OpenWRT/LEDE-specific solution (\textit{.ipk}) integrated by four separated packages (two for Bird IPv4 (\textit{bird4-uci}) and IPv6 (\textit{bird6-uci}) UCI integration and the other two for Web UI management (\textit{luci-app-bird4} and \textit{luci-app-bird6}) providing Bird Daemon a user-friendly configuration scheme (UCI) and a graphical interface in OpenWRT/LEDE-based routers.
@@ -32,7 +32,8 @@ Bird-OpenWRT Package, from now onwards \textit{the Package}, is an open source O
 As part of the GSoC project, the solution provided was not mature enough to fulfil all the requirements:
 \begin{itemize}
     \item Tight time-frame forcing to prioritise the key capabilities to implement.
-    \item Some key protocols were not enabled in the final solution because they were not relevant for GSoC's scope.
+    \item Some key protocols were not enabled in the final solution because they were not relevant for GSoC's scope (i.e. Pipe or Direct).
+    \item Some secondary protocols were not enabled in the final solution because they were not relevant for GSoC's scope (i.e. OSPF or )
     \item Some basic processes require manual (terminal) changes
     \item No possible way to edit Filters or Functions files through Web UI.
     \item No Bird Daemon Status feedback (i.e. no way to know if bird is running or failed to start through Web UI).
@@ -42,10 +43,30 @@ As part of the GSoC project, the solution provided was not mature enough to fulf
 \end{itemize}
 \section{Scope of the project}
 \label{sec:sotp}
-In this document, it is covered the 
+This project's scope is to adopt as many of the mentioned enhancements that are clearly aligned with eradicating required manual changes in command line, improve the UX\footnote{UX: User eXperience} and to align the packet with current Bird Daemon API in the given time frame of 3 months. As a result of a \textit{backlog} prioritization, the following items were agreed (in priority order):
 
-\subsection{Deviations from the original plan}
+\begin{itemize}
+    \item Update the package to the latest Bird API.
+    \item Update old version's disruptive issues (i.e. disabled Protocols).
+    \item Status, Log, Filters and Functions Graphical integration.
+    \item Theoretical viability investigation of uBus integration.
+\end{itemize}
 
+
+\subsection{Deviations from the original plan and future  work}
+While agreeing the original scope of the project, few extra ideas or tasks were planned but, as a matter of priorities and time constraints, were dismissed or set as future work.
+
+\begin{itemize}
+    \item Add secondary protocols: adopt more key features from Bird and increasing the range of administrators being able to take advantage of this Package.
+    \item Integrate next generation of Web UI using LUCI2: HTML/JavaScript-based UI instead of LUA-based.
+    \item Implementation of uBus integration according to the results of the investigation done in this project.
+    \item Comparative set of tests between Quagga and Bird Daemon solutions.
+\end{itemize}
+
+Most of these extra tasks are already documented as part of the Package Documentation Reporitory\footnote{GitHub TODO List: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/TODO.md}{Link}.} and open for discussion for Package customers.
+
+\subsubsection{Bird Daemon VS. Quagga deployments}
+There is a special reasoning behind not doing a comparative analysis of those two solutions. Of course, the timing constrains have strongly influenced the decision of dropping it from this project's scope, but there is also the big amount of evidence already collected for my GSoC project as well as some new evidence found either in some reputable sources as well as from Bird's own OSS Community proving that Bird Daemon has been far more stable, less resource eater and flexible (thanks to its Filter\&Function scripting language) than other well-known enterprise level solutions. This evidence is available in the Appendix \ref{app:ch:blinks}.
 
 
 \subsection{Methodology and communication}
