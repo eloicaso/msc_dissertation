@@ -66,12 +66,22 @@ While agreeing the original scope of the project, few extra ideas or tasks were 
 Most of these extra tasks are already documented as part of the Package Documentation Reporitory\footnote{GitHub TODO List: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/TODO.md}{Link}.} and open for discussion for Package customers.
 
 \subsubsection{Bird Daemon VS. Quagga deployments}
-There is a special reasoning behind not doing a comparative analysis of those two solutions. Of course, the timing constrains have strongly influenced the decision of dropping it from this project's scope, but there is also the big amount of evidence already collected for my GSoC project as well as some new evidence found either in some reputable sources as well as from Bird's own OSS Community proving that Bird Daemon has been far more stable, less resource eater and flexible (thanks to its Filter\&Function scripting language) than other well-known enterprise level solutions. This evidence is available in the Appendix \ref{app:ch:blinks}.
+There is a special reasoning behind not doing a comparative analysis of these two solutions. Of course, the timing constrains have strongly influenced the decision of dropping it from this project's scope, but there is also the big amount of evidence already collected for my GSoC project as well as some new evidence found either in some reputable sources as well as from Bird's own OSS Community proving that Bird Daemon has been far more stable, less resource eater and flexible (thanks to its Filter\&Function scripting language) than other well-known enterprise level solutions. This evidence is available in the Appendix \ref{app:ch:blinks}.
 
 
 \subsection{Methodology and communication}
+This project starts with the premise that there is no need for a wide initial investigation phase as it is a package fully designed and developed by myself. Nevertheless, there are three foreseen introductory tasks:
+\begin{itemize}
+    \item Refresh the Package to the latest Bird Daemon version API. 
+    \item Investigate, understand and document the production environment.
+    \item Update Documentation and prepare the repositories required (docn, package and dissertation).
+\end{itemize}
 
-
+After this initial phase, the implementation tasks will be executed in a Kanban-like approach:
+\begin{itemize}
+    \item Features will be executed following Backlog's priority order and one at a time.
+    \item There is no Board or framework to introduce the data (i.e. time spent or state of the tasks) as such as the overhead of doing it was not proportional to the number of tasks or value of the data that could be collected. However, during the first \textit{Sprint/Cycle} of the project, in order to illustrate how could this project look like, I did use an online OSS tool called \textit{Taiga.io}\footnote{Taiga.io: Online project management tool working either with Kanban or SCRUM Agile methodologies. This tool is widely used in OSS projects due to its power, simplicity and plugins (open API) and has also enterprise options.}. See Appendix \ref{app:sec:kanban} in order to see some captures of this tool.
+\end{itemize}
 
 \section{Background concepts}
 \label{sec:backc}
