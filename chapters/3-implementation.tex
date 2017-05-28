@@ -61,12 +61,12 @@ To perform configuration integrity tests in current package, it is required to r
 Testing the outputs from the old and new packages, and taking into account that there are some manual changes in the old one, the following example is configured as follows:
 
 \begin{itemize}
-\item Router IDs follow node's IP Address
-\item Kernel, Device and Static Protocols have been set by default
-\item A Static Route has been added  (identical)
-\item BGP Template and Instance have been configured following v0.2 scheme with matching settings to avoid Bird failures
-\item BGP Instance AS and Neighbours are dummy values
-\item A BGP Filter called "all\_ok" (accept all routes) has been added using each version's process.
+    \item Router IDs follow node's IP Address
+    \item Kernel, Device and Static Protocols have been set by default
+    \item A Static Route has been added  (identical)
+    \item BGP Template and Instance have been configured following v0.2 scheme with matching settings to avoid Bird failures
+    \item BGP Instance AS and Neighbours are dummy values
+    \item A BGP Filter called "all\_ok" (accept all routes) has been added using each version's process.
 \end{itemize}
 
 In the new package, we have instantaneous configuration correctness feedback as we can check Bird's status in the Status Page. 

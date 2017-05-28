@@ -3,12 +3,8 @@
 \pagenumbering{arabic}
 \pagestyle{headings}
 
-
-\cite{nitos}
-
 \section{Structure of the document}
-
-
+%%%TBD
 
 \section{Motivation and description of the problem}
 \label{sec:bdotp}
@@ -19,7 +15,7 @@ Back in 2014, while working on my BSc. dissertation in the \textit{Universitat P
 
 That project was successful and the result was an integration package using OpenWRT's well-known UCI/LUCI configuration mechanism to set up Bird through a user-friendly Web UI even without deep knowledge of Bird's syntax. GSoC's time frame though was not enough to polish the package and add some secondary protocols and the package stopped getting maintenance from myself later that year. However, it has been an OSS project that has been on my \textit{backlog} of things I want to keep improving and also been queried some times by Víctor Oncins as it is really helpful for network administrators but it is not mature enough for complex production environments available in Guifi.net.
 
-Therefore, I have been really lucky to have the opportunity to retake this package as my MSc. project and work together Víctor as this has meant that I have had direct feedback from administrators using the tool in production environments as a daily job and to improve it in the most critical parts of it.
+Therefore, I have been really lucky to have the opportunity to retake this package as my MSc. project while doing my MSc. and work together Víctor as this has meant that I have had direct feedback from administrators using the tool in production environments and to improve its most critical features. Moreover, Víctor has also published a report on GitHub \cite{bgpbmx6} describing the main challenges found using the old version of the Package and a deep description of the environment.
 
 \subsection{Bird Daemon}
 Bird Daemon, from now onwards Bird, is an open source Internet Routing service (daemon) that allows network administrators to simplify route sharing configuration, management and monitoring by using Routing tables and a powerful filtering language\footnote{Bird Daemon: \href{http://bird.network.cz/}{Link}}.
@@ -54,7 +50,7 @@ This project's scope is to adopt as many of the mentioned enhancements that are 
 
 
 \subsection{Deviations from the original plan and future  work}
-While agreeing the original scope of the project, few extra ideas or tasks were planned but, as a matter of priorities and time constraints, were dismissed or set as future work.
+While agreeing the original scope of the project, few extra ideas and tasks were planned but, as a matter of priorities and time constraints, some were dismissed or set as future work.
 
 \begin{itemize}
     \item Add secondary protocols: adopt more key features from Bird and increasing the range of administrators being able to take advantage of this Package.
@@ -63,79 +59,92 @@ While agreeing the original scope of the project, few extra ideas or tasks were 
     \item Comparative set of tests between Quagga and Bird Daemon solutions.
 \end{itemize}
 
-Most of these extra tasks are already documented as part of the Package Documentation Reporitory\footnote{GitHub TODO List: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/TODO.md}{Link}.} and open for discussion for Package customers.
+Most of these extra tasks are already documented as part of the Package Documentation Reporitory\footnote{GitHub TODO List: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/TODO.md}{Link}.} and open for discussion and Pull Requests\footnote{Pull Request: Changes pushed to a repository by an external party (i.e. a fork repository pushing changes to its parent.} to add extra requirements.
 
 \subsubsection{Bird Daemon VS. Quagga deployments}
 There is a special reasoning behind not doing a comparative analysis of these two solutions. Of course, the timing constrains have strongly influenced the decision of dropping it from this project's scope, but there is also the big amount of evidence already collected for my GSoC project as well as some new evidence found either in some reputable sources as well as from Bird's own OSS Community proving that Bird Daemon has been far more stable, less resource eater and flexible (thanks to its Filter\&Function scripting language) than other well-known enterprise level solutions. This evidence is available in the Appendix \ref{app:ch:blinks}.
 
 
 \subsection{Methodology and communication}
-This project starts with the premise that there is no need for a wide initial investigation phase as it is a package fully designed and developed by myself. Nevertheless, there are three foreseen introductory tasks:
+This project starts with the premise that there is no need for a wide initial investigation phase as the Package used was designed and developed by myself. Nevertheless, there are three foreseen introductory tasks:
 \begin{itemize}
     \item Refresh the Package to the latest Bird Daemon version API. 
     \item Investigate, understand and document the production environment.
-    \item Update Documentation and prepare the repositories required (docn, package and dissertation).
+    \item Update Documentation and prepare the repositories required (documentation, package and dissertation).
 \end{itemize}
 
 After this initial phase, the implementation tasks will be executed in a Kanban-like approach:
 \begin{itemize}
     \item Features will be executed following Backlog's priority order and one at a time.
-    \item There is no Board or framework to introduce the data (i.e. time spent or state of the tasks) as such as the overhead of doing it was not proportional to the number of tasks or value of the data that could be collected. However, during the first \textit{Sprint/Cycle} of the project, in order to illustrate how could this project look like, I did use an online OSS tool called \textit{Taiga.io}\footnote{Taiga.io: Online project management tool working either with Kanban or SCRUM Agile methodologies. This tool is widely used in OSS projects due to its power, simplicity and plugins (open API) and has also enterprise options.}. See Appendix \ref{app:sec:kanban} in order to see some captures of this tool.
+    \item Each \textit{feature}/\textit{requirement} must be self-contained and the Package should be releasable at any time.
+    \item There is no Board or framework to introduce the data (i.e. time spent or state of the tasks) as such as the overhead of doing it is not proportional to the number of tasks or value of the data that could be collected. However, during the first \textit{Cycle} of the project (first two weeks), in order to illustrate how could this project look like using Kanban, I did use an online OSS tool called \textit{Taiga.io}\footnote{\href{https://taiga.io/}{Taiga.io}: Online project management tool working either with Kanban or SCRUM Agile methodologies. This tool is widely used in OSS projects due to its power, simplicity and plugins (open API) and has also enterprise options.}. See Appendix \ref{app:sec:kanban} in order to see some captures of the initial tasks created using the tool.
+    \item There will be weekly/bi-weekly meetings with the Stakeholder in order to discuss progress, any blocker or issue and rearrange priorities if required.
+    \item There will be a \textit{demo} to the Stakeholder to show progress in a weekly/bi-weekly basis.
 \end{itemize}
 
-\section{Background concepts}
-\label{sec:backc}
+The communication, as already mentioned, will be done through regular meetings with the External Consultant (Stakeholder) using the Jitsi\footnote{\href{https://jitsi.org/}{Jitsi}: Open Source multiplatform VoIP conference service.} conference service, which allows screen sharing and text communication while in conference, simplifying demoing and code reviews. Regular communication will be also done through Hangouts instant messaging service and by email to share progress, risks or blockers.
 
-\subsection{Community Networks}
-\label{subsec:cn}
+\subsubsection{Gantt Diagram}
+Tasks' delivery forecast can be seen in Figures  \ref{fig:general_gantt} and \ref{fig:detail_gantt}:
+
+\begin{landscape}
+
+\begin{figure}[h!]
+\centering
+    \includegraphics[width=\hsize]{images/gantt}
+    \caption{Tasks schedule}
+    \label{fig:general_gantt}
+\end{figure}
+
+Key milestones:
+\begin{itemize}
+    \item \textbf{Project's start date \& RoadMap Report} (09/03/17): initial Package refresh and production environment investigation. Formal report of which are project's goals and when are they expected to be delivered.
+    \item \textbf{Project's implementation start date} (30/03/17): beginning of features' implementation.
+    \item \textbf{Continuous Evaluation Report I} (22/04/17): formal report to present Project's progress, pending work, any issue or blocker and updated  timeline.
+    \item \textbf{MVP Release} (12/05/2017): forecast delivery date of the final version of the Package. No extra changes planned unless the investigation task requires them.
+    \item \textbf{CE Report II} (22/05/17): optional progress report prior to Project's delivery.
+    \item \textbf{Project Delivery Date} (12/06/17): final date to deliver the dissertation, slides+recording and any extra archive required.
+\end{itemize} 
+
+\begin{figure}[h!]
+    \includegraphics[width=\hsize]{images/gantt_data}
+    \caption{Schedule details}
+    \label{fig:detail_gantt}
+\end{figure}
+\end{landscape}
+
+
+\section{Background information}
+\label{sec:backc}
+\subsection{Guifi.net}
+\label{subsec:gn}
+Guifi.net is a community network working for and by its own users (self-organised) giving an affordable alternative for anyone willing to connect to the Internet. This network's principles are freedom, open design, administration and management and neutrality. This network was born in Catalonia as a wireless network but it has spread all over the world and with about 33.124\footnote{Guifi.net live statistics: \href{https://guifi.net/guifi/menu/stats/nodes}{Link}} active nodes (as 26/05/17) using roof antennas and optical fiber deployments.
+
+This network is connected to the Catalan Internet Exchange Point (CATNIX\footnote{CATNIX: \href{http://www.catnix.net/en/}{Link}}), has its own Government Foundation\footnote{Fundació Guifi.net: \href{https://fundacio.guifi.net/Foundation}{Link}} to promote and protect network's principles defined in an operational and behavioural common regulation (Comuns - XOLN\footnote{\href{https://guifi.net/en/FONNC}{XOLN/FONN}: Compact for a Free, Open \& Neutral Network}) and it is open for any company that adheres to the XOLN/FONNC principles, to professionally operate and advertise itself as a Guifi.net Internet or services provider. 
+
+Finally, although Guifi.net main routing protocol is BGP for infrastructure and OSPF for internal routing, there are several isles\footnote{Guifi.net Mesh Networks: \href{http://ca.wiki.guifi.net/wiki/Annex:subxarxes_mesh}{Link}}\footnote{\href{http://qmp.party/Documentation}{qMp}: Most commonly used firmware in Guifi.net for mesh networks. This OpenWRT fork aims to simplify and automate mesh deployments.} operating as Mesh Networks using BMX6 dynamic routing protocol.
 
 \subsection{OpenWRT/LEDE Project}
 \label{subsec:owrtlp}
+OpenWRT, and its Fork LEDE-Project\footnote{LEDE-Project: Linux Embedded Development Environment.}, are Open Source Linux-based firmwares primarily focused on commodity routers, but aiming to work in any Linux-based system. This firmware supports a wide variety of manufacturer's hardware and also a wide range of software, services and routing protocols to enhance, secure and efficiently operate as a standalone router and service provider.
 
+\subsection{Infrastructure vs Mesh Network Routing Protocols}
+\label{subsec:dsrp}
+Routing protocols' job is to receive a route and, according to its attributes and the information stored in the system, to redirect this route to the next step towards its destination or to drop it. However, 
 
-\subsection{Dynamic Routing Protocols}
-\label{subsec:drp}
-
-
-\subsection{Static Routing Protocols}
-\label{subsec:srp}
-
-
-\subsubsection{BMX6}
-\label{subsec:bmx}
-
-
+\begin{itemize}
+    \item \textbf{Infrastructure}: commonly used in structural networks. Stable, robust and scalable. Their main handicap is to suffer of big overheads on topology changes (i.e. low/non fault tolerance) and have big convergence times in large-scale networks.
+    \item \textbf{Mesh Networks}: oppositely to classic dynamic networks, mesh networks' strength is to be able to converge almost instantly after any topology event. These networks work in a cooperative manner in order to achieve a fully connected network (point-to-multipoint) where all the nodes share network's knowledge in order to optimise routes and nodes floods the network in order to keep the network topology knowledge up to date.
+\end{itemize}
 
 \subsubsection{BGP}
-\label{subsubsec:BADV}
+\label{subsubsec:bgp}
+BGP is a dynamic infrastructure IP routing protocol designed for large-scale internet topologies (EGP\footnote{EGP: Exterior Gateway Protocol. This includes all the protocols that routes between Autonomous systems.}). Its routing algorithm relies on the best path according to route's attributes.
 
-
-\subsubsection{OSPF}
+\subsubsection{BMX6}
+\label{subsec:bmx6}
+Batman-eXperimental6 \cite{bmx6} is a fork of the Mesh protocol BATMAN\footnote{\href{https://www.open-mesh.org/projects/open-mesh/wiki}{B.A.T.M.A.N}: Better Approach To Mobile Adhoc Networking.}. This is a mesh networking routing protocol is compatible with most of linux-like systems but only operates with IPv6 networks. This routing protocol uses a table-driven\footnote{Table-driven: Compose a routing table with all the source-destination entries.} distance-vector approach\footnote{Distance-vector: Best path (cost of going) from source to destination.}.
 
 
 \section{State of the art}
 \label{sec:soa}
-
-
-\section{Planning}
-\label{sec:tp}
-
-
-\subsection{Tasks}
-
-
-\subsubsection{Project's background}
-
-
-\subsubsection{Project's validation}
-
-
-\subsubsection{Document and support}
-
-
-
-\subsection{Deviations and modifications in the planning}
-
-
-\section{Budget} 
-
