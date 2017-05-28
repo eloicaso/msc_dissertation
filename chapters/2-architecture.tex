@@ -10,10 +10,9 @@ As shown in the figure:
     \item \textbf{Mesh eXchange Node 1} (MXN1): LEDE/OpenWRT router connected via Ethernet to the ISN1 and to the antenna (or an Ethernet port) providing access to the Mesh Network. This frontier node provides BGP to BMX6 route-sharing capabilities using Bird Daemon.
     \item \textbf{Mesh Network}: A number of Nodes connected using BMX6 forming an isle between BGP nodes.
     \item \textbf{Mesh eXchange Node 2} (MXN2): LEDE/OpenWRT router connected via Ethernet to the ISN2 and to the antenna (or an Ethernet port) providing access to the Mesh Network. This frontier node provides BGP to BMX6 route-sharing capabilities using Bird Daemon.
-    \item \textbf{Infrastructure Super Node 2} (ISN1): BGP Supernode connected to the BGP network (Guifi.net, section 2) via wireless and to the MXN2 Router through Ethernet.
+    \item \textbf{Infrastructure Super Node 2} (ISN1): BGP Super Node connected to the BGP network (Guifi.net, section 2) via wireless and to the MXN2 Router through Ethernet.
 \end{itemize}
 
-\newpage
 
 \section{Routing requirements}
 Routing requirements to successfully ensure that all routes are shared between both BGP ends are:
@@ -34,7 +33,7 @@ There is an important caveat with this network distribution:
 
 Current version of BMX6 is not able to handle the number of routes that this Guifi.net BGP section is sharing (2.500+). Therefore, BMX6 starts aggregating routes, which eventually shut-downs the service and leaves the node overloaded as it is not able to achieve it.
 
-In order to avoid this disruptive issue, Bird Daemon filter scripting capabilities available in MXN1 and MXN2 allow to reduce the geographical scope of the routes imported and exported to/from the Barcelon\`{e}s\footnote{\href{https://guifi.net/barcelones}{Barcelon\`{e}s}: Network Zone including Badalona, Barcelona, Hospitalet del Llobregat, Sant Adri\`{a} del Besos and Santa Coloma de Gramanet} Zone.
+In order to avoid this disruptive issue, Bird Daemon filter scripting capabilities available in MXN1 and MXN2 allow to reduce the geographical scope of the routes imported and exported to/from the Barcelon\`{e}s\footnote{\href{https://guifi.net/en/barcelones}{Barcelon\`{e}s}: Network Zone including Badalona, Barcelona, Hospitalet del Llobregat, Sant Adri\`{a} del Besos and Santa Coloma de Gramanet} Zone.
 
 \begin{landscape}
 
@@ -47,22 +46,44 @@ In order to avoid this disruptive issue, Bird Daemon filter scripting capabiliti
 \end{landscape}
 \newpage
 
-\section{Real environment testing}
-Although it has not been possible to test Package's improvements due to the impact that a change like this could incur in a live network involving several critical \textit{Super Nodes} and all the routes in the Mesh Network, it is foreseen to be updated soon in a planned and backed up manner.
+\section{Testing Scenarios}
+Although it has not been possible to test Package's improvements in the target production network as the changes would be incur in service disruption to up to 1500+ nodes\footnote{Font: https://guifi.net/en/node/2435/view/nodes} in the \textit{Barcelon\`{e}s}  Zone, it is foreseen to update MXN Nodes after agreeing it with all the involved parts.
 
-\subsection{Development environment testing}
-The \textit{Universitat Oberta de Catalunya} and V\'{i}ctor have provided me a number of Virtual Machines plus a number of network resources in order to simulate our target network but without the risk of damaging the production network or flooding unwanted routes to Guifi.net.
+Nevertheless, this Package's improvements have been tested in two environments connected directly with Guifi.net thanks to the \textit{Universitat Oberta de Catalunya} and V\'{i}ctor have who have provided and helped me configuring a number of Virtual Machines plus a number of virtual network resources in order to simulate the network section required in each case: 
+
+\subsubsection{Internal Development Testing}
+As part of the development of this project, \textit{Universitat Oberta de Catalunya} and V\'{i}ctor have provided me and helped me configuring a Virtual Machine inside UOC's network and connected to a \textit{busy} Guifi.net section in Barcelona (3000+ BGP Routes). As 
+
+\subsubsection{Final Package Testing}
+As can be seen in the Figure \ref{fig:devnet}, the final testing environment is mirror of the target network. This environment has been created in order to do the final tests after \textit{releasing} the final version of the Package in order to test it but without the risk of damaging the production network or flooding unwanted routes to Guifi.net. This network section routes to two Infrastructure SuperNodes connected to two geographically-separated Barcelona well-known Universities, being almost, if not exactly, a mirror of what our target network is. 
 
 \begin{itemize}
     \item VPN access to the Guifi Network using UOC's resources.
-    \item 4 Virtual Machines using LEDE17.01 Firmware.
+    \item 4 Virtual Machines using LEDE17.01 Firmware in University's network.
     \item Virtual Bridge to connect the VMs simulating a Mesh Network.
     \item Network way through two different network sections.
     \begin{itemize}
         \item Connection using UOC's Super Node
-        \item Virtual Machine 4 connects through UPF\footnote{Universitat Pompeu Fabra}'s internal network to find path out to a near Guifi network.
+        \item Virtual Machine 4 connects through UPF\footnote{UPF: Universitat Pompeu Fabra (Barcelona)}'s internal network to find path out to a near Guifi network.
+        \item Both Infrastructure SuperNodes have Import ALL policy applied to our network
+        \item UPF's SuperNode throughput has been limited to avoid disruption in their internal network.
+        \begin{itemize}
+            \item Connection through UPF's internal network using a GRE Tunnel\footnote{Generic Routing Encapsulation (GRE): Cisco's IP Layer virtual tunnelling Point-to-Point protocol.}
+            \item We have agreed to do this testing in a limited time-frame to avoid disruption in their services as we are sharing routes between Guifi.net-UOC-UPF-Guifi.net.
+        \end{itemize}
     \end{itemize}
 \end{itemize}
+
+\subsubsection{Testing environment elements}
+\begin{itemize}
+    \item \textbf{SJM}: Guifi.net Node  \href{https://guifi.net/en/node/20262/}{BCNSantJoanDeMalta51}. Infrastructure Node with 6 Point-to-Point connections to other Super Nodes. As we have no control on this node, we will consider that it is importing and exporting any received route to/from Guifi.net.
+    \item \textbf{UOC}: Guifi.net Node \href{https://guifi.net/en/node/63255}{BCNRamblaPobleNou156}. Infrastructure Node located in the \textit{Universitat Oberta de Catalunya} and connected to the Super Node BCNSantJoanDeMalta51. This node is shown as AS1.
+    \item \textbf{VM1}: KVM\footnote{KVM: Kernel-based Virtual Machine.} Virtual Machine acting as Frontier Node (MXN1). This node is configured with Bird Daemon (BGP AS2) and BMX6 in order to connect to its BGP neighbour AS1 (ISN1), to its iBGP Peer AS2 (MXN2) and to the BMX6 Mesh network.
+    \item \textbf{VM2 \& VM3}: KVM Virtual Machines acting as plain Mesh nodes.
+    \item \textbf{VM4}: KVM Virtual Machine acting as Frontier Node (MXN2). This node is configured with Bird Daemon (BGP AS2) and BMX6. It connects to its BGP neighbour AS3 (ISN2) over a GRE Tunnel configured in UPF's internal network, also to its iBGP Peer AS2 (MXN2) and to the BMX6 Mesh network.
+    \item \textbf{UPF}: Guifi.net Node \href{https://guifi.net/en/node/56604}{BCNUPFPobleNou}. Infrastructure Node located in the \textit{Universitat Pompeu Fabra} and reached through UPF's internal network. Therefore, VM4 connects using an internal IP Address supplied by UPF's administrators. This node is shown as AS3.
+\end{itemize}
+
 
 \begin{landscape}
 

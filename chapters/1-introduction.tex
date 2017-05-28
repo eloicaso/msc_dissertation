@@ -18,10 +18,43 @@ That project was successful and the result was an integration package using Open
 Therefore, I have been really lucky to have the opportunity to retake this package as my MSc. project while doing my MSc. and work together Víctor as this has meant that I have had direct feedback from administrators using the tool in production environments and to improve its most critical features. Moreover, Víctor has also published a report on GitHub \cite{bgpbmx6} describing the main challenges found using the old version of the Package and a deep description of the environment.
 
 \subsection{Bird Daemon}
-Bird Daemon, from now onwards Bird, is an open source Internet Routing service (daemon) that allows network administrators to simplify route sharing configuration, management and monitoring by using Routing tables and a powerful filtering language\footnote{Bird Daemon: \href{http://bird.network.cz/}{Link}}.
+Bird Daemon\footnote{Bird Daemon: \href{http://bird.network.cz/}{Link}}, from now onwards Bird, is an open source Internet Routing service (daemon) that allows network administrators to simplify route sharing configuration, management and monitoring of different routing protocols by using Routing tables as \textit{transferable} knowledge and a powerful filtering c-like language to achieve it with really fine-grained results.
+
+Bird current version is 1.6.3 and its functionality is split in two different Daemons, one for IPv4 (Bird4) and one for IPv6 (Bird6). This version supports the following routing protocols:
+\subsubsection{Routing Protocols}
+\begin{itemize}
+    \item \textbf{\href{https://www.irif.fr/~jch//software/babel/}{Babel}}: IGP\footnote{Interior Gateway Protocol: routing protocols being used in internal Autonomous Systems to manage their connectivity and paths.}\footnote{Autonomous System: Single-administrated network behaving as an entity.} distance-vector protocol stated as being in alpha stage of adoption.
+    This protocol is not available to automate through our Package yet.
+    \item \textbf{Open Shortest Path First - OSPF}: IGP link-state protocol fully supported for both IPv4 \href{https://tools.ietf.org/html/rfc2328}{OSPFv2} and IPv6 \href{https://tools.ietf.org/html/rfc5340}{OSPFv3}.
+    This protocol has some functionality available for IPv4 in the Package but is not fully functional and there is no UI supporting it. OSPF support is one of the top priorities for future Package improvements.
+    \item \textbf{\href{https://www.rfc-editor.org/rfc/rfc2453.txt}{Routing Information Protocol - RIP}}: IGP distance-vector protocol fully supported. This protocol is completely deprecated by other distance-vector protocols as OSPF, which are less constrained by network's scale.
+    This protocol is not available to automate through our Package and, because it is obsolete, there are not plans to implement it in short term.
+    \item \textbf{\href{https://www.rfc-editor.org/rfc/rfc4271.txt}{Border Gateway Protocol - BGP}}: EGP\footnote{Exterior Gateway Protocol: routing protocols managing connectivity and paths on networks compound by Autonomous System entities.} path-vector protocol fully supported. This is the most common protocol for backbone networks and the key protocol for this project.
+    This protocol is available to automate through the Package but only the most common / relevant options have been implemented. BGP's support finalisation is one of the top priorities for future Package improvements. 
+\end{itemize}.
+
+\subsubsection{Support Protocols}
+The following list of \textit{Protocols} are not exactly routing protocols but supportive implementations of different capabilities or services to enhance and simplify system's management.
+
+\begin{itemize}
+    \item \textbf{Static}: Bird's mechanism to implement \textit{smart} static routes. It allows  origin or pattern discrimination and modification. For example, configure \textbf{any} route in 10.0.0.0/16 to be unreachable or to extend it with an attribute: \texttt{ospf\_metric = 100}.
+    Static Protocol is available to automate through the Package.
+    \item \textbf{Pipe}: Routing Tables are the main knowledge units for Bird (i.e. BGP \& OSPF primary tables). Pipe Protocol allows to connect different Routing Tables and to apply discrimination to the routes the share (i.e. BGP->OSPF accept all and OSPF->BGP accept if part of 10.0.0.0/8).
+    Pipe Protocol is available to automate through the Package.
+    \item \textbf{Direct}: Route generator for any targeted interface. Bird uses pattern matching to include/exclude any network interface that we want to be encapsulated as a single bunch of \textit{device} routes.
+    Direct Protocol is available to automate through the Package.
+    \item \textbf{Device}: This \textit{protocol} is required in most of the Bird configurations and its main purpose is to gather key data from system's interfaces in order to facilitate Bird's operation.
+    Device Protocol is available to automate through the Package.
+    \item \textbf{Kernel}: Bird's implementation to allow sharing routes between the Operative System Kernel Routing Tables and the ones designated by Bird.
+    Kernel Protocol is available to automate through the Package. There are plans to improve this protocol as there is one process left to be automated through UI and it is top priority.
+    \item \textbf{RAdv}: Implementation of the Router Advertisement Protocol (\href{https://tools.ietf.org/html/rfc4861}{IPV6's Neighbour Discovery}) allowing a fine-grained control of how often the neighbour discovery information is sent and which information is shared on them per target.
+    RAdv Protocol is not available to automate through the Package. There are not plans to implement it in short term.
+    \item \textbf{\href{https://www.rfc-editor.org/rfc/rfc5880.txt}{Biderectional Forwarding Detection - BFD}}: This \textit{protocol} is a standalone tool for neighbours monitoring in order to foresee some protocol service disruptions by monitoring peers in a more efficient way than most protocols do. This protocol consists in session created by real routing protocols (i.e. OSPF and BGP) and its sole role is to notify them in case of an event. This protocol is almost fully supported (except of verbose mode and authentication).
+    BFD Protocol is not available to automate through the Package. There are not plans to implement it in short term.
+\end{itemize}
 
 \subsection{OpenWRT/LEDE's configuration integration package}
-Bird-OpenWRT Package, from now onwards \textit{the Package}, is an open source OpenWRT/LEDE-specific solution (\textit{.ipk}) integrated by four separated packages (two for Bird IPv4 (\textit{bird4-uci}) and IPv6 (\textit{bird6-uci}) UCI integration and the other two for Web UI management (\textit{luci-app-bird4} and \textit{luci-app-bird6}) providing Bird Daemon a user-friendly configuration scheme (UCI) and a graphical interface in OpenWRT/LEDE-based routers.
+Bird-OpenWRT Package, from now onwards \textit{the Package}, is an open source OpenWRT/LEDE-specific solution (\textit{.ipk}) integrated by four separated packages (two for Bird IPv4 (\textit{bird4-uci}) and IPv6 (\textit{bird6-uci}) UCI integration and the other two for Web UI management (\textit{luci-app-bird4} and \textit{luci-app-bird6}) providing Bird Daemon a user-friendly configuration scheme (UCI) and a graphical interface in OpenWRT/LEDE-based routers. All the implementation details are covered in chapter \ref{ch:implementation}.
 
 \subsection{Bird Daemon administration issues}
 \label{subsec:bdai}

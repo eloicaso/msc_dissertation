@@ -18,4 +18,63 @@
 \chapter{Bird Daemon presence in Worldwide IXPs and other institutions}
 \label{app:ch:blinks}
 
+\chapter{Kanban Project Management using Taiga.io Service}
+\label{app:sec:kanban}
+As part of the initial investigation, I did some research on Open Source Project Management tools that could help me monitoring my progress as well as adding some value to the final project.
+Because of this project's scope and time-frame, the size of the team (me) and the number of Stakeholders (Víctor), the only Agile \textit{approach} that I could use was Kanban\footnote{\href{http://www.scrumhub.com/kanban-fundamentals/}{Kanban} approach summarised: project with a continuous prioritised backlog, one task per team resource, the project must be releasable after closing any task, reduce to the minimum the number of required ceremonies and tasks go from \textit{ToDo} (left) to \textit{Done} (right).}. The following sections present the tests and initial usage of Taiga Kanban service.
+
+\begin{landscape}
+\section{EPICS View}
+\begin{figure}[h!]
+\centering
+    \includegraphics[width=\hsize]{images/kanban/epics}
+    \caption{Project EPICs overview}
+    \label{fig:kepic}
+\end{figure}
+
+This view presents the information about the big tasks represented in project's schedule, who is working on each one, other useful information and how far it is the task of being delivered.
+\newpage
+
+\subsection{EPIC Detail View}
+\begin{figure}[h!]
+\centering
+    \includegraphics[width=0.85\hsize]{images/kanban/epic-details}
+    \caption{Housekeeping EPIC detailed view}
+    \label{fig:kepicd}
+\end{figure}
+This view presents the detailed information of a specific Epic. It presents the first EPIC \textit{Housekeeping} which is In Progress, assigned to \textbf{Eloi} and two tasks, one already in progress and another waiting for resources.
+\newpage
+
+\section{Timeline View}
+\begin{figure}[h!]
+\centering
+    \includegraphics[width=0.7\hsize]{images/kanban/timeline}
+    \caption{Project timeline status information}
+    \label{fig:ktimeline}
+\end{figure}
+The Timeline View presents Project's log information. Any action applied to any of the tasks, stories or epics will be logged and shown chronologically in this page.
+\newpage
+
+\section{Kanban Board View}
+\begin{figure}[ht!]
+\centering
+    \includegraphics[width=0.85\hsize]{images/kanban/kanban}
+    \caption{Kanban User Stories board view}
+    \label{fig:kboard}
+\end{figure}
+The Kanban Board shows the state of the User Stories being addressed, in which state and how far they are from being completed.
+\newpage
+
+\subsection{Cycle/Sprint View}
+\begin{figure}[ht!]
+\centering
+    \includegraphics[width=0.85\hsize]{images/kanban/cycle}
+    \caption{Kanban current cycle/sprint tasks board view}
+    \label{fig:kcycle}
+\end{figure}
+The Cycle/Sprint View presents the user stories being addressed in priority order (in the left) and all the involved Tasks required to complete each of these user stories, to who are assigned and their state. This is a detailed view of the Kanban Board View.
+
+\end{landscape}
+
+
 \end{appendices}
