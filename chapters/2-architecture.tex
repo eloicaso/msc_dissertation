@@ -1,6 +1,5 @@
 \chapter{Network Architecture}
 \label{ch:architecture}
-\pagestyle{headings}
 
 As shown in the figure \ref{fig:tarnet}, our targeted network is a mixed section requiring the use of Exterior Gateway Protocols (IGP) and Internal Gateway Protocols (EGP) in order be able to share routes routes between the two BGP ends (named \textit{E} and \textit{F}) going through a BMX6 Mesh Network (from report \cite{bgpbmx6} - in Catalan). 
 
@@ -47,12 +46,19 @@ In order to avoid this disruptive issue, Bird Daemon filter scripting capabiliti
 \newpage
 
 \section{Testing Scenarios}
-Although it has not been possible to test Package's improvements in the target production network as the changes would be incur in service disruption to up to 1500+ nodes\footnote{Font: https://guifi.net/en/node/2435/view/nodes} in the \textit{Barcelon\`{e}s}  Zone, it is foreseen to update MXN Nodes after agreeing it with all the involved parts.
+Although it has not been possible to test Package's improvements in the target production network as the changes would be incur in service disruption for up to 1500+ nodes\footnote{Font: https://guifi.net/en/node/2435/view/nodes} in the \textit{Barcelon\`{e}s} Zone, it is foreseen to update target \textbf{MXN} Nodes after agreeing it with all the involved parts.
 
-Nevertheless, this Package's improvements have been tested in two environments connected directly with Guifi.net thanks to the \textit{Universitat Oberta de Catalunya} and V\'{i}ctor have who have provided and helped me configuring a number of Virtual Machines plus a number of virtual network resources in order to simulate the network section required in each case: 
+Nevertheless, this Package's improvements have been tested in two environments connected directly with Guifi.net thanks to  \textit{Universitat Oberta de Catalunya} and V\'{i}ctor's support, who have provided me and helped me configuring a number of Virtual Machines, a number of virtual network resources and also agreed permission to connect through another university's network (UPF\footnote{UPF: Universitat Pompeu Fabra (Barcelona)}) in order to simulate the network section required in each case: 
 
 \subsubsection{Internal Development Testing}
-As part of the development of this project, \textit{Universitat Oberta de Catalunya} and V\'{i}ctor have provided me and helped me configuring a Virtual Machine inside UOC's network and connected to a \textit{busy} Guifi.net section in Barcelona (3000+ BGP Routes). As 
+Package development tests have been done inside UOC's network using a really simple network topology where our target Bird Node VM is connected to Guifi.net using UOC's Infrastructure Node (UOC receives/announces 3000+ BGP Routes). 
+
+\begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/devmin}
+        \caption{Minimal test environment.}
+        \label{fig:mindev}
+	\end{figure}
 
 \subsubsection{Final Package Testing}
 As can be seen in the Figure \ref{fig:devnet}, the final testing environment is mirror of the target network. This environment has been created in order to do the final tests after \textit{releasing} the final version of the Package in order to test it but without the risk of damaging the production network or flooding unwanted routes to Guifi.net. This network section routes to two Infrastructure SuperNodes connected to two geographically-separated Barcelona well-known Universities, being almost, if not exactly, a mirror of what our target network is. 
@@ -86,13 +92,12 @@ As can be seen in the Figure \ref{fig:devnet}, the final testing environment is 
 
 
 \begin{landscape}
-
 \begin{figure}[ht!]
-        \centering
-        \includegraphics[width=\hsize]{images/devnetfull}
-        \caption{Development Network simulating production's environment}
-        \label{fig:devnet}
-	\end{figure}
+    \centering
+    \includegraphics[width=\hsize]{images/devnetfull}
+    \caption{Development Network simulating production's environment}
+    \label{fig:devnet}
+\end{figure}
 \end{landscape}
 \newpage
 

@@ -1,6 +1,5 @@
 \chapter{Package improvements implementation}
 \label{ch:implementation}
-\pagestyle{headings}
 
 \section{Administration requirements}
 One of the administrator's main tasks while managing networks is, if required, to facilitate the coexistence of different Routing protocols in the same network section. Hence the requirement of rich routing tools as Quagga or Bird to act as facilitators of this route \textit{crossed-announcement} -and even attributes translation- between protocols.
@@ -131,7 +130,6 @@ Following previous section \ref{sec:uciimp} UCI/LUCI example, there have been ot
 \subsubsection{Status Page}
 \textbf{New} Page allowing an administrator to manage Bird Service. This page shows 3 buttons tied with the init.d functions explained in section \ref{sec:initd} figure \ref{fig:initdui}.
 
-This page uses OpenWrt's LUCI mechanism in order to represents the UCI configuration in web format by using Lua\footnote{\href{https://www.lua.org/manual/5.1/}{Lua}: open source powerful language optimised for embedded environments.} language and a modelling parser called CBI\footnote{\href{https://github.com/openwrt/luci/wiki/CBI}{CBI}: Lua model parser UCI-to-HTML.}.
 
 The contents of this page are:
 \begin{itemize}
@@ -146,20 +144,45 @@ The contents of this page are:
     \label{fig:statusp}
 \end{figure}
 
-Although the contents of this page are simple and straightforward, the result shown in figure \ref{fig:statusp} is not the desired result. The initial idea was to use a single button for starting and stopping the service, and none for restart. Moreover, the button would be automatically switch between states showing, when started, service's PID. In Appendix \ref{app:extrap} you can see the expected behaviour shown in the LUCI implementation of Privoxy's OpenWrt Package.
+Although contents of this page are simple and straightforward, the result shown in figure \ref{fig:statusp} is not the desired one. The initial idea was to use a single button for starting and stopping the service, and none for restart. Moreover, the button would be automatically switch between states showing, when started, service's PID. In Appendix \ref{app:ch:extrap} you can see the expected behaviour shown in the LUCI implementation of Privoxy's OpenWrt Package.
 
-The reason behind not doing it is that this simple change would require to change from using LUCI's CBI to LUCI2. 
+The reason behind not doing it is that this simple change would require to change from using LUCI's CBI (Lua) to LUCI2 (JavaScript). Lua's implementation allows you to trigger a number of actions according to a specific element state, if an action (i.e. button clicked) is triggered or during page's rendering. However, there is no granular control on it or a polling mechanism that could automate the transition between service disabled and enabled. To do so, it would be required to force the page to wait (manual OS \texttt{sleep} command) which would also \textbf{block} page's loading.
 
-LUCI2\footnote{\href{https://wiki.openwrt.org/doc/techref/luci2}{LUCI2}: 2nd generation of OpenWrt UCI UI presentation. This second version uses HTML/CSS/JavaScript and communication through JSON messages instead of LUA.} is the next version of LUCI using client-side web technologies to simplify UI creation, releasing resources from the router. Moreover, this new version uses standard communication process between browser and http server (JavaScript's XHR\footnote{XMLHttpRequest(XHR): communication method to transfer queries as objects. Most common communication object format is JSON.}) using the RPC Daemon\footnote{\href{https://wiki.openwrt.org/doc/techref/rpcd}{Remote Procedure Calls}: Client-Server communication mechanism for network (external) nodes.} and uBus Daemon\footnote{\href{https://wiki.openwrt.org/doc/techref/ubus}{Universal Bus} (uBus): is a daemon providing a \textit{space} for packages or protocols to register their APIs allowing external access to it acting as a pipe between them. uBus use RPC calls through the RPC Daemon available in OpenWrt.} as query brokers between UI's Front End, Server's Back End and with other Daemons providing services under RPCd.
+Moreover, I did do a test implementation (without a \texttt{sleep}) and, because of the way CBIs work, the button action and rendering action were somehow triggering service calls multiple times, starting and stopping the service in an unexpected way and not refreshing the contents (wrong status and PID displayed).
 
 \subsubsection{Log Page}
+\textbf{New} Page showing contents in Bird's configured Log file. This page is automatically refreshed \textbf{each second} with the following information:
 
+\begin{itemize}
+    \item Name of the Log file. For reference and easier administration.
+    \item Size of the Log file. Critical information in Bird configurations where \textbf{Debug} information is also enabled. Log file can grow really fast if there are more peers sharing information or if the debug mode is set to log most/all the possible events in the system.
+    If the Log file grows enough to fill the /var partition, Bird will \textbf{automatically} shutdown and \textbf{prevent} any start up attempt until this is resolved. 
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/bird0.3/log}
+    \caption{Log Page: service restart example}
+    \label{fig:statusp}
+\end{figure}
+
+This page has been implemented using mixed capabilities from LUCI and LUCI2. Because of the requirement to show a \textbf{rolling} Log page with a reasonably regular auto-refresh process, it was necessary to use JavaScript's XHR capabilities embedded in the HTML page itself together with Lua code to read the file and send the text as a PlainText HTML response (object).
+
+Because of the lack of documentation in this area, I did spend weeks investigating it by my own using the available package sources in OpenWrt's repositories. However, because what the other packages usually do is to use XHR polls as a communication broker method (i.e. get a specific data from a specific UCI file, apply some filtering/transformation if the data is not in the desired state and, finally, populate specific UI fields available in the HTML page) it was not clear what exactly I had to do as I only needed to: read last 30 lines of a file (Bird's Log File) and populate the Text View (Plain text data).
+
+Finally, after spending some days trying to contact experienced LEDE/OpenWrt developers using community's contact channels\footnote{LEDE community contact methods: \href{https://lede-project.org/contact}{Link}}, I could have few conversations with one of the main contributors of LEDE, OpenWrt \texttt{jow-}\footnote{Jo-Philip Wich: \href{https://github.com/jow-}{Github Profile}.} and also main author of LUCI/LUCI2, who gave me some hints and examples of LUCI2 pages that helped me fixing my issues with the Log and Filters/Functions pages.\\
+
+\textbf{Log File key elements:}
+\input{code/logfile1}
+
+
+\subsubsection{Service Overview Page}
+
+\subsubsection{General Protocols Page}
+
+\subsubsection{BGP Protocol Page}
 
 \subsubsection{Filters \& Functions Page}
-
-
-\subsubsection{BGP and Classic protocols Pages}
-
 
 \subsection{Align documentation and upgrade to Markdown}
 
@@ -212,11 +235,7 @@ Bird will give you hints about what is wrong most of the times: wrong IP address
 
 As an example of this: \texttt{bird4: Failed - bird: /tmp/bird4.conf, line 65: syntax error}. We need to check the bird4.conf file and see that in line 65:
 
-\begin{lstlisting}[language=bash, caption={Bird4.conf contents}]
-64:    protocol bgp BGPExample {
-65:        import Filter NonExistingFilter;
-66:    }
-\end{lstlisting}
+\input{code/bgperror}
 
 We will need to find out that the shown filter used in the \textbf{import} field of BGP Protocol, does not exist.
 

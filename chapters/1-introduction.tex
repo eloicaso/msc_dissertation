@@ -22,6 +22,7 @@ Therefore, I have been really lucky to have the opportunity to retake this packa
 Bird Daemon\footnote{Bird Daemon: \href{http://bird.network.cz/}{Link}}, from now onwards Bird, is an open source Internet Routing service (daemon) that allows network administrators to simplify route sharing configuration, management and monitoring of different routing protocols by using Routing tables as \textit{transferable} knowledge and a powerful filtering c-like language to achieve it with really fine-grained results. Bird manages its own configuration also following a c-like scheme and this was the main goal of my 2014 project: to automate and simplify it by using UCI instead and letting the Package do the translation to Bird configuration.
 
 Bird current version is 1.6.3 and its functionality is split in two different Daemons, one for IPv4 (Bird4) and one for IPv6 (Bird6). This version supports the following routing protocols:
+
 \subsubsection{Routing Protocols}
 \begin{itemize}
     \item \textbf{\href{https://www.irif.fr/~jch//software/babel/}{Babel}}: IGP\footnote{Interior Gateway Protocol: routing protocols being used in internal Autonomous Systems to manage their connectivity and paths.}\footnote{Autonomous System: Single-administrated network behaving as an entity.} distance-vector protocol stated as being in alpha stage of adoption.
@@ -179,6 +180,26 @@ BGP is a dynamic infrastructure IP routing protocol designed for large-scale int
 \label{subsec:bmx6}
 Batman-eXperimental6 \cite{bmx6} is a fork of the Mesh protocol BATMAN\footnote{\href{https://www.open-mesh.org/projects/open-mesh/wiki}{B.A.T.M.A.N}: Better Approach To Mobile Adhoc Networking.}. This is a mesh networking routing protocol is compatible with most of linux-like systems but only operates with IPv6 networks. This routing protocol uses a table-driven\footnote{Table-driven: Compose a routing table with all the source-destination entries.} distance-vector approach\footnote{Distance-vector: Best path (cost of going) from source to destination.}.
 
+\subsubsection{UCI}
+The Unified Configuration Interface (\href{https://wiki.openwrt.org/doc/uci}{UCI}) aims to centralise OpenWrt's packages and system configuration. This mechanism is widely used for almost, if not all, the packages working in OpenWrt. UCI allows you to easily, and in a human-readable manner, simplify administration overheads.
+
+\subsubsection{LUCI}
+LUCI is OpenWrt's solution to graphically represent and allow configuring UCI settings via web pages (UI is generated on \textbf{Server-side}). It uses Lua\footnote{\href{https://www.lua.org/manual/5.1/}{Lua}: open source powerful language optimised for embedded environments.} language following the MVC\footnote{MVC: Model View Controller Software architecture pattern. This is \textbf{just one} of the different patterns of logically separate a program's \textit{intelligence} between data, logic and UI avoiding tangled \textit{spaghetti code}.} software pattern.
+
+%and a modelling parser called CBI\footnote{\href{https://github.com/openwrt/luci/wiki/CBI}{CBI}: Lua model parser UCI-to-HTML.}.
+LUCI's components are:
+\begin{itemize}
+    \item CBI (Model): CBI files include UCI definitions and \textit{describe} HTML's final form (i.e. optional/mandatory properties, order of apparition, and all the required logic to validate entered data through the forms.
+    \item Controller: Web pages definition (i.e. data or rendering target) and communication functions required by the Model (CBI) page.
+    \item View: HTML templates defining how a page, section or specific element is represented.
+\end{itemize}
+
+\subsubsection{LUCI2}
+LUCI2\footnote{\href{https://wiki.openwrt.org/doc/techref/luci2}{LUCI2}: 2nd generation of OpenWrt UCI UI modeling. This second version uses HTML/CSS/JavaScript and communication through JSON messages instead of LUA.} is the next version of LUCI using \textbf{client-side} web technologies to enhance and simplify UI creation, releasing these router's resources. Moreover, this new version uses standard communication process between browser and http server (JavaScript's XHR\footnote{XMLHttpRequest(XHR): communication method to transfer queries as objects. Most common communication object format is JSON.}) using the RPC Daemon\footnote{\href{https://wiki.openwrt.org/doc/techref/rpcd}{Remote Procedure Calls}: Client-Server communication mechanism for network systems (router).} and uBus Daemon\footnote{\href{https://wiki.openwrt.org/doc/techref/ubus}{Universal Bus} (uBus): is a daemon providing a \textit{space} for packages or protocols to register their APIs allowing external access to it acting as a pipe between them. uBus use RPC calls through the RPC Daemon available in OpenWrt.} as query brokers between UI's Front End, Server's Back End and router's internal Daemons providing services under RPCd.
+
+This new version is not completely defined and it has been evolving together with OpenWrt/LEDE and LUCI. There is no much documentation of its definition, API, how to use it or integration examples and, therefore, it is complex to get the full picture of how it works and how to start using it and it is common to see packages using both CBIs(LUCI) and HTML/CSS/JS(LUCI2) approaches together according to the complexity or level of customisation required to represent the data.
+
+The already mentioned lack of documentation in LUCI2 will be repeated during section \ref{sec:luciimp} as it was a critical handicap while implementing some UI pages with \textit{simple} data structures, but requiring some customisation and process automation, which LUCI2 solves efficiently if you know how to do it.
 
 \section{State of the art}
 \label{sec:soa}

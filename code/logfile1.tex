@@ -1,0 +1,20 @@
+\\
+Only execute the polling function if \textit{refresh} is passed as parameter.
+\begin{lstlisting}[language=lua]
+if luci.http.formvalue("refresh") then
+\end{lstlisting}
+
+Send the outputs back as plain text.
+\begin{lstlisting}[language=lua]
+luci.http.prepare_content("text/plain")
+\end{lstlisting}
+
+Get the last 30 lines of the file \texttt{log\_file}
+\begin{lstlisting}[language=lua]
+lf = sys.exec("tail -n30 " .. log_file):gsub("\r\n?", "\n")
+\end{lstlisting}
+
+Send, as HTTPResponse object, the quoted message.
+\begin{lstlisting}[language=lua]
+luci.http.write("Using Log File: " .. log_file .. " - File Size: " .. log_size .. "\n" .. lf)
+\end{lstlisting}
