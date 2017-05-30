@@ -1,0 +1,21 @@
+\begin{lstlisting}[language=lua, caption={LUCI tied options implementation}]
+[...]
+import_trigger = sect_templates:option(Flag, "import_trigger", "Import       Limit", "Enable Routes Import limit settings")
+import_trigger.default = 0
+import_trigger.rmempty = false
+import_trigger.optional = false
+
+import_limit = sect_templates:option(Value, "import_limit", "Routes import   limit", "Specify an import route limit.")
+import_limit:depends({import_trigger = "1"})
+import_limit.rmempty = true
+
+import_limit_action = sect_templates:option(ListValue,                       "import_limit_action", "Routes import limit action", "Action to take when    import routes limit ir reached")
+import_limit_action:depends({import_trigger = "1"})
+import_limit_action:value("warn")
+import_limit_action:value("block")
+import_limit_action:value("disable")
+import_limit_action:value("restart")
+import_limit_action.default = "warn"
+import_limit_action.rmempty = true
+[...]
+\end{lstlisting}

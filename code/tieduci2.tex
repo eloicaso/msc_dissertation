@@ -1,0 +1,12 @@
+\begin{lstlisting}[language=bash,caption={Tied options using UCI (II)}]
+config bgp 'bgpAS1'
+        option import_limit_action 'warn'
+        option export_trigger '0'
+        option receive_trigger '0'
+        option disabled '0'
+        option template 'bgpCommon'
+        option neighbor_address '192.168.1.100'
+        option neighbor_as '1'
+        option import_trigger '1'
+        option import_limit '1000'
+\end{lstlisting}

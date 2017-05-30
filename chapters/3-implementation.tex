@@ -3,12 +3,12 @@
 \pagestyle{headings}
 
 \section{Administration requirements}
-One of the administrator's main tasks while managing networks is, if necessary, to facilitate the coexistence of different Routing protocols in the same network section. Hence the requirement of rich tools as Quagga or Bird to act as facilitators of this route transference between them.
+One of the administrator's main tasks while managing networks is, if required, to facilitate the coexistence of different Routing protocols in the same network section. Hence the requirement of rich routing tools as Quagga or Bird to act as facilitators of this route \textit{crossed-announcement} -and even attributes translation- between protocols.
 
 Administrators require:
 \begin{itemize}
     \item A full-featured tool with an easy and intuitive UI to manage and monitor protocol health and data efficiently and avoiding any handmade/custom edit, reducing configuration's complexity.
-    \item Use LEDE/OpenWRT-based firmwares widely used in the target network.
+    \item Use of LEDE/OpenWRT-based firmwares widely used in the target network.
     \item A Routing protocols management tool that, at least, supports BGP Static Routing Protocol and it is able to share routes with BMX6 Dynamic Routing Protocol in a manageable way.
     \item Use Bird Daemon instead of Quagga to make us of its proven efficiency, low resource consumption and powerful filter capabilities, which is critical to some of the widely used commodity hardware in Guifi.net.
     \item Use and improve Bird Daemon's configuration integration package (bird-uci and luci-app-bird) available in the official Routing Repository of LEDE/OpenWRT.
@@ -19,31 +19,147 @@ Administrators require:
     \begin{itemize}
         \item Bird Daemon service status
         \item Bird Daemon events information (Logs)
-        \item Filters and Functions editing using an embedded HTML text editor
-        \item Update old Web UI pages to 
+        \item Filters and Functions editing using an embedded HTML text editor.
+        \item Update old configuration Web pages, fix some outdated options and re-sort them to a more logically order.
     \end{itemize}
     \item Do theoretical viability investigation to use uBus Daemon as a mechanism to communicate with Bird Daemon and get health information and current-status information for handled protocol using JSON messages.
 \end{itemize}
 
+\section{Changes and improvements implemented}
+The following sections summarises what has been changed as part of this project's development, which changes have been successful, challenges found and lessons learnt that will help towards future versions of the Package.
 
+\subsection{Build and deployment process documentation update}
+One of the first challenges I found during the initial investigation was that the documented process for building the package was wrong. This misalignment led into few days testing the build process using the latest version of the development environment in order to tune it (the original building process was documented in 2014).
 
-\section{Changes in the code}
+\begin{itemize}
+    \item Generalise Makefiles (bird4/bird6) and post installation scripts.
+    \item Add detailed steps to get Package's source, add bird required packages into the Image Build settings, compile it (\texttt{make}) and deploy it in the target router.
+    \item Add alternative mechanisms, Package information and (after finishing changes in the Package), Package known issues.
+\end{itemize}
 
 \subsection{Apply code standards}
+As a daily Bash user, one of the main concerns that I had once I did retake the project was the state of the code because I did stop giving support to the Package on 2014 and I have improved drastically my consciousness towards clean, standard and following-best-practises code. Therefore, the top priority task I got was to normalise the code, apply best practises and, where possible, refactor it to follow a \textit{library}-pattern to be able to formalise an API and, in future releases, even to create unitary tests that would automate Package's tests.
+
+The first challenge I found was that LEDE/OpenWRT firmwares use the light compound of Linux tools BusyBox\footnote{\href{https://busybox.net/downloads/BusyBox.html}{BusyBox}: light and optimised UNIX tools including most of the widely used terminal commands (i.e. \texttt{ash}, \texttt{cat} or \texttt{rm}).}. This all-in-one tool comes really handy in embedded environments where performance and storage are critical but some of its tools are limited versions of the original ones.
+
+Particularly, the tool that has been more challenging is \textit{ash}, which is the built-in Shell Command Line included instead of \textit{Bash} and, although it includes most of its features, there are few others like Arrays that are not available and requires the developer to re-think the solution (Ash readme page suggest the use of \texttt{set} command).
+
+Some examples of the improvements applied are:
+\begin{itemize}
+    \item Encapsulate variables with curly brackets to avoid wrong substitutions or other common issues where mixing variable names and other strings:
+    \input{code/bestp1} 
+    This is a forced example but there are some instances where, in really complex scripts, unexpected substitutions could happen.
+    \item Encapsulate Strings appropriately to avoid unexpected substitutions or code execution (i.e. script injection): this is an uncommon situation that could happen with commands like \texttt{sed}, where quotes and other special symbols are crucial to get the expected output.
+    \item Use of 4 spaces instead of tabs for code readability.
+    \item Use of simplified \texttt{if} statements \textbf{only} with clear and single-line occasions. Avoid using simplifications on instances where more than one line is required or the command is too large and would be more reasonable to split it using backslash (\texttt{\textbackslash}).
+    \input{code/bestp2}
+\end{itemize}
 
 \subsection{init.d script and service management}
+\label{sec:initd}
+Bird's init.d script (\texttt{/etc/init.d/bird4}) manages the service on boot or on demand. Bird Daemon's init.d file is substituted on installation time by \texttt{/etc/bird\{4|6\}/init.d/bird\{4|6\}} script, and the original one backed up as \texttt{/etc/bird\{4|6\}/init.d/bird\{4|6\}.orig} to be restorable in the event of uninstalling the Package.
+
+Improvements introduced are:
+\begin{itemize}
+    \item Refactor init.d script and split it in two files. \texttt{bird\{4|6\}} for service management and \texttt{bird\{4|6\}-lib.sh} as an \textit{API/function} holder for UCI-bird configuration translation.
+    \item Store a backup of the current configuration each time the service is started. However, this backup is overwritten each time and it is administrator decision to take a copy of this file before reloading the service.
+    \item Add \textit{smart} service management to avoid multiple start/stop/restart calls to the service, causing service disruptions if not required (i.e. multiple start calls should be ignored). See figure \ref{fig:initdt}.
+    \item Add extra management functions for LUCI Web management. These new functions call the original ones but forcing plain text outputs. See figure \ref{fig:initdui}.
+    \item Re-sort UCI translation script's in order to fix an issue with Functions and Filters.
+    \item Enhance service handling and error information logging, previously dismissed.
+\end{itemize}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/initdterminal}
+    \caption{Service management for Terminal.}
+    \label{fig:initdt}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/initdui}
+    \caption{Service management for Web UI.}
+    \label{fig:initdui}
+\end{figure}
 
 \subsection{UCI Configuration improvements}
+\label{sec:uciimp}
+The Unified Configuration Interface (UCI) aims to centralise OpenWrt's settings and it is widely used for almost, if not all, the packages in OpenWrt. UCI allows you to easily, and in a human-readable manner, configure any system following the same scheme, simplifying administration overheads.
+
+However, \textit{bird-uci} Package uses the UCI configuration file in a non-classical manner. Instead of making use of the configuration as it is, the Package only acts as a translator between what the user wants (written in UCI-scheme) and what bird needs to work (c-like configuration file). As stated in section \ref{sec:motivation}, the first version of the package successfully manages Bird, but there have been some API changes since Bird v1.4.3 and the integration is not completed yet:
+
+\begin{itemize}
+    \item As part of Bird's v1.4.3 to v1.6.3 API reviewing, some options have required tweaking in order to be compliant to the latest API.
+    \item Most of the UCI improvements are tied to LUCI improvements (see section \ref{sec:luciimp}) in order to enhance User eXperience.
+    For example, BGP Protocol allows you to execute an action once a number of routes is reached (imported, exported or received). This is shown as a pair of settings in the UI. Previously, each setting was independent, which was a problem as both are optional and hidden for simplicity reasons.
+    By adding the extra option, I have been able to tie both options graphically and make them work as expected.
+    From /etc/config/bird4:
+    \input{code/tieduci1}
+    As shown in the snippet, we have three \texttt{\_trigger '0'} options that states that there is \textbf{no} Limit set in this BGP session. However, if we set one through the UI:
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/bgp/bgptrigger1}
+    \caption{Import Limit Trigger \textbf{not} selected.}
+    \label{fig:uitiedn}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/bgp/bgptrigger2}
+    \caption{Import Limit Trigger \textbf{selected}.}
+    \label{fig:uitiedy}
+\end{figure}
+
+As shown in both figures \ref{fig:uitiedn} and \ref{fig:uitiedy} LUCI brings both options together, making it clear to the administrator that these settings must be filled. The UCI result for \ref{fig:uitiedy} is the following:
+
+\input{code/tieduci2}
+
+This \textit{tying} improvement has been done in the web UI's and not in UCI translation time because, as can be seen in the following code snippet, it is easier to let LUCI configuration management process to add/remove those attributes automatically on settings save time, than doing some hand-made if statements.
+
+In the following LUA snippet, LUCI creates a UI Flag option (our trigger) which is mandatory (\texttt{optional = false}. The other two options (\texttt{limit} and \texttt{limit\_action}) are both optional and dependant on the value of our flag (\texttt{depends({import\_trigger = "1"})}.
+
+\input{code/tieduci3}
+\end{itemize}
+
+\newpage
 
 \subsection{LUCI UI improvements}
+\label{sec:luciimp}
+Following previous section \ref{sec:uciimp} UCI/LUCI example, there have been other UI improvements coupled with changes in the UCI implementation. The following subsections will cover each UI Page to summarise its role and which changes have been done to it. Nevertheless, the last subsection will explain the number of challenges faced during project's development.
 
 \subsubsection{Status Page}
+\textbf{New} Page allowing an administrator to manage Bird Service. This page shows 3 buttons tied with the init.d functions explained in section \ref{sec:initd} figure \ref{fig:initdui}.
+
+This page uses OpenWrt's LUCI mechanism in order to represents the UCI configuration in web format by using Lua\footnote{\href{https://www.lua.org/manual/5.1/}{Lua}: open source powerful language optimised for embedded environments.} language and a modelling parser called CBI\footnote{\href{https://github.com/openwrt/luci/wiki/CBI}{CBI}: Lua model parser UCI-to-HTML.}.
+
+The contents of this page are:
+\begin{itemize}
+    \item Three buttons to trigger the service management: Start, Stop and Restart in Quiet mode.
+    \item Dynamic Text Box showing Bird service's status. This text will be updated if you trigger any service update through the buttons.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/bird0.3/status}
+    \caption{Status Page}
+    \label{fig:statusp}
+\end{figure}
+
+Although the contents of this page are simple and straightforward, the result shown in figure \ref{fig:statusp} is not the desired result. The initial idea was to use a single button for starting and stopping the service, and none for restart. Moreover, the button would be automatically switch between states showing, when started, service's PID. In Appendix \ref{app:extrap} you can see the expected behaviour shown in the LUCI implementation of Privoxy's OpenWrt Package.
+
+The reason behind not doing it is that this simple change would require to change from using LUCI's CBI to LUCI2. 
+
+LUCI2\footnote{\href{https://wiki.openwrt.org/doc/techref/luci2}{LUCI2}: 2nd generation of OpenWrt UCI UI presentation. This second version uses HTML/CSS/JavaScript and communication through JSON messages instead of LUA.} is the next version of LUCI using client-side web technologies to simplify UI creation, releasing resources from the router. Moreover, this new version uses standard communication process between browser and http server (JavaScript's XHR\footnote{XMLHttpRequest(XHR): communication method to transfer queries as objects. Most common communication object format is JSON.}) using the RPC Daemon\footnote{\href{https://wiki.openwrt.org/doc/techref/rpcd}{Remote Procedure Calls}: Client-Server communication mechanism for network (external) nodes.} and uBus Daemon\footnote{\href{https://wiki.openwrt.org/doc/techref/ubus}{Universal Bus} (uBus): is a daemon providing a \textit{space} for packages or protocols to register their APIs allowing external access to it acting as a pipe between them. uBus use RPC calls through the RPC Daemon available in OpenWrt.} as query brokers between UI's Front End, Server's Back End and with other Daemons providing services under RPCd.
 
 \subsubsection{Log Page}
 
+
 \subsubsection{Filters \& Functions Page}
 
+
 \subsubsection{BGP and Classic protocols Pages}
+
 
 \subsection{Align documentation and upgrade to Markdown}
 
@@ -74,7 +190,6 @@ In the old package, after executing \texttt{/etc/bird\{4|6\}/init.d/bird4 start}
 
 After checking that both daemons are running, we can then perform a \textit{diff} between the configuration files and look for any noticeable difference
 
-%\lstinputlisting[language=diff, caption={diff of bird4.conf in v0.2 (<) and v0.3 (>)}]{code/conf2vs3.diff}
 \input{code/conf2vs3}
 
 As shown in this \textit{diff} snippet, almost all the translated configuration is identical apart from:

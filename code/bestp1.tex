@@ -1,0 +1,7 @@
+\begin{lstlisting}[language=bash,caption={Variable encapsulation}]
+root@LEDE:~# path="/etc/"
+root@LEDE:~# ls $pathconfig/bird4
+ls: /bird4: No such file or directory
+root@LEDE:~# ls ${path}config/bird4
+/etc/config/bird4
+\end{lstlisting}

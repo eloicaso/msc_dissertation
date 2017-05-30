@@ -1,0 +1,16 @@
+
+Acceptable:
+\begin{lstlisting}[language=bash,caption={If statement simplification (I)}]
+root@LEDE:# var="true"
+root@LEDE:# [ "$var" = "true" ] && install_package="y" || install_package="n"
+var is true
+\end{lstlisting}
+Unacceptable:
+\begin{lstlisting}[language=bash,caption={If statement simplification (II)}]
+root@LEDE:# [ "$(uname)" = "Linux" ] && { . /etc/os-release;
+ echo -e "\n $LEDE_RELEASE \n"; } || echo "Not Available"
+
+LEDE Reboot SNAPSHOT r3969-8322dba
+
+root@LEDE:#
+\end{lstlisting}
