@@ -1,20 +1,43 @@
 \\
-Only execute the polling function if \textit{refresh} is passed as parameter.
-\begin{lstlisting}[language=lua]
+\begin{lstlisting}[language=lua,caption={Lua - Log Code (I)}]
 if luci.http.formvalue("refresh") then
-\end{lstlisting}
-
-Send the outputs back as plain text.
-\begin{lstlisting}[language=lua]
+[...]
 luci.http.prepare_content("text/plain")
 \end{lstlisting}
+\begin{itemize}
+    \item Only execute the polling function (update log information) if \textit{refresh} is passed as parameter.
+    \item Send the outputs back as plain text.
+\end{itemize}
 
-Get the last 30 lines of the file \texttt{log\_file}
-\begin{lstlisting}[language=lua]
+\begin{lstlisting}[language=lua,caption={Lua - Log Code (II)}]
 lf = sys.exec("tail -n30 " .. log_file):gsub("\r\n?", "\n")
-\end{lstlisting}
-
-Send, as HTTPResponse object, the quoted message.
-\begin{lstlisting}[language=lua]
+[...]
 luci.http.write("Using Log File: " .. log_file .. " - File Size: " .. log_size .. "\n" .. lf)
 \end{lstlisting}
+\begin{itemize}
+    \item Get the last 30 lines of the file \texttt{log\_file}.
+    \item Return this text as HTTP Response.
+\end{itemize}
+
+\begin{lstlisting}[language=javascript,caption={JavaScript - Log Code (III)}]
+<script type="text/javascript">//<![CDATA[
+    // Refresh page each second. Use "refresh=1" as trigger.
+    XHR.poll(1, '<%=url('admin/network/bird4/log')%>', { refresh: 1 },       function(xhrInstance) {
+        var area = document.getElementById('log')
+        area.value = xhrInstance.responseText;
+    });
+//]]></script>
+\end{lstlisting}
+\begin{itemize}
+    \item Embed JavaScript code in the HTML Page.
+    \item Execute an XHR Poll periodically (1 second) against the URL \texttt{admin/network/bird4/log} (itself) with parameter \texttt{refresh=0}.
+    In this instance, \texttt{refresh} is a \textit{JSON object} parsed to the backend script in Lua that will trigger our File reading and return the last 30 lines of log information (\textbf{really} simple case).
+    However, this mechanism is designed to receive complex JSON object structures that would include all the data required for the backend scripts to execute some transformations into UCI or into system calls and, finally, to return the outputs that would refresh the data in the UI.
+    \item The internal function \texttt{function(xhrInstance)...} gets the HTML code below with ID \textit{log} (our HTML Log Text Box) and injects the Text Object received by our XHR instance.
+\end{itemize}
+
+\begin{lstlisting}[language=javascript,caption={HTML - Log Code (IV)}]
+<textarea readonly="readonly" style="width: 100%" wrap="on" rows="32"        id="log"><%=lf:pcdata()%></textarea>
+\end{lstlisting}
+
+This is \textbf{all} our page's real code. We have a simple readonly Text Box (32 lines) with ID \textit{log} and instantiates the variable \texttt{lf} from Lua's code.

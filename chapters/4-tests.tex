@@ -1,2 +1,107 @@
 \chapter{Tests Results}
 \label{ch:tresults}
+
+\section{Package Testing}
+Testing an integration/translation Package, and this one specifically, is a rather complex task to evaluate as Bird configuration files are modular and desired settings can be achieved in different ways. Even more, although a \textit{it works/it does not work} policy could be accepted, it does not mean that there are not other possible implementations that could work in a better way. For example, filters and functions can be either written in the \textit{.conf} file or included using \textbf{\%include} mechanism, being the second one a better approach as it enhances code readability as well as it avoids bloating the configuration file unnecessarily.
+
+With this introduction in mind, the following sections will explain how this package has been tested following Bird's configuration base requirements and service behaviour and some \textit{future work} ideas to achieve automatic and unit tests.
+
+
+\subsection{Configuration Translation Tests (future work)}
+To perform configuration integrity tests in current package, it is required to repeat the execution of \texttt{/etc/bird\{4|6\}/init.d/bird4 restart} in order to trigger the UCI-bird.conf translation from a target UCI file. The code to do this translation has been refactored in an functional manner to allow future unit tests or, at least, make it easier to integrate in an automated test framework or process. For example, an automated CI/CD build process could build an update of the package, push it into a test node, execute the translation process and compare it against the previous (or a stable) version as well as check its correctness by querying Bird's status.
+
+\subsubsection{Reviewing v0.2 against v0.3}
+Testing the outputs from the old and new packages, and taking into account that there are some manual changes in the old one, the following example is configured as follows:
+
+\begin{itemize}
+    \item Router IDs follow node's IP Address
+    \item Kernel, Device and Static Protocols have been set by default
+    \item A Static Route has been added  (identical)
+    \item BGP Template and Instance have been configured following v0.2 scheme with matching settings to avoid Bird failures
+    \item BGP Instance AS and Neighbours are dummy values
+    \item A BGP Filter called "all\_ok" (accept all routes) has been added using each version's process.
+\end{itemize}
+
+In the new package, we have instantaneous configuration correctness feedback as we can check Bird's status in the Status Page. 
+In the old package, after executing \texttt{/etc/bird\{4|6\}/init.d/bird4 start}, Bird will fail and it is required to move the Filter "all\_ok" to the top of the document. Bird will start correctly after this modification.
+
+After checking that both daemons are running, we can then perform a \textit{diff} between the configuration files and look for any noticeable difference
+
+\input{code/conf2vs3}
+
+As shown in this \textit{diff} snippet, almost all the translated configuration is identical apart from:
+
+\begin{itemize}
+\item Different Router IDs and BGP neighbours (expected)
+\item Kernel Protocol definition (minor change in the API)
+\item BGP Filter definition (major change in the API)
+\end{itemize}
+
+\subsection{Bird Daemon Errors}
+Bird Daemon provides an error exit code together with different text outputs in order to highlight errors in the configuration. Although most of the times it can be easily spotted using Bird's feedback, there are also instances where the Daemon's documentation may be required to fix them.
+
+\subsubsection{Bird Daemon Error examples}
+Most common errors that an administrator may need to resolve are:
+
+\begin{itemize}
+\item A configured field has incorrect syntax.
+Bird will give you hints about what is wrong most of the times: wrong IP address format \texttt{bird: /tmp/bird4.conf, line 7: Invalid IPv4 address 1921.68.1.1}. But some \textit{rare} times the message is less helpful and you may need to check the contents of the file and understand the error.
+
+As an example of this: \texttt{bird4: Failed - bird: /tmp/bird4.conf, line 65: syntax error}. We need to check the bird4.conf file and see that in line 65:
+
+\input{code/bgperror}
+
+We will need to find out that the shown filter used in the \textbf{import} field of BGP Protocol, does not exist.
+
+\item Non-compatible configuration.
+The other set of common errors is non-compatible fields in a Protocol.
+
+As an example of this: \texttt{bird: /tmp/bird4.conf, line 76: Only internal neighbor can be RR client}. We need to remove the Route Reflector Client setting from the BGP Instance to fix this behaviour.
+
+\item Missing filter or function
+If you include a filter name in any of the Protocols or if any of your filters use a non-existing function, Bird will fail to start showing an error as follows: \texttt{bird: /tmp/bird4.conf, line 71: No such filter}.
+
+\item Syntax errors in a filter or function.
+This error follows the same approach as the first bullet: \texttt{bird: /etc/bird4/filters/filter-20170507-0951, line 4: syntax error}. You are required to go to command line and fix the problem checking the configuration and filter or function files.
+
+\item Filter calling to non-existing functions.
+If your filter executes a command that is not defined by Bird's syntax, it will handle it as a function. If that function does not exist in any of the handled files, it will show this error: \texttt{bird: /tmp/bird4.conf, You can't call something which is not a function. Really.}
+
+\item Filters not accepting/rejecting routes.
+Bird Daemon filters must return an \textit{accept} or \textit{reject} policy per route received. If any of your filters does not return any policy per route, it will be silently ignored and substituted with an "accept".
+
+As an example of this issue:
+\input{code/filter1}
+
+Bird Daemon will succeed starting up but, if we check the log information in the Log Page, this error message will be shown:
+\input{code/filter2}
+
+\end{itemize}
+
+\subsection{Real Scenario: VM with simple BGP configuration connected to Guifi.net}
+As part of the acceptance tests, a VM was set up by a sysadmin in the \textit{Universitat Oberta de Catalunya} to act as a pre-production machine. This VM is connected to a \textit{Mikrotik} Router acting as Gateway to \textit{Guifi.net} but this scenario does \textbf{not} connect or communicate through any Mesh Network using BMX6, so it is an end point.
+
+The configuration of this system is almost identical, component-wise, to the ones available in Guifi.net. However, this system will only route itself (1 route) and import any.
+
+Bird UCI configuration set through the WEB UI and its translation into Bird4 configuration can be reviewed in appendix \ref{app:ch:bdcuoc}.
+
+This VM is communicating to Guifi.net through a Mikrotik which is already doing some filtering but, in any case, it is still able to import 3000+ Routes and export itself:
+
+\input{code/vm_bgp}
+
+Using Bird Lightweight Remote Control (\textbf{birdcl4}) we can verify Bird's BGP instance. As key information:
+
+\begin{itemize}
+    \item BGP Instance: BGPImportALL
+    \item Filters applied: \textit{ebgp\_in} and \textit{bgp\_out}
+    \item We are connected to our neighbour 10.90.224.65 with Autonomous System ID 59361
+    \item  The number of routes received fluctuates but the data shown presents 2999 routes imported.
+    \item We do not know when, but the import Limit reached (HIT) and that generated warnings.
+    From our Package's Log Page:
+    \texttt{2017-05-21 22:09:13 <WARN> Protocol BGPImportALL hits route import limit (3000), action: warn}
+    \item We are exporting 1 Route.
+\end{itemize}
+
+As a health check, we can query Bird of its last reconfiguration, reboot time or status using \texttt{bircl4 status}:
+
+\input{code/vm_birds}

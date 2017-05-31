@@ -1,5 +1,6 @@
 \documentclass[a4paper,11pt,onecolumn,final,openright]{report}
-
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
 \usepackage[utf8]{inputenc}
 \usepackage{subfigure}
 \usepackage[english]{babel}
@@ -22,38 +23,39 @@
 \usepackage{pdflscape}
 \usepackage[title]{appendix}
 
+
 %%%%%%%%%%%%%%% LUA SCRIPTING FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
 \lstdefinelanguage{Lua} 
 {
-        basicstyle       = \footnotesize,
-        backgroundcolor=\color{white!95!black},
-        morekeywords={and,break,do,else,elseif,end,false,for,function,if,in,local,nil,not,or,repeat,return,then,true,until,while,_G,_ENV,io,read,write}, 
-        sensitive=false, 
-        morecomment=[l]{--}, 
-        morecomment=[s]{--[[}{]]}, 
-        morestring=[b]",
-        upquote=true,
-        breaklines=true,
-        frame=tb,
-        captionpos=b,
-        showstringspaces=false,
-        morestring=[b]' 
+    basicstyle       = \footnotesize,
+    backgroundcolor=\color{white!95!black},
+    morekeywords={and,break,do,else,elseif,end,false,for,function,if,in,local,nil,not,or,repeat,return,then,true,until,while,_G,_ENV,io,read,write}, 
+    sensitive=false, 
+    morecomment=[l]{--}, 
+    morecomment=[s]{--[[}{]]}, 
+    morestring=[b]",
+    upquote=true,
+    breaklines=true,
+    frame=tb,
+    captionpos=b,
+    showstringspaces=false,
+    morestring=[b]' 
 }
 
 %%%%%%%%%%%%%%% DIFF FILES FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
 \lstdefinelanguage{diff}{
-  backgroundcolor=\color{white!95!black},
-  basicstyle=\footnotesize,
-  showstringspaces=false,
-  upquote=true,
-  breaklines=true,
-  frame=tb,
-  captionpos=b,
-  morecomment=[f][\color{blue}]{@@},     % group identifier
-  morecomment=[f][\color{green!50!black}][0]>,         % deleted lines 
-  morecomment=[f][\color{red!60!black}][0]<,       % added lines
-  morecomment=[f][\color{black}]{---}, % Diff header lines (must appear after +,-)
-  morecomment=[f][\color{magenta}]{+++},
+    backgroundcolor=\color{white!95!black},
+    basicstyle=\footnotesize,
+    showstringspaces=false,
+    upquote=true,
+    breaklines=true,
+    frame=tb,
+    captionpos=b,
+    morecomment=[f][\color{blue}]{@@},     % group identifier
+    morecomment=[f][\color{green!50!black}][0]>,         % deleted lines 
+    morecomment=[f][\color{red!60!black}][0]<,       % added lines
+    morecomment=[f][\color{black}]{---}, % Diff header lines (must appear after +,-)
+    morecomment=[f][\color{magenta}]{+++},
 }
 
 %%%%%%%%%%%%%%% BASH FILES FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
@@ -68,8 +70,36 @@
   sensitive=true,
   stepnumber=1,
   tabsize=4,
+  showstringspaces=false,
   upquote=true
 }
+
+%%%%%%%%%%%%%%% JAVASCRIPT FILES FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
+\lstdefinelanguage{javascript}{
+  backgroundcolor=\color{white!95!black},
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  breakatwhitespace=true,
+  breaklines=true,
+  captionpos=b,
+  frame=tb,
+  resetmargins=true,
+  sensitive=true,
+  stepnumber=1,
+  tabsize=4,
+  upquote=true,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  showstringspaces=false,
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
