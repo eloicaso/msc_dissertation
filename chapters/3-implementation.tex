@@ -8,8 +8,8 @@ Administrators require:
 \begin{itemize}
     \item A full-featured tool with an easy and intuitive UI to manage and monitor protocol health and data efficiently and avoiding any handmade/custom edit, reducing configuration's complexity.
     \item Use of LEDE/OpenWRT-based firmwares widely used in the target network.
-    \item A Routing protocols management tool that, at least, supports BGP Static Routing Protocol and it is able to share routes with BMX6 Dynamic Routing Protocol in a manageable way.
-    \item Use Bird Daemon instead of Quagga to make us of its proven efficiency, low resource consumption and powerful filter capabilities, which is critical to some of the widely used commodity hardware in Guifi.net.
+    \item A Routing Protocols' management tool that, at least, supports BGP Static Routing Protocol and it is able to share routes with BMX6 Dynamic Routing Protocol in a manageable way.
+    \item Use Bird Daemon instead of Quagga to make use of its proven efficiency, low resource consumption and powerful filter capabilities, which is critical to some of the widely used commodity hardware in Guifi.net.
     \item Use and improve Bird Daemon's configuration integration package (bird-uci and luci-app-bird) available in the official Routing Repository of LEDE/OpenWRT.
     \item Avoid project-specific customisations in the integration package that would not benefit all the community. If required, add those custom enhancements in a development branch.
     \item Update Package's documentation and create new topics to cover Web UI interface and any manual process not covered by package's improvements.
@@ -41,7 +41,7 @@ As a daily Bash user, one of the main concerns that I had once I did retake the 
 
 The first challenge I found was that LEDE/OpenWRT firmwares use the light compound of Linux tools BusyBox\footnote{\href{https://busybox.net/downloads/BusyBox.html}{BusyBox}: light and optimised UNIX tools including most of the widely used terminal commands (i.e. \texttt{ash}, \texttt{cat} or \texttt{rm}).}. This all-in-one tool comes really handy in embedded environments where performance and storage are critical but some of its tools are limited versions of the original ones.
 
-Particularly, the tool that has been more challenging is \textit{ash}, which is the built-in Shell Command Line included instead of \textit{Bash} and, although it includes most of its features, there are few others like Arrays that are not available and requires the developer to re-think the solution (Ash readme page suggest the use of \texttt{set} command).
+Particularly, the tool that has been more challenging is \textit{ash}, which is the built-in Shell Command Line included instead of \textit{Bash} and, although it includes most of its features, there are few others like Arrays that are not available and require the developer to re-think the solution (Ash readme page suggest the use of \texttt{set} command).
 
 Some examples of the improvements applied are:
 \begin{itemize}
@@ -126,7 +126,7 @@ In the following LUA snippet, LUCI creates a UI Flag option (our trigger) which 
 
 \subsection{LUCI UI improvements}
 \label{sec:luciimp}
-Following previous section's UCI/LUCI example\ref{sec:uciimp}, there have been other UI improvements coupled with changes in the UCI implementation. The following subsections will cover each UI Page to summarise its role and which changes have been done to it. Nevertheless, the last subsection will explain the number of challenges faced during project's development. More detailed images of each page are located in the Appendix \ref{app:ch:extrap}. The ones shown here are for reference.
+Following previous section's UCI/LUCI example \ref{sec:uciimp}, there have been other UI improvements coupled with changes in the UCI implementation. The following subsections will cover each UI Page to summarise its role and which changes have been done to it. Nevertheless, the last subsection will explain the number of challenges faced during project's development. More detailed images of each page are located in the Appendix \ref{app:ch:extrap}. The ones shown here are for reference.
 
 \subsubsection{Status Page}
 \textbf{New} Page allowing an administrator to manage Bird Service. This page shows 3 buttons tied with the init.d functions explained in section \ref{sec:initd} figure \ref{fig:initdui}.
@@ -145,19 +145,20 @@ The contents of this page are:
     \label{fig:statusp}
 \end{figure}
 
-Although contents of this page are simple and straightforward, the result shown in figure \ref{fig:statusp} is not the desired one. The initial idea was to use a single button for starting and stopping the service, and none for restart. Moreover, the button would be automatically switch between states showing, when started, service's PID. In Appendix \ref{app:ch:extrap} you can see the expected behaviour shown in the LUCI implementation of Privoxy's OpenWrt Package.
+Although contents of this page are simple and straightforward, the result shown in figure \ref{fig:statusp} is not the desired one. The initial idea was to use a single button for starting and stopping the service, and none for restart. Moreover, the button would be automatically switched between states showing, when started, service's PID. In Appendix \ref{app:ch:extrap} you can see the expected behaviour in the implementation of Privoxy's OpenWrt Package.
 
-The reason behind not doing it is that this simple change would require to change from using LUCI's CBI (Lua) to LUCI2 (JavaScript). Lua's implementation allows you to trigger a number of actions according to a specific element state, if an action (i.e. button clicked) is triggered or during page's rendering. However, there is no granular control on it or a polling mechanism that could automate the transition between service disabled and enabled. To do so, it would be required to force the page to wait (manual OS \texttt{sleep} command) which would also \textbf{block} page's loading.
+The reason behind not doing it is that this simple change would require to change from using LUCI's CBI (Lua) to LUCI2 (JavaScript). Lua's implementation allows you to trigger a number of actions according to a specific element state, if an action (i.e. button clicked) is triggered or during page's rendering. However, Bird's startup can take few seconds and LUCI has no granular control or a polling mechanism on rendering time to allow this behaviour. To do so, it would be required to force the page to wait (manual OS \texttt{sleep} command) which would \textbf{block} page's loading and leave it in an incorrect state depending on Bird's time to start.
 
-Moreover, I did do a test implementation (without a \texttt{sleep}) and, because of the way CBIs work, the button action and rendering action were somehow triggering service calls multiple times, starting and stopping the service in an unexpected way and not refreshing the contents (wrong status and PID displayed).
+Nevertheless, I did do a test implementation (with and without a \texttt{sleep} OS call) and, because of the way CBIs work, the button action and rendering action were somehow triggering service calls multiple times, starting and stopping the service in an random way and not refreshing the contents correctly, hence showing wrong status and PIDs.
 
 \subsubsection{Log Page}
+\label{sub:sub:logp}
 \textbf{New} Page showing contents in Bird's configured Log file. This page is automatically refreshed \textbf{each second} with the following information:
 
 \begin{itemize}
     \item Name of the Log file. For reference and easier administration.
     \item Size of the Log file. Critical information in Bird configurations where \textbf{Debug} information is also enabled. Log file can grow really fast if there are more peers sharing information or if the debug mode is set to log most/all the possible events in the system.
-    If the Log file grows enough to fill the /var partition, Bird will \textbf{automatically} shutdown and \textbf{prevent} any start up attempt until this is resolved. 
+    If the Log file fills the partition where it is located, Bird will \textbf{automatically} shutdown and \textbf{prevent} any start up attempt until this is resolved. 
 \end{itemize}
 
 \begin{figure}[H]
@@ -171,7 +172,7 @@ This page has been implemented using mixed capabilities from LUCI and LUCI2. Bec
 
 Because of the lack of documentation in this area, I did spend weeks investigating it by my own using the available package sources in OpenWrt's repositories. However, because what the other packages usually do is to use XHR polls as a communication broker method (i.e. get a specific data from a specific UCI file, apply some filtering/transformation if the data is not in the desired state and, finally, populate specific UI fields available in the HTML page) it was not clear what exactly I had to do as I only needed to: read last 30 lines of a file (Bird's Log File) and populate the Text View (Plain text data).
 
-Finally, after spending some days trying to contact experienced LEDE/OpenWrt developers using community's contact channels\footnote{LEDE community contact methods: \href{https://lede-project.org/contact}{Link}}, I could have few conversations with one of the main contributors of LEDE, OpenWrt \texttt{jow-}\footnote{Jo-Philip Wich: \href{https://github.com/jow-}{Github Profile}.} and also main author of LUCI/LUCI2, who gave me some hints and examples of LUCI2 pages that helped me fixing my issues with the Log and Filters/Functions pages.\\
+Finally, after spending some days trying to contact experienced LEDE/OpenWrt developers using community's contact channels\footnote{LEDE community contact methods: \href{https://lede-project.org/contact}{Link}}, I could have few conversations with one of the main contributors of LEDE, OpenWrt and also main author of LUCI/LUCI2 \texttt{jow-}\footnote{Jo-Philip Wich: \href{https://github.com/jow-}{Github Profile}.}, who gave me some hints, examples of LUCI2 pages and also debugging some issues I had during the development that helped me finishing both Log and Filters/Functions pages.\\
 
 \textbf{Log File Source key highlights:}
 \input{code/logfile1}
@@ -225,7 +226,6 @@ These two protocols are now required as they allow to communicate routing tables
 The BGP Protocol Page is the most important for this project as it allows us to configure the main protocol used in Guifi.net. Together with OSPF, BGP is the most complex protocol to configure (and translate) on Bird. With a big number of different \textit{options} as well as another big number of \textit{attributes} to configure, the automation of this protocol has been the main goal of this Package.
 
 \begin{itemize}
-    \item Kernel Protocol (1 mandatory as base Routing Table talking to the OS. Any extra kernel protocol is optional)
     \item BGP Templates: allow to set a number of common options repeated among a number of  different BGP Sessions. Their use simplifies configuration's maintainability as well as improves readability of the file. Templates are optional and you can configure as many as required.
     \item BGP Instances: Instances are the definition of each BGP session to be created. They can feed from Templates or set all the options manually. Instance options will always prevail over template ones. Instances are optional and you can configure as many as required.
 \end{itemize}
@@ -238,17 +238,92 @@ The BGP Protocol Page is the most important for this project as it allows us to 
 \end{figure}
 
 \textbf{Changes and Improvements:}
+BGP Templates and Instances options have been re-sorted in order to follow a logical order when configuring them. Moreover, all the shown options have been reviewed and re-targeted as optional or mandatory and also, as explained in previous section \ref{sec:uciimp}, some of the options required to configure route sharing limits were not displayed together, which was prone to misconfiguration.
 
 \subsubsection{Filters \& Functions Page}
+\textbf{Two new} Pages empowering Filters\&Functions file edition without requiring terminal-based processes. This feature is one of this project's main goals because it completely removes the need for administrators to go to command line, which is a barrier for some non-expert administrators. Page's composition is the following (for both functions and filters):
+
+\begin{itemize}
+    \item Disclaimer: informative message about how to rename new files and how to visualise them after creation.
+    \item Recognised files dropdown menu: List of the files detected in the correct folder and available for administrators to use. Supported folders are:
+    \begin{itemize}
+        \item Filters: \texttt{/etc/bird\{4|6\}/filters/*}
+        \item Functions: \texttt{/etc/bird\{4|6\}/functions/*}
+    \end{itemize}
+    \item Load Button: This button will \textbf{select} the file shown in the Text Area and populate the \textit{read-only} Text Box stating which file is actually being edited. Internally, this button will set a \textbf{Lock} variable in the filesystem containing target file name, in order to prevent editing files.
+    \item Editing File read-only Text Box: This read-only field is populated with the contents selected in the dropdown menu when the \textit{Load} Button is clicked. Unless this field is populated with a full path to a file, any contents in the TextArea will dropped (\textbf{Submit} button will just refresh the contents of the page).
+    \item Text Area Box: This editable 30 lines field will be populated with the contents of the file Loaded (or empty if it is a new file). Any contents in this field will be stored in the selected file, or dropped otherwise.
+    \item Submit Button: This button will trigger the save mechanism. If a file has been correctly loaded, it will store the contents in the Text Area to the target file. Protocol's configuration can be stored before applying it by clicking the \textit{Save} button instead of the \textit{Save \& Apply} on. However, this process uses direct system calls and is not reversible, hence it is named \textit{Submit}.
+\end{itemize}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{images/bird0.3/overview}
-    \caption{Overview Page}
-    \label{fig:overview}
+    \includegraphics[width=\textwidth]{images/bird0.3/filters}
+    \caption{Filters Page}
+    \label{fig:filtersp}
 \end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/bird0.3/functions}
+    \caption{Functions Page}
+    \label{fig:functionsp}
+\end{figure}
+
+These two pages have been implemented using LUCI capabilities only (Lua Model) plus a simple HTML template, with some Lua embedded to inject text and properties, in order to enhance the Text Area: set to 30 lines, enlarge text's size and make use of \texttt{Courier New} font in order to make it more \textit{console-alike} highlighting that it is code and not plain text:
+
+\input{code/ffhtml}
+
+\begin{itemize}
+    \item \texttt{<\%+cbi/valueheader\%>} and \texttt{<\%+cbi/valuefooter\%>}: Lua snippets acting as delimiters for top and bottom cbi's contents.
+    \item \texttt{<\%[...]\%>}: Lua code injection.
+    \item \texttt{<\%=[...]\%>} Lua variable injection.
+\end{itemize}
+
+\textbf{Caveats}\\
+The biggest challenge has been to be able to select different files to store our filters and functions. This Page has required a couple of weeks of development because its functionality, the already mentioned file selection flexibility and what is required from the Text Area is not something easy to do with current LUCI documentation.
+
+In the same way as the Log Page \ref{sub:sub:logp}, current documentation touches most common uses but pages where no UCI configuration is involved are almost an unknown. Some of the challenges found are:
+\begin{itemize}
+    \item \texttt{SimpleForm} Page format is required due the lack of UCI settings to modify. However, the documentation explaining which is SimpleForm's API, differences between this solution and \texttt{Map}\footnote{Map is LUCI's alternative format page to define UI by \textit{mapping} fields into UCI properties} or possibilities using SimpleForm are not detailed enough.
+    \item Local variables are not reliable. Because pages can be re-rendered depending on the event triggered, your stored variables could be overwritten with new values by these rendering functions.
+    An example of this issue was my attempt use the Read-only field to store the path. Because \texttt{cfgvalue} (render) function is triggered several times in an uncontrolled manner (we have no control of it) your variable may have been overwritten several times. Therefore, if you switch the selected file, you were storing your data in the wrong file.
+    \item UI values can only be gathered or saved during specific events (i.e. on render or save functions).
+    \item Unable to refresh the file list on a render function. It has bee required to do it as part of Page's creation, therefore, needing to refresh the page to update the file list. This is \textit{annoying} if you have created a new file, because it may not be listed until you refresh the page.
+    This has been documented as a known issue and will be resolved by using LUCI2 in a future release. 
+    \item Trying to use nested events usually cause data misconfiguration.
+    An example of that was my first attempt to use the Load File Button to lock the target file. Current process to edit files is: 
+    \begin{itemize}
+        \item Select a file
+        \item Press Load Button
+        \item The file is Loaded (write Lua function): filename in the readonly field and contents in the TextArea.
+        \item Edit File contents
+        \item Press Submit (write Lua function)
+    \end{itemize}
+    Because the Submit button also triggers a write Lua function, it was, somehow, also activating Load Button's one. This was a big issue if, before saving the file, the administrator selects a different file from the dropdown menu.
+    This issue was finally solved by adding an extra level of complexity on both write Lua functions as well as storing our target path in a file in the system (\texttt{/etc/bird\{4|6\}/filter\_lock} and \texttt{/etc/bird\{4|6\}/ffunction\_lock}).
+\end{itemize}
+
 \subsection{Align documentation and upgrade to Markdown}
-%%TBD
+Documentation has been one of the biggest disappointments while working with LUCI/LUCI2. To use a project or a technology and find that there is not enough detail, if any, about what you can do and how, is really disappointing and causes frustration while trying to figure it out. Therefore, I have put a lot of efforts on updating all the documentation available in the Package, as well as added an extra repository with other data that supports it, without bloating it (this Package will be Pulled to the official repository, so it is desirable to have the minimum contents in this one, and everything else linked). Moreover, because the old documentation was plain text, it was unpleasant to read. In order to facilitate Package's configuration and daily usage, I have upgraded old documents to MarkDown\footnote{MarkDown: Programmatic documentation syntax to convert plain text documentation into HTML. There are several different implementations with slight differences. \href{https://daringfireball.net/projects/markdown/}{Original specification - 2004}.}
+
+Main documentation is now separated between:
+\begin{itemize}
+    \item UCI\footnote{UCI-DOCN: \href{https://github.com/eloicaso/bird-openwrt/blob/master/UCI-DOCUMENTATION.md}{Link}.}: UCI definition and examples and any terminal-based function or command required to use the Package without UI.
+    \item  LUCI\footnote{LUCI-DOCN: \href{https://github.com/eloicaso/bird-openwrt/blob/master/LUCI-DOCUMENTATION.md}{Link}.}: Web UI Pages composition, field description, default values and any known issue.
+    \item README.md: Development notes about how to build and enhance the Package and known issues on current Package version.
+    \item Changelog.md: Exhaustive list of enhancements added as part of this project (v0.3)
+    \item COPYING.md: Markdown version of GPLv3.0
+    \item AUTHORS.md: List of the contributors.
+\end{itemize}
+
+Documentation repository with extra information:
+\begin{itemize}
+    \item Repository-Contents.md\footnote{Repository-Contents: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/Repository-Contents.md}{Link}.} This file includes the tree structure of Packages repository as well as a description of what is \textbf{each file}.
+    \item Manual-Procedures.md\footnote{Manual\_Procedures.md: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/manual_procedures.md}{Link}.}: List of manual procedures that have not been automated in this Package's version and may require an administrator to do them on command line.
+    Currently the use of secondary Routing Tables with custom table IDs has to be done following the procedure shown.
+    \item TODO.md: Unsorted and non-prioritised list of tasks pending for future releases.
+\end{itemize}
+
 
 

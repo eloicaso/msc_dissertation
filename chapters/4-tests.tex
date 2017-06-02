@@ -58,7 +58,7 @@ The other set of common errors is non-compatible fields in a Protocol.
 
 As an example of this: \texttt{bird: /tmp/bird4.conf, line 76: Only internal neighbor can be RR client}. We need to remove the Route Reflector Client setting from the BGP Instance to fix this behaviour.
 
-\item Missing filter or function
+\item Missing filter or function.
 If you include a filter name in any of the Protocols or if any of your filters use a non-existing function, Bird will fail to start showing an error as follows: \texttt{bird: /tmp/bird4.conf, line 71: No such filter}.
 
 \item Syntax errors in a filter or function.
