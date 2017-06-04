@@ -1,0 +1,20 @@
+\begin{lstlisting}[language=bash, caption={Birdc Console mode.}]
+root@LEDE-MXN1:/etc/config# birdc4
+BIRD 1.6.3 ready.
+bird> show status
+BIRD 1.6.3
+Router ID is 10.139.173.161
+Current server time is 2017-06-03 19:06:59
+Last reboot on 2017-06-03 00:54:23
+Last reconfiguration on 2017-06-03 00:54:23
+Daemon is up and running
+bird> show protocols
+name     proto    table    state  since       info
+kernel1  Kernel   aux      up     00:54:22
+static1  Static   aux      up     00:54:22
+device1  Device   master   up     00:54:22
+BCNRamblaPobleNou BGP      aux      up     00:54:27    Established
+UOCBGPMesh BGP      aux      down   00:54:22
+bird> exit
+root@LEDE-MXN1:/etc/config#
+\end{lstlisting}

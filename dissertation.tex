@@ -21,8 +21,8 @@
 \usepackage{listings}
 \usepackage{textcomp}
 \usepackage{pdflscape}
-\usepackage[toc,title]{appendix}
-
+\usepackage[toc,title]
+{appendix}
 
 %%%%%%%%%%%%%%% LUA SCRIPTING FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
 \lstdefinelanguage{Lua} 
@@ -30,7 +30,7 @@
     basicstyle       = \footnotesize,
     backgroundcolor=\color{white!95!black},
     morekeywords={and,break,do,else,elseif,end,false,for,function,if,in,local,nil,not,or,repeat,return,then,true,until,while,_G,_ENV,io,read,write}, 
-    sensitive=false, 
+    sensitive=false,
     morecomment=[l]{--}, 
     morecomment=[s]{--[[}{]]}, 
     morestring=[b]",
@@ -71,7 +71,14 @@
   stepnumber=1,
   tabsize=4,
   showstringspaces=false,
-  upquote=true
+  upquote=true,
+  commentstyle=\color{red},
+  keywordstyle=\color{blue},
+  morecomment=[f][\color{blue}]{\#},
+  morekeywords={case, echo,esac,and,break,do,else,elseif,end,false,for,function,if,in,local,nil,not,or,repeat,return,then,true,until,while,_G,_ENV,io,read,write}, 
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
 }
 
 %%%%%%%%%%%%%%% JAVASCRIPT FILES FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%

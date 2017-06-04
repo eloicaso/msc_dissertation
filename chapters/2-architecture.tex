@@ -48,7 +48,7 @@ In order to avoid this disruptive issue, Bird Daemon filter scripting capabiliti
 \section{Testing Scenarios}
 Although it has not been possible to test Package's improvements in the target production network as the changes would incur in service disruption for up to 1500+ nodes\footnote{Font: https://guifi.net/en/node/2435/view/nodes} in the \textit{Barcelon\`{e}s} Zone, it is foreseen to update target \textbf{MXN} Nodes after agreeing it with all the involved parts.
 
-Nevertheless, this Package's improvements have been tested in two environments connected directly with Guifi.net thanks to  \textit{Universitat Oberta de Catalunya} and V\'{i}ctor's support, who have provided and helped me configuring a number of Virtual Machines, virtual network resources and also agreed permission to connect through another university's network (UPF\footnote{UPF: Universitat Pompeu Fabra (Barcelona)}) in order to simulate different BGP Peers communication and route sharing: 
+Nevertheless, this Package's improvements have been tested in two environments connected directly with Guifi.net thanks to  Universitat Oberta de Catalunya and V\'{i}ctor's support, who have provided and helped me configuring a number of Virtual Machines, virtual network resources and also agreed permission to connect through another university's network (UPF\footnote{UPF: Universitat Pompeu Fabra (Barcelona)}) in order to simulate different BGP Peers communication and route sharing: 
 
 \subsubsection{Internal Development Testing}
 Package development tests have been done inside UOC's network using a really simple network topology where our target Bird Node VM is connected to Guifi.net using UOC's Infrastructure Node (UOC receives/announces 3000+ BGP Routes). 
@@ -84,11 +84,11 @@ The components provided in order to achieve this network have been:
 \subsubsection{Testing environment elements}
 \begin{itemize}
     \item \textbf{SJM}: Guifi.net Node  \href{https://guifi.net/en/node/20262/}{BCNSantJoanDeMalta51}. Infrastructure Node with 6 Point-to-Point connections to other Super Nodes. As we have no control on this node, we will consider that it is importing and exporting any received route to/from Guifi.net.
-    \item \textbf{UOC}: Guifi.net Node \href{https://guifi.net/en/node/63255}{BCNRamblaPobleNou156}. Infrastructure Node located in the \textit{Universitat Oberta de Catalunya} and connected to the Super Node BCNSantJoanDeMalta51. This node is shown as AS1.
+    \item \textbf{UOC}: Guifi.net Node \href{https://guifi.net/en/node/63255}{BCNRamblaPobleNou156}. Infrastructure Node located in the Universitat Oberta de Catalunya and connected to the Super Node BCNSantJoanDeMalta51. This node is shown as AS1.
     \item \textbf{VM1}: KVM\footnote{KVM: Kernel-based Virtual Machine.} Virtual Machine acting as Frontier Node (MXN1). This node is configured with Bird Daemon (BGP AS2) and BMX6 in order to connect to its BGP neighbour AS1 (ISN1), to its iBGP Peer AS2 (MXN2) and to the BMX6 Mesh network.
     \item \textbf{VM2 \& VM3}: KVM Virtual Machines acting as plain Mesh nodes.
     \item \textbf{VM4}: KVM Virtual Machine acting as Frontier Node (MXN2). This node is configured with Bird Daemon (BGP AS2) and BMX6. It connects to its BGP neighbour AS3 (ISN2) over a GRE Tunnel configured in UPF's internal network, also to its iBGP Peer AS2 (MXN2) and to the BMX6 Mesh network.
-    \item \textbf{UPF}: Guifi.net Node \href{https://guifi.net/en/node/56604}{BCNUPFPobleNou}. Infrastructure Node located in the \textit{Universitat Pompeu Fabra} and reached through UPF's internal network. Therefore, VM4 connects using an internal IP Address supplied by UPF's administrators. This node is shown as AS3.
+    \item \textbf{UPF}: Guifi.net Node \href{https://guifi.net/en/node/56604}{BCNUPFPobleNou}. Infrastructure Node located in the Universitat Pompeu Fabra and reached through UPF's internal network. Therefore, VM4 connects using an internal IP Address supplied by UPF's administrators. This node is shown as AS3.
 \end{itemize}
 
 

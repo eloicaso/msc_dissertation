@@ -1,4 +1,4 @@
-\chapter{Package improvements implementation}
+\chapter{Package improvements' implementation}
 \label{ch:implementation}
 
 \section{Administration requirements}
@@ -16,25 +16,24 @@ Administrators require:
     \item Update Bird integration package in order to be compliant to the latest API (v1.6.3 when this document was written).
     \item Enhance Web UI to support user-friendly configuration and visualisation of the following:
     \begin{itemize}
-        \item Bird Daemon service status
-        \item Bird Daemon events information (Logs)
+        \item Bird Daemon service status.
+        \item Bird Daemon events information (Logs).
         \item Filters and Functions editing using an embedded HTML text editor.
         \item Update old configuration Web pages, fix some outdated options and re-sort them to a more logically order.
     \end{itemize}
     \item Do theoretical viability investigation to use uBus Daemon as a mechanism to communicate with Bird Daemon and get health information and current-status information for handled protocol using JSON messages.
 \end{itemize}
 
-\section{Changes and improvements implemented}
+\section{Implemented changes and improvements}
 The following sections summarises what has been changed as part of this project's development, which changes have been successful, challenges found and lessons learnt that will help towards future versions of the Package.
 
 \subsection{Build and deployment process documentation update}
-One of the first challenges I found during the initial investigation was that the documented process for building the package was wrong. This misalignment led into few days testing the build process using the latest version of the development environment in order to tune it (the original building process was documented in 2014).
+One of the first challenges I found during the initial investigation was that the documented process for building the Package was wrong. Because this process was originally written and tested on 2014 using OpenWrt, it was misaligned and  led into few days testing this process using the latest version of the development environment in order to tune it. Main changes are:
 
 \begin{itemize}
-    \item Generalise Makefiles (bird4/bird6) and post installation scripts.
-    \item Add detailed steps to get Package's source, add bird required packages into the Image Build settings, compile it (\texttt{make}) and deploy it in the target router.
-    \item Add alternative mechanisms, Package information and (after finishing changes in the Package), Package known issues.
-\end{itemize}
+    \item Generalise Makefiles: remove hardcoded references to bird4/bird6 where possible on Makefile and post installation scripts.
+    \item Re-test and update steps: Refresh steps required to compile (\texttt{make}) and deploy the Package in the target test environment.
+    \item Add extra useful information: Package version information, dependencies, links to documentation and known issues,  \end{itemize}
 
 \subsection{Apply code standards}
 As a daily Bash user, one of the main concerns that I had once I did retake the project was the state of the code because I did stop giving support to the Package on 2014 and I have improved drastically my consciousness towards clean, standard and following-best-practises code. Therefore, the top priority task I got was to normalise the code, apply best practises and, where possible, refactor it to follow a \textit{library}-pattern to be able to formalise an API and, in future releases, even to create unitary tests that would automate Package's tests.
@@ -50,13 +49,13 @@ Some examples of the improvements applied are:
     This is a forced example but there are some instances where, in really complex scripts, unexpected substitutions could happen.
     \item Encapsulate Strings appropriately to avoid unexpected substitutions or code execution (i.e. script injection): this is an uncommon situation that could happen with commands like \texttt{sed}, where quotes and other special symbols are crucial to get the expected output.
     \item Use of 4 spaces instead of tabs for code readability.
-    \item Use of simplified \texttt{if} statements \textbf{only} with clear and single-line occasions. Avoid using simplifications on instances where more than one line is required or the command is too large and would be more reasonable to split it using backslash (\texttt{\textbackslash}).
+    \item Use of simplified \texttt{if} statements only with clear and single-line occasions. Avoid using simplifications on instances where more than one line is required or the command is too large and would be more reasonable to split it using backslash (\texttt{\textbackslash}).
     \input{code/bestp2}
 \end{itemize}
 
 \subsection{init.d script and service management}
 \label{sec:initd}
-Bird's init.d script (\texttt{/etc/init.d/bird4}) manages the service on boot or on demand. Bird Daemon's init.d file is substituted on installation time by \texttt{/etc/bird\{4|6\}/init.d/bird\{4|6\}} script, and the original one backed up as \texttt{/etc/bird\{4|6\}/init.d/bird\{4|6\}.orig} to be restorable in the event of uninstalling the Package.
+Bird's init.d script (\texttt{/etc/init.d/bird4}) manages the service on boot or on demand. Bird Daemon's init.d file is substituted on the installation time by \texttt{/etc/bird\{4|6\}/init.d/bird\{4|6\}} script, and the original one backed up as \texttt{/etc/bird\{4|6\}/init.d/bird\{4|6\}.orig} to be restorable in the event of uninstalling the Package.
 
 Improvements introduced are:
 \begin{itemize}
@@ -95,19 +94,19 @@ However, \textit{bird-uci} Package uses the UCI configuration file in a non-clas
     By adding the extra option, I have been able to tie both options graphically and make them work as expected.
     From /etc/config/bird4:
     \input{code/tieduci1}
-    As shown in the snippet, we have three \texttt{\_trigger '0'} options that states that there is \textbf{no} Limit set in this BGP session. However, if we set one through the UI:
+    As shown in the snippet, we have three \texttt{\_trigger '0'} options that state that there is no Limit set in this BGP session. However, if we set one through the UI:
     
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{images/bgp/bgptrigger1}
-    \caption{Import Limit Trigger \textbf{not} selected.}
+    \caption{Import Limit Trigger not selected.}
     \label{fig:uitiedn}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{images/bgp/bgptrigger2}
-    \caption{Import Limit Trigger \textbf{selected}.}
+    \caption{Import Limit Trigger selected.}
     \label{fig:uitiedy}
 \end{figure}
 
@@ -115,9 +114,9 @@ As shown in both figures \ref{fig:uitiedn} and \ref{fig:uitiedy} LUCI brings bot
 
 \input{code/tieduci2}
 
-This \textit{tying} improvement has been done in the web UI's and not in UCI translation time because, as can be seen in the following code snippet, it is easier to let LUCI configuration management process to add/remove those attributes automatically on settings save time, than doing some hand-made if statements.
+This tying improvement has been done in the web UI's and not in UCI translation time because, as can be seen in the following code snippet, it is easier to let LUCI configuration management process to add/remove those attributes automatically on settings save time, than doing some hand-made if statements.
 
-In the following LUA snippet, LUCI creates a UI Flag option (our trigger) which is mandatory (\texttt{optional = false}. The other two options (\texttt{limit} and \texttt{limit\_action}) are both optional and dependant on the value of our flag (\texttt{depends({import\_trigger = "1"})}.
+In the following LUA snippet, LUCI creates a UI Flag option (our trigger) which is mandatory (\texttt{optional = false}). The other two options (\texttt{limit} and \texttt{limit\_action}) are both optional and dependant on the value of our flag (\texttt{depends({import\_trigger = "1"})}.
 
 \input{code/tieduci3}
 \end{itemize}
@@ -129,13 +128,13 @@ In the following LUA snippet, LUCI creates a UI Flag option (our trigger) which 
 Following previous section's UCI/LUCI example \ref{sec:uciimp}, there have been other UI improvements coupled with changes in the UCI implementation. The following subsections will cover each UI Page to summarise its role and which changes have been done to it. Nevertheless, the last subsection will explain the number of challenges faced during project's development. More detailed images of each page are located in the Appendix \ref{app:ch:extrap}. The ones shown here are for reference.
 
 \subsubsection{Status Page}
-\textbf{New} Page allowing an administrator to manage Bird Service. This page shows 3 buttons tied with the init.d functions explained in section \ref{sec:initd} figure \ref{fig:initdui}.
+New Page allowing an administrator to manage Bird Service. This page shows 3 buttons tied with the init.d functions explained in section \ref{sec:initd} figure \ref{fig:initdui}.
 
 
 The contents of this page are:
 \begin{itemize}
     \item Three buttons to trigger the service management: Start, Stop and Restart in Quiet mode.
-    \item Dynamic Text Box showing Bird service's status. This text will be updated if you trigger any service update through the buttons.
+    \item Dynamic Text Box showing Bird service's status. This text will be updated if any service update through the buttons is triggered.
 \end{itemize}
 
 \begin{figure}[H]
@@ -147,18 +146,18 @@ The contents of this page are:
 
 Although contents of this page are simple and straightforward, the result shown in figure \ref{fig:statusp} is not the desired one. The initial idea was to use a single button for starting and stopping the service, and none for restart. Moreover, the button would be automatically switched between states showing, when started, service's PID. In Appendix \ref{app:ch:extrap} you can see the expected behaviour in the implementation of Privoxy's OpenWrt Package.
 
-The reason behind not doing it is that this simple change would require to change from using LUCI's CBI (Lua) to LUCI2 (JavaScript). Lua's implementation allows you to trigger a number of actions according to a specific element state, if an action (i.e. button clicked) is triggered or during page's rendering. However, Bird's startup can take few seconds and LUCI has no granular control or a polling mechanism on rendering time to allow this behaviour. To do so, it would be required to force the page to wait (manual OS \texttt{sleep} command) which would \textbf{block} page's loading and leave it in an incorrect state depending on Bird's time to start.
+The reason behind not doing it is that this simple change would require to change from using LUCI's CBI (Lua) to LUCI2 (JavaScript). Lua's implementation allows you to trigger a number of actions according to a specific element state, if an action (i.e. button clicked) is triggered or during page's rendering. However, Bird's startup can take few seconds and LUCI has no granular control or a polling mechanism on rendering time to allow this behaviour. To do so, it would be required to force the page to wait (manual OS \texttt{sleep} command) which would block page's loading and leave it in an incorrect state depending on Bird's time to start.
 
 Nevertheless, I did do a test implementation (with and without a \texttt{sleep} OS call) and, because of the way CBIs work, the button action and rendering action were somehow triggering service calls multiple times, starting and stopping the service in an random way and not refreshing the contents correctly, hence showing wrong status and PIDs.
 
 \subsubsection{Log Page}
 \label{sub:sub:logp}
-\textbf{New} Page showing contents in Bird's configured Log file. This page is automatically refreshed \textbf{each second} with the following information:
+New Page showing contents in Bird's configured Log file. This page is automatically refreshed \textit{each second} with the following information:
 
 \begin{itemize}
     \item Name of the Log file. For reference and easier administration.
-    \item Size of the Log file. Critical information in Bird configurations where \textbf{Debug} information is also enabled. Log file can grow really fast if there are more peers sharing information or if the debug mode is set to log most/all the possible events in the system.
-    If the Log file fills the partition where it is located, Bird will \textbf{automatically} shutdown and \textbf{prevent} any start up attempt until this is resolved. 
+    \item Size of the Log file. Critical information in Bird configurations where Debug information is also enabled. Log file can grow really fast if there are more peers sharing information or if the debug mode is set to log most, or all, the possible events in the system.
+    If the Log file fills the partition where it is located, Bird will automatically shutdown and prevent any start up attempt until this is resolved. 
 \end{itemize}
 
 \begin{figure}[H]
@@ -168,11 +167,11 @@ Nevertheless, I did do a test implementation (with and without a \texttt{sleep} 
     \label{fig:statusp}
 \end{figure}
 
-This page has been implemented using mixed capabilities from LUCI and LUCI2. Because of the requirement to show a \textbf{rolling} Log page with a reasonably regular auto-refresh process, it was necessary to use JavaScript's XHR capabilities embedded in the HTML page itself together with Lua code to read the file and send the text as a PlainText HTML response (object).
+This page has been implemented using mixed capabilities from LUCI and LUCI2. Because of the requirement to show a rolling Log page with a reasonably regular auto-refresh process, it was necessary to use JavaScript's XHR capabilities embedded in the HTML page itself together with Lua code to read the file and send the text as a PlainText HTML response (object).
 
-Because of the lack of documentation in this area, I did spend weeks investigating it by my own using the available package sources in OpenWrt's repositories. However, because what the other packages usually do is to use XHR polls as a communication broker method (i.e. get a specific data from a specific UCI file, apply some filtering/transformation if the data is not in the desired state and, finally, populate specific UI fields available in the HTML page) it was not clear what exactly I had to do as I only needed to: read last 30 lines of a file (Bird's Log File) and populate the Text View (Plain text data).
+Because of the lack of documentation in this area, I spent weeks investigating it by my own using the available package sources in OpenWrt's repositories. However, because what the other packages usually do is to use XHR polls as a communication broker method (i.e. get a specific data from a specific UCI file, apply some filtering/transformation if the data is not in the desired state and, finally, populate specific UI fields available in the HTML page) it was not clear what exactly I had to do as I only needed to: read last 30 lines of a file (Bird's Log File) and populate the Text View (Plain text data).
 
-Finally, after spending some days trying to contact experienced LEDE/OpenWrt developers using community's contact channels\footnote{LEDE community contact methods: \href{https://lede-project.org/contact}{Link}}, I could have few conversations with one of the main contributors of LEDE, OpenWrt and also main author of LUCI/LUCI2 \texttt{jow-}\footnote{Jo-Philip Wich: \href{https://github.com/jow-}{Github Profile}.}, who gave me some hints, examples of LUCI2 pages and also debugging some issues I had during the development that helped me finishing both Log and Filters/Functions pages.\\
+Finally, after spending some days trying to contact experienced LEDE/OpenWrt developers using community's contact channels\footnote{LEDE community contact methods: \href{https://lede-project.org/contact}{Link}}, I could have few conversations with one of the main contributors of LEDE, OpenWrt and also main author of LUCI/LUCI2 \texttt{jow-}\footnote{Jo-Philip Wich: \href{https://github.com/jow-}{Github Profile}.}, who gave me some hints, examples of LUCI2 pages and also helped me debugging some issues I had during the development that allowed me to finish both Log and Filters/Functions pages.\\
 
 \textbf{Log File Source key highlights:}
 \input{code/logfile1}
@@ -203,11 +202,11 @@ This section has not been severely modified. The only big change has been the Lo
 The General Protocols Page shows the configuration of some of the supportive protocols described in section \ref{sub:sub:supproto}.
 
 \begin{itemize}
-    \item Kernel Protocol (1 mandatory as base Routing Table talking to the OS. Any extra kernel protocol is optional)
-    \item Device Protocol: optional
-    \item Pipe Protocol: optional
-    \item Direct Protocol: optional
-    \item Static Protocol: optional
+    \item Kernel Protocol (1 mandatory as base Routing Table talking to the OS. Any extra kernel protocol is optional).
+    \item Device Protocol: optional.
+    \item Pipe Protocol: optional.
+    \item Direct Protocol: optional.
+    \item Static Protocol: optional.
     \item Routes: Routes are just the representation of entries in a Static Protocol. These are optional and tied to a single Static Protocol.
 \end{itemize}
 
@@ -241,7 +240,7 @@ The BGP Protocol Page is the most important for this project as it allows us to 
 BGP Templates and Instances options have been re-sorted in order to follow a logical order when configuring them. Moreover, all the shown options have been reviewed and re-targeted as optional or mandatory and also, as explained in previous section \ref{sec:uciimp}, some of the options required to configure route sharing limits were not displayed together, which was prone to misconfiguration.
 
 \subsubsection{Filters \& Functions Page}
-\textbf{Two new} Pages empowering Filters\&Functions file edition without requiring terminal-based processes. This feature is one of this project's main goals because it completely removes the need for administrators to go to command line, which is a barrier for some non-expert administrators. Page's composition is the following (for both functions and filters):
+Two new Pages empowering Filters\&Functions file edition without requiring terminal-based processes. This feature is one of this project's main goals because it completely removes the need for administrators to go to command line, which is a barrier for some non-expert administrators. Page's composition is the following (for both functions and filters):
 
 \begin{itemize}
     \item Disclaimer: informative message about how to rename new files and how to visualise them after creation.
@@ -250,8 +249,8 @@ BGP Templates and Instances options have been re-sorted in order to follow a log
         \item Filters: \texttt{/etc/bird\{4|6\}/filters/*}
         \item Functions: \texttt{/etc/bird\{4|6\}/functions/*}
     \end{itemize}
-    \item Load Button: This button will \textbf{select} the file shown in the Text Area and populate the \textit{read-only} Text Box stating which file is actually being edited. Internally, this button will set a \textbf{Lock} variable in the filesystem containing target file name, in order to prevent editing files.
-    \item Editing File read-only Text Box: This read-only field is populated with the contents selected in the dropdown menu when the \textit{Load} Button is clicked. Unless this field is populated with a full path to a file, any contents in the TextArea will dropped (\textbf{Submit} button will just refresh the contents of the page).
+    \item Load Button: This button will select the file shown in the Text Area and populate the \textit{read-only} Text Box stating which file is actually being edited. Internally, this button will set a Lock variable in the filesystem containing target file name, in order to prevent editing files.
+    \item Editing File read-only Text Box: This read-only field is populated with the contents selected in the dropdown menu when the \textit{Load} Button is clicked. Unless this field is populated with a full path to a file, any contents in the TextArea will dropped (\texttt{Submit} button will just refresh the contents of the page).
     \item Text Area Box: This editable 30 lines field will be populated with the contents of the file Loaded (or empty if it is a new file). Any contents in this field will be stored in the selected file, or dropped otherwise.
     \item Submit Button: This button will trigger the save mechanism. If a file has been correctly loaded, it will store the contents in the Text Area to the target file. Protocol's configuration can be stored before applying it by clicking the \textit{Save} button instead of the \textit{Save \& Apply} on. However, this process uses direct system calls and is not reversible, hence it is named \textit{Submit}.
 \end{itemize}
@@ -281,7 +280,7 @@ These two pages have been implemented using LUCI capabilities only (Lua Model) p
 \end{itemize}
 
 \textbf{Caveats}\\
-The biggest challenge has been to be able to select different files to store our filters and functions. This Page has required a couple of weeks of development because its functionality, the already mentioned file selection flexibility and what is required from the Text Area is not something easy to do with current LUCI documentation.
+The biggest challenge has been to be able to select different files to store our filters and functions. This Page has required a couple of weeks of development because of its functionality, the already mentioned file selection flexibility and what is required from the Text Area is not something easy to do with current LUCI documentation.
 
 In the same way as the Log Page \ref{sub:sub:logp}, current documentation touches most common uses but pages where no UCI configuration is involved are almost an unknown. Some of the challenges found are:
 \begin{itemize}
@@ -319,11 +318,68 @@ Main documentation is now separated between:
 
 Documentation repository with extra information:
 \begin{itemize}
-    \item Repository-Contents.md\footnote{Repository-Contents: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/Repository-Contents.md}{Link}.} This file includes the tree structure of Packages repository as well as a description of what is \textbf{each file}.
+    \item Repository-Contents.md\footnote{Repository-Contents: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/Repository-Contents.md}{Link}.} This file includes the tree structure of Packages repository as well as a description of what is each file.
     \item Manual-Procedures.md\footnote{Manual\_Procedures.md: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/manual_procedures.md}{Link}.}: List of manual procedures that have not been automated in this Package's version and may require an administrator to do them on command line.
     Currently the use of secondary Routing Tables with custom table IDs has to be done following the procedure shown.
     \item TODO.md: Unsorted and non-prioritised list of tasks pending for future releases.
 \end{itemize}
 
+\section{Bird Daemon uBus integration investigation}
+uBus theoretical investigation is driven by the need of continuously monitor the status of our protocols and the critical historical data that it could bring any administrator managing any size and complexity networks. Current Bird's implementation provides a low consumption and powerful routing solution but its monitoring capabilities lay in a CLI\footnote{CLI: Command Line Interface.} mimicking other well-known plain text-based tools as Quagga, Cisco or Mikrotik's Consoles.
 
+OpenWrt/LEDE's Bird plain-text CLI tools are \texttt{birdc\{4|6\}} and \texttt{birdc\{4|6\}}\footnote{birdcl: Lightweight version of birdc. It does not support some commands (i.e. service management) or command history.} and provide administrators an API\footnote{Birdc documentation and API: \href{http://bird.network.cz/?get_doc&f=bird-4.html}{Link}.} in order to manage live system and gather information from it using UNIX Standard domain sockets (\texttt{bird.ctl}). As already mentioned, this CLI provides human readable plain-text information on specific queries, thus most of its outputs are not suitable or automatizable for scripting. Some example of Birdc's outputs are:
+
+\input{code/birdcex1}
+
+This example shows two output examples of Bird CLI working in Console mode. The administrator enters into a Bird-protected-mode in order to visualize the required information. The tool also includes a helper function (\texttt{?}) according to the specific command being visualised:\\
+
+\input{code/birdcex2}
+
+Finally, the following code snippet shows our target information: BGP Session live data.
+
+\input{code/birdcex3}
+
+As it can be seen in the snippet above, we can query Bird to get base BGP information: name, session status, path preference, neighbour's ID... Or live data as Keepalive time left or number of routes imported, exported, blocked by our filters etc. This information would be valuable for administrators if it was shown in the UI as a chart or rolling text field, working both as live status checker and also as a health screener.
+
+Understanding that our main goal is to, somehow, integrate monitoring capabilities into the Package, the next step is to see which tools would support us doing it:
+
+\subsection{LUCI2 new architecture: WebUI-uBus-RPCd-Service}
+LUCI2 introductory information is available in section \ref{sub:sub:luci2}, read it before this section to know the acronyms.
+
+LUCI2 main components are: 
+
+\begin{itemize}
+    \item Client-Side Browser: HTML/CSS/JS provided by service (i.e. luci-app-bird\{4|6\}) is executed on client's side.\\
+    This approach generates a new requirement: to gather system resources from the server (LUCI's HTML generation and data injection happens in the server and using Lua).
+    \item uBus and RPC Daemon:\\
+    uBus is a rich tool (number of libraries, daemon and UNIX Socket) acting as a virtual pipe were system services registers and communicates to each other using uBus as a query broker exchanging JSON messages. uHTTP Server uses it via \texttt{uhttpd-mod-ubus} plugin to provide the API required by other services. However, it is required to heavily integrate target's service in order to use uBus. In order to avoid this, an alternative RPCd backend server is used.\\ RPCd is explained in the next section.
+    \item uHTTPd Server: \textit{Server-side} HTTP server to satisfy queries.
+\end{itemize}
+
+Using Bird4, luci-app-bird4 and a fictional \textit{RPC-uBus Bird4 Service} as an example, this process' architecture is the following:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/luci2/luci2d}
+    \caption{LUCI2 Communication architecture for Bird4 Service}
+    \label{fig:functionsp}
+\end{figure}
+
+
+\subsubsection{RPCd Backend Server and communication process}
+RPC Daemon is the backend server used in LUCI2 to receive Client requests for non-system (or non-fully-integrated) services registered in uBus. There is also a JavaScript framework to manage communication and queries against the server.
+In order to register a service on uBus and to be able to called, a service developer requires to:
+
+\begin{itemize}
+    \item Implement the API and functions required to communicate through JSON objects with the Client.
+\end{itemize}
+
+\input{code/rpcbird}
+
+
+
+
+
+
+    RPCd is the back end server but also a framework implemented in JavaScript used on Client-side in order to query the Daemon using XHR Objects.
 

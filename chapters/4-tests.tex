@@ -2,7 +2,7 @@
 \label{ch:tresults}
 
 \section{Package Testing}
-Testing an integration/translation Package, and this one specifically, is a rather complex task to evaluate as Bird configuration files are modular and desired settings can be achieved in different ways. Even more, although a \textit{it works/it does not work} policy could be accepted, it does not mean that there are not other possible implementations that could work in a better way. For example, filters and functions can be either written in the \textit{.conf} file or included using \textbf{\%include} mechanism, being the second one a better approach as it enhances code readability as well as it avoids bloating the configuration file unnecessarily.
+Testing an integration/translation Package, and this one specifically, is a rather complex task to evaluate as Bird configuration files are modular and desired settings can be achieved in different ways. Even more, although a \textit{it works/it does not work} policy could be accepted, it does not mean that there are not other possible implementations that could work in a better way. For example, filters and functions can be either written in the \textit{.conf} file or included using \texttt{\%include} mechanism, being the second one a better approach as it enhances code readability as well as it avoids bloating the configuration file unnecessarily.
 
 With this introduction in mind, the following sections will explain how this package has been tested following Bird's configuration base requirements and service behaviour and some \textit{future work} ideas to achieve automatic and unit tests.
 
@@ -51,7 +51,7 @@ As an example of this: \texttt{bird4: Failed - bird: /tmp/bird4.conf, line 65: s
 
 \input{code/bgperror}
 
-We will need to find out that the shown filter used in the \textbf{import} field of BGP Protocol, does not exist.
+We will need to find out that the shown filter used in the import field of BGP Protocol, does not exist.
 
 \item Non-compatible configuration.
 The other set of common errors is non-compatible fields in a Protocol.
@@ -79,7 +79,7 @@ Bird Daemon will succeed starting up but, if we check the log information in the
 \end{itemize}
 
 \subsection{Real Scenario: VM with simple BGP configuration connected to Guifi.net}
-As part of the acceptance tests, a VM was set up by a sysadmin in the \textit{Universitat Oberta de Catalunya} to act as a pre-production machine. This VM is connected to a \textit{Mikrotik} Router acting as Gateway to \textit{Guifi.net} but this scenario does \textbf{not} connect or communicate through any Mesh Network using BMX6, so it is an end point.
+As part of the acceptance tests, a VM was set up by a sysadmin in the Universitat Oberta de Catalunya to act as a pre-production machine. This VM is connected to a \textit{Mikrotik} Router acting as Gateway to \textit{Guifi.net} but this scenario does not connect or communicate through any Mesh Network using BMX6, so it is an end point.
 
 The configuration of this system is almost identical, component-wise, to the ones available in Guifi.net. However, this system will only route itself (1 route) and import any.
 

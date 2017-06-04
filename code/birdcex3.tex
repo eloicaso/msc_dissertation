@@ -1,0 +1,24 @@
+\begin{lstlisting}[language=bash, caption={Birdc Simple \texttt{Show Protocols all}. Truncated to show BGP.}]
+root@LEDE-MXN1:/etc/config# birdc4 show protocols all
+BIRD 1.6.3 ready.
+name     proto    table    state  since       info
+BCNRamblaPobleNou BGP      aux      up     00:54:28    Established
+  Preference:     100
+  Input filter:   ebgp_in
+  Output filter:  ebgp_out
+  Routes:         3023 imported, 0 exported, 3023 preferred
+  Route change stats:     received   rejected   filtered    ignored   accepted
+    Import updates:         108200          0          0         13     108187
+    Import withdraws:        25629          0        ---          6      25623
+    Export updates:         108187     108187          0        ---          0
+    Export withdraws:        25623        ---        ---        ---          0
+  BGP state:          Established
+    Neighbor address: 172.25.35.25
+    Neighbor AS:      59361
+    Neighbor ID:      10.90.224.65
+    Neighbor caps:    refresh AS4
+    Session:          external AS4
+    Source address:   172.25.35.26
+    Hold timer:       164/180
+    Keepalive timer:  28/60
+\end{lstlisting}

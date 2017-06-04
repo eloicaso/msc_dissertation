@@ -1,0 +1,39 @@
+\begin{lstlisting}[language=bash, caption={Help on Birdc Console mode.}]
+bird> ?
+add roa ...                                    Add ROA record
+configure ...                                  Reload configuration
+debug ...                                      Control protocol debugging via BIRD logs
+delete roa ...                                 Delete ROA record
+disable <protocol> | "<pattern>" | all         Disable protocol
+down                                           Shut the daemon down
+dump ...                                       Dump debugging information
+echo ...                                       Control echoing of log messages
+enable <protocol> | "<pattern>" | all          Enable protocol
+eval <expr>                                    Evaluate an expression
+exit                                           Exit the client
+flush roa [table <name>]                       Removes all dynamic ROA records
+help                                           Description of the help system
+mrtdump ...                                    Control protocol debugging via MRTdump files
+quit                                           Quit the client
+reload <protocol> | "<pattern>" | all          Reload protocol
+restart <protocol> | "<pattern>" | all         Restart protocol
+restrict                                       Restrict current CLI session to safe commands
+show ...                                       Show status information
+bird>
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, caption={Help on \texttt{show} level of Birdc Console mode.}]
+bird> show ?
+show bfd ...                                   Show information about BFD protocol
+show interfaces                                Show network interfaces
+show memory                                    Show memory usage
+show ospf ...                                  Show information about OSPF protocol
+show protocols [<protocol> | "<pattern>"]      Show routing protocols
+show rip ...                                   Show information about RIP protocol
+show roa ...                                   Show ROA table
+show route ...                                 Show routing table
+show static [<name>]                           Show details of static protocol
+show status                                    Show router status
+show symbols ...                               Show all known symbolic names
+bird>
+\end{lstlisting}

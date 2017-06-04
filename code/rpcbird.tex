@@ -1,0 +1,25 @@
+\begin{lstlisting}[language=bash,caption={RPCd Bird4 Service Management}]
+#!/bin/sh
+
+case "$1" in
+    list)
+        echo '{ "status": { }, "start":{ }, "stop":{ } }'
+    ;;
+    call)
+        case "$2" in
+            status)
+                status=$(/etc/init.d/bird4 status_quiet)
+                echo "{ \"status\" : \"$status\" }"
+            ;;
+            start)
+                start=$(/etc/init.d/bird4 start_quiet)
+                echo "{ \"start\" : \"$start\" }"
+            ;;
+            stop)
+                stop=$(/etc/init.d/bird4 stop_quiet)
+                echo "{ \"stop\" : \"$stop\" }"
+            ;;
+        esac
+    ;;
+esac
+\end{lstlisting}
