@@ -8,7 +8,7 @@
 
 \section{Motivation and description of the problem}
 \label{sec:bdotp}
-This project aims to simplify and enhance management and monitoring capabilities of network administrators using Bird Daemon software on top of an OpenWRT/LEDE-based Firmware. This project is a second iteration in the development of an existing configuration integration package already being used by OpenWRT/LEDE's community.
+This project aims to simplify and enhance management and monitoring capabilities of network administrators using Bird Daemon  software on top of an OpenWRT/LEDE-based Firmware. This project is a second iteration in the development of an existing configuration integration package already being used by OpenWRT/LEDE's community.
 
 \subsection{Motivation}
 \label{sec:motivation}
@@ -42,7 +42,7 @@ The following list of \textit{Protocols} are not exactly routing protocols but s
 \begin{itemize}
     \item \textbf{Static}: Bird's mechanism to implement \textit{smart} static routes. It allows  origin or pattern discrimination and modification. For example, configure any route in 10.0.0.0/16 to be unreachable or to extend it with an attribute: \texttt{ospf\_metric = 100}.
     Static Protocol is available to automate through the Package.
-    \item \textbf{Pipe}: Routing Tables are the main knowledge units for Bird (i.e. BGP \& OSPF primary tables). Pipe Protocol allows to connect different Routing Tables and to apply discrimination to the routes the share (i.e. BGP->OSPF accept all and OSPF->BGP accept if part of 10.0.0.0/8).
+    \item \textbf{Pipe}: Routing Tables are the main knowledge units for Bird (e.g BGP \& OSPF primary tables). Pipe Protocol allows to connect different Routing Tables and to apply discrimination to the routes the share (e.g BGP->OSPF accept all and OSPF->BGP accept if part of 10.0.0.0/8).
     Pipe Protocol is available to automate through the Package.
     \item \textbf{Direct}: Route generator for any targeted interface. Bird uses pattern matching to include/exclude any network interface that we want to be encapsulated as a single bunch of \textit{device} routes.
     Direct Protocol is available to automate through the Package.
@@ -52,7 +52,7 @@ The following list of \textit{Protocols} are not exactly routing protocols but s
     Kernel Protocol is available to automate through the Package. There are plans to improve this protocol as there is one process left to be automated through UI and it is top priority.
     \item \textbf{RAdv}: Implementation of the Router Advertisement Protocol (\href{https://tools.ietf.org/html/rfc4861}{IPV6's Neighbour Discovery}) allowing a fine-grained control of how often the neighbour discovery information is sent and which information is shared on them per target.
     RAdv Protocol is not available to automate through the Package. There are not plans to implement it in short term.
-    \item \textbf{\href{https://www.rfc-editor.org/rfc/rfc5880.txt}{Biderectional Forwarding Detection - BFD}}: This \textit{protocol} is a standalone tool for neighbours monitoring in order to foresee some protocol service disruptions by monitoring peers in a more efficient way than most protocols do. This protocol consists in a session created by real routing protocols (i.e. OSPF and BGP) and its sole role is to notify them in case of an event. This protocol is almost fully supported (except of verbose mode and authentication).
+    \item \textbf{\href{https://www.rfc-editor.org/rfc/rfc5880.txt}{Biderectional Forwarding Detection - BFD}}: This \textit{protocol} is a standalone tool for neighbours monitoring in order to foresee some protocol service disruptions by monitoring peers in a more efficient way than most protocols do. This protocol consists in a session created by real routing protocols (e.g OSPF and BGP) and its sole role is to notify them in case of an event. This protocol is almost fully supported (except of verbose mode and authentication).
     BFD Protocol is not available to automate through the Package. There are not plans to implement it in short term.
 \end{itemize}
 
@@ -64,14 +64,14 @@ Bird-OpenWrt Package (from now onwards \textit{the Package}) is an open source O
 As part of the GSoC project, the solution provided was not mature enough to fulfil all the requirements:
 \begin{itemize}
     \item Tight time-frame forcing to prioritise the key capabilities to implement.
-    \item Some key protocols were not enabled in the final solution because they were not relevant for GSoC's scope (i.e. Pipe or Direct).
-    \item Some secondary protocols were not enabled in the final solution because they were not relevant for GSoC's scope (i.e. OSPF or Babel).
+    \item Some key protocols were not enabled in the final solution because they were not relevant for GSoC's scope (e.g Pipe or Direct).
+    \item Some secondary protocols were not enabled in the final solution because they were not relevant for GSoC's scope (e.g OSPF or Babel).
     \item Some basic processes require manual (terminal) changes.
     \item No possible way to edit Filters or Functions files through Web UI.
-    \item No Bird Daemon Status feedback (i.e. no way to know if bird is running or failed to start through Web UI).
+    \item No Bird Daemon Status feedback (e.g no way to know if bird is running or failed to start through Web UI).
     \item No possible way to see Bird Daemon's Log information through Web UI.
     \item Bird's API changed (from Bird 1.4.3 to 1.6.3) making bird crash using base Package configuration.
-    \item No possible way of monitoring Bird's current status (i.e. full information for BGP connections).
+    \item No possible way of monitoring Bird's current status (e.g full information for BGP connections).
 \end{itemize}
 \section{Scope of the project}
 \label{sec:sotp}
@@ -79,7 +79,7 @@ This project's scope is to adopt as many of the mentioned enhancements that are 
 
 \begin{itemize}
     \item Update the package to the latest Bird API.
-    \item Update old version's disruptive issues (i.e. disabled Protocols).
+    \item Update old version's disruptive issues (e.g disabled Protocols).
     \item Status, Log, Filters and Functions Graphical integration.
     \item Theoretical viability investigation of uBus integration.
 \end{itemize}
@@ -95,7 +95,7 @@ While agreeing the original scope of the project, few extra ideas and tasks were
     \item Comparative set of tests between Quagga and Bird Daemon solutions.
 \end{itemize}
 
-Most of these extra tasks are already documented as part of the Package Documentation Reporitory\footnote{GitHub TODO List: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/TODO.md}{Link}.} and open for discussion and Pull Requests\footnote{Pull Request: Changes pushed to a repository by an external party (i.e. a fork repository pushing changes to its parent.} to add extra requirements.
+Most of these extra tasks are already documented as part of the Package Documentation Reporitory\footnote{GitHub TODO List: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/TODO.md}{Link}.} and open for discussion and Pull Requests\footnote{Pull Request: Changes pushed to a repository by an external party (e.g a fork repository pushing changes to its parent.} to add extra requirements.
 
 \subsubsection{Bird Daemon Vs. Quagga deployments}
 There is a special reasoning behind not doing a comparative analysis of these two solutions. Of course, the timing constrains have strongly influenced the decision of dropping this comparison from this project's scope, but there is also the big amount of evidence already collected for my GSoC2014 project as well as some new evidence found either in some reputable sources as well as from Bird's own OSS Community proving that Bird Daemon has been far more stable, less resource eater and flexible (thanks to its Filter\&Function scripting language) than other well-known enterprise level solutions. This evidence and where it is coming from is available in the Appendix \ref{app:ch:blinks}.
@@ -113,7 +113,7 @@ After this initial phase, the implementation tasks will be executed in a Kanban-
 \begin{itemize}
     \item Features will be executed following Backlog's priority order and one at a time.
     \item Each \textit{feature} or \textit{requirement} must be self-contained and the Package should be releasable at any time.
-    \item There is no Board or framework to introduce the data (i.e. time spent or state of the tasks) as such as the overhead of doing it is not proportional to the number of tasks or value of the data that could be collected. However, during the first \textit{Cycle} of the project (first two weeks), in order to illustrate how could this project look like using Kanban, I did use an online OSS tool called \textit{Taiga.io}\footnote{\href{https://taiga.io/}{Taiga.io}: Online project management tool working either with Kanban or SCRUM Agile methodologies. This tool is widely used in OSS projects due to its power, simplicity and plugins (open API) and has also enterprise options.}. See Appendix \ref{app:sec:kanban} in order to see some captures of the initial tasks created using the tool.
+    \item There is no Board or framework to introduce the data (e.g time spent or state of the tasks) as such as the overhead of doing it is not proportional to the number of tasks or value of the data that could be collected. However, during the first \textit{Cycle} of the project (first two weeks), in order to illustrate how could this project look like using Kanban, I did use an online OSS tool called \textit{Taiga.io}\footnote{\href{https://taiga.io/}{Taiga.io}: Online project management tool working either with Kanban or SCRUM Agile methodologies. This tool is widely used in OSS projects due to its power, simplicity and plugins (open API) and has also enterprise options.}. See Appendix \ref{app:sec:kanban} in order to see some captures of the initial tasks created using the tool.
     \item There will be weekly/bi-weekly meetings with the Stakeholder in order to discuss progress, any blocker or issue and rearrange priorities if required.
     \item There will be a \textit{demo} to the Stakeholder to show progress in a weekly/bi-weekly basis.
 \end{itemize}
@@ -169,7 +169,7 @@ OpenWRT, and its Fork LEDE-Project\footnote{LEDE-Project: Linux Embedded Develop
 Routing protocols' job is to receive a route and, according to its attributes and the information stored in the system, to redirect this route to the next step towards its destination or to drop it. However, each protocol follows different principles in order to achieve the best performance using different algorithms or paradigms. Moreover, depending on who is consuming the network and which are its requirements, we could prioritise either scalability, stability or resilience and prioritise how much critical are the previous characteristics for our consumers:
 
 \begin{itemize}
-    \item \textbf{Infrastructure Networks}: commonly used in \textit{backbone} networks. Stable, robust and highly scalable. Their main handicap is that it suffers from big overheads on topology changes (i.e. low/non fault tolerance) and that it has big convergence times in large-scale networks.
+    \item \textbf{Infrastructure Networks}: commonly used in \textit{backbone} networks. Stable, robust and highly scalable. Their main handicap is that it suffers from big overheads on topology changes (e.g low/non fault tolerance) and that it has big convergence times in large-scale networks.
     \item \textbf{Mesh Networks}: oppositely to classic dynamic networks, mesh networks' strength is to be able to converge almost instantly after any topology event. These networks work in a cooperative manner in order to achieve a fully connected network (point-to-multipoint) where all the nodes share network's knowledge in order to optimise routes and nodes floods the network in order to keep network's topology knowledge up to date.
 \end{itemize}
 
@@ -190,8 +190,8 @@ LUCI is OpenWrt's solution to graphically represent and allow UCI settings' conf
 %and a modelling parser called CBI\footnote{\href{https://github.com/openwrt/luci/wiki/CBI}{CBI}: Lua model parser UCI-to-HTML.}.
 LUCI's components are:
 \begin{itemize}
-    \item CBI (Model): CBI files include UCI definitions and \textit{describe} HTML's final form (i.e. optional/mandatory properties, order of apparition, and all the required logic to validate entered data through the forms.
-    \item Controller: Web pages definition (i.e. data or rendering target) and communication functions required by the Model (CBI) page.
+    \item CBI (Model): CBI files include UCI definitions and \textit{describe} HTML's final form (e.g optional/mandatory properties, order of apparition, and all the required logic to validate entered data through the forms.
+    \item Controller: Web pages definition (e.g data or rendering target) and communication functions required by the Model (CBI) page.
     \item View: HTML templates defining how a page, section or specific element is represented.
 \end{itemize}
 
@@ -202,6 +202,3 @@ LUCI2\footnote{\href{https://wiki.openwrt.org/doc/techref/luci2}{LUCI2}: 2nd gen
 This new version is not completely defined and it has been evolving together with OpenWrt/LEDE and LUCI. There is no much documentation of its definition, API, how to use it or integration examples and, therefore, it is complex to get the full picture of how it works and how to start using it and it is common to see packages using both CBIs(LUCI) and HTML/CSS/JS(LUCI2) approaches together according to the complexity or level of customisation required to represent the data.
 
 The already mentioned lack of documentation in LUCI2 will be repeated during section \ref{sec:luciimp} as it was a critical handicap while implementing some UI pages with \textit{simple} data structures, but requiring some customisation and process automation, which LUCI2 solves efficiently if you know how to do it.
-
-\section{State of the art}
-\label{sec:soa}

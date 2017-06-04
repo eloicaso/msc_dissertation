@@ -27,7 +27,7 @@
 %%%%%%%%%%%%%%% LUA SCRIPTING FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
 \lstdefinelanguage{Lua} 
 {
-    basicstyle       = \footnotesize,
+  basicstyle={\footnotesize\ttfamily},
     backgroundcolor=\color{white!95!black},
     morekeywords={and,break,do,else,elseif,end,false,for,function,if,in,local,nil,not,or,repeat,return,then,true,until,while,_G,_ENV,io,read,write}, 
     sensitive=false,
@@ -45,7 +45,7 @@
 %%%%%%%%%%%%%%% DIFF FILES FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
 \lstdefinelanguage{diff}{
     backgroundcolor=\color{white!95!black},
-    basicstyle=\footnotesize,
+  basicstyle={\footnotesize\ttfamily},
     showstringspaces=false,
     upquote=true,
     breaklines=true,
@@ -83,8 +83,9 @@
 
 %%%%%%%%%%%%%%% JAVASCRIPT FILES FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
 \lstdefinelanguage{javascript}{
+  basicstyle={\footnotesize\ttfamily},
   backgroundcolor=\color{white!95!black},
-  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break, static, void, struct},
   keywordstyle=\color{blue}\bfseries,
   ndkeywords={class, export, boolean, throw, implements, import, this},
   ndkeywordstyle=\color{darkgray}\bfseries,
@@ -94,19 +95,18 @@
   captionpos=b,
   frame=tb,
   resetmargins=true,
-  sensitive=true,
+  sensitive=false,
   stepnumber=1,
   tabsize=4,
   upquote=true,
   comment=[l]{//},
   morecomment=[s]{/*}{*/},
   showstringspaces=false,
-  commentstyle=\color{purple}\ttfamily,
+  commentstyle=\color{green!50!black}\ttfamily,
   stringstyle=\color{red}\ttfamily,
   morestring=[b]',
   morestring=[b]"
 }
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -124,11 +124,15 @@
 \input{chapters/5-conclusions}
 
 \newpage
-\input{appendix}
+\addcontentsline{toc}{chapter}{{\small Glossary of Terms}}
+\input{glossary}
 
-
+\newpage
 \bibliographystyle{ieeetr}
 \bibliography{references}
 \addcontentsline{toc}{chapter}{{\small Bibliography}}
+
+\newpage
+\input{appendix}
 
 \end{document}

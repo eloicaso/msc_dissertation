@@ -38,7 +38,7 @@ One of the first challenges I found during the initial investigation was that th
 \subsection{Apply code standards}
 As a daily Bash user, one of the main concerns that I had once I did retake the project was the state of the code because I did stop giving support to the Package on 2014 and I have improved drastically my consciousness towards clean, standard and following-best-practises code. Therefore, the top priority task I got was to normalise the code, apply best practises and, where possible, refactor it to follow a \textit{library}-pattern to be able to formalise an API and, in future releases, even to create unitary tests that would automate Package's tests.
 
-The first challenge I found was that LEDE/OpenWRT firmwares use the light compound of Linux tools BusyBox\footnote{\href{https://busybox.net/downloads/BusyBox.html}{BusyBox}: light and optimised UNIX tools including most of the widely used terminal commands (i.e. \texttt{ash}, \texttt{cat} or \texttt{rm}).}. This all-in-one tool comes really handy in embedded environments where performance and storage are critical but some of its tools are limited versions of the original ones.
+The first challenge I found was that LEDE/OpenWRT firmwares use the light compound of Linux tools BusyBox\footnote{\href{https://busybox.net/downloads/BusyBox.html}{BusyBox}: light and optimised UNIX tools including most of the widely used terminal commands (e.g. \texttt{ash}, \texttt{cat} or \texttt{rm}).}. This all-in-one tool comes really handy in embedded environments where performance and storage are critical but some of its tools are limited versions of the original ones.
 
 Particularly, the tool that has been more challenging is \textit{ash}, which is the built-in Shell Command Line included instead of \textit{Bash} and, although it includes most of its features, there are few others like Arrays that are not available and require the developer to re-think the solution (Ash readme page suggest the use of \texttt{set} command).
 
@@ -47,7 +47,7 @@ Some examples of the improvements applied are:
     \item Encapsulate variables with curly brackets to avoid wrong substitutions or other common issues where mixing variable names and other strings:
     \input{code/bestp1} 
     This is a forced example but there are some instances where, in really complex scripts, unexpected substitutions could happen.
-    \item Encapsulate Strings appropriately to avoid unexpected substitutions or code execution (i.e. script injection): this is an uncommon situation that could happen with commands like \texttt{sed}, where quotes and other special symbols are crucial to get the expected output.
+    \item Encapsulate Strings appropriately to avoid unexpected substitutions or code execution (e.g. script injection): this is an uncommon situation that could happen with commands like \texttt{sed}, where quotes and other special symbols are crucial to get the expected output.
     \item Use of 4 spaces instead of tabs for code readability.
     \item Use of simplified \texttt{if} statements only with clear and single-line occasions. Avoid using simplifications on instances where more than one line is required or the command is too large and would be more reasonable to split it using backslash (\texttt{\textbackslash}).
     \input{code/bestp2}
@@ -61,7 +61,7 @@ Improvements introduced are:
 \begin{itemize}
     \item Refactor init.d script and split it in two files. \texttt{bird\{4|6\}} for service management and \texttt{bird\{4|6\}-lib.sh} as an \textit{API/function} holder for UCI-bird configuration translation.
     \item Store a backup of the current configuration each time the service is started. However, this backup is overwritten each time and it is administrator decision to take a copy of this file before reloading the service.
-    \item Add \textit{smart} service management to avoid multiple start/stop/restart calls to the service, causing service disruptions if not required (i.e. multiple start calls should be ignored). See figure \ref{fig:initdt}.
+    \item Add \textit{smart} service management to avoid multiple start/stop/restart calls to the service, causing service disruptions if not required (e.g. multiple start calls should be ignored). See figure \ref{fig:initdt}.
     \item Add extra management functions for LUCI Web management. These new functions call the original ones but forcing plain text outputs. See figure \ref{fig:initdui}.
     \item Re-sort UCI translation script's in order to fix an issue with Functions and Filters.
     \item Enhance service handling and error information logging, previously dismissed.
@@ -146,7 +146,7 @@ The contents of this page are:
 
 Although contents of this page are simple and straightforward, the result shown in figure \ref{fig:statusp} is not the desired one. The initial idea was to use a single button for starting and stopping the service, and none for restart. Moreover, the button would be automatically switched between states showing, when started, service's PID. In Appendix \ref{app:ch:extrap} you can see the expected behaviour in the implementation of Privoxy's OpenWrt Package.
 
-The reason behind not doing it is that this simple change would require to change from using LUCI's CBI (Lua) to LUCI2 (JavaScript). Lua's implementation allows you to trigger a number of actions according to a specific element state, if an action (i.e. button clicked) is triggered or during page's rendering. However, Bird's startup can take few seconds and LUCI has no granular control or a polling mechanism on rendering time to allow this behaviour. To do so, it would be required to force the page to wait (manual OS \texttt{sleep} command) which would block page's loading and leave it in an incorrect state depending on Bird's time to start.
+The reason behind not doing it is that this simple change would require to change from using LUCI's CBI (Lua) to LUCI2 (JavaScript). Lua's implementation allows you to trigger a number of actions according to a specific element state, if an action (e.g. button clicked) is triggered or during page's rendering. However, Bird's startup can take few seconds and LUCI has no granular control or a polling mechanism on rendering time to allow this behaviour. To do so, it would be required to force the page to wait (manual OS \texttt{sleep} command) which would block page's loading and leave it in an incorrect state depending on Bird's time to start.
 
 Nevertheless, I did do a test implementation (with and without a \texttt{sleep} OS call) and, because of the way CBIs work, the button action and rendering action were somehow triggering service calls multiple times, starting and stopping the service in an random way and not refreshing the contents correctly, hence showing wrong status and PIDs.
 
@@ -169,7 +169,7 @@ New Page showing contents in Bird's configured Log file. This page is automatica
 
 This page has been implemented using mixed capabilities from LUCI and LUCI2. Because of the requirement to show a rolling Log page with a reasonably regular auto-refresh process, it was necessary to use JavaScript's XHR capabilities embedded in the HTML page itself together with Lua code to read the file and send the text as a PlainText HTML response (object).
 
-Because of the lack of documentation in this area, I spent weeks investigating it by my own using the available package sources in OpenWrt's repositories. However, because what the other packages usually do is to use XHR polls as a communication broker method (i.e. get a specific data from a specific UCI file, apply some filtering/transformation if the data is not in the desired state and, finally, populate specific UI fields available in the HTML page) it was not clear what exactly I had to do as I only needed to: read last 30 lines of a file (Bird's Log File) and populate the Text View (Plain text data).
+Because of the lack of documentation in this area, I spent weeks investigating it by my own using the available package sources in OpenWrt's repositories. However, because what the other packages usually do is to use XHR polls as a communication broker method (e.g. get a specific data from a specific UCI file, apply some filtering/transformation if the data is not in the desired state and, finally, populate specific UI fields available in the HTML page) it was not clear what exactly I had to do as I only needed to: read last 30 lines of a file (Bird's Log File) and populate the Text View (Plain text data).
 
 Finally, after spending some days trying to contact experienced LEDE/OpenWrt developers using community's contact channels\footnote{LEDE community contact methods: \href{https://lede-project.org/contact}{Link}}, I could have few conversations with one of the main contributors of LEDE, OpenWrt and also main author of LUCI/LUCI2 \texttt{jow-}\footnote{Jo-Philip Wich: \href{https://github.com/jow-}{Github Profile}.}, who gave me some hints, examples of LUCI2 pages and also helped me debugging some issues I had during the development that allowed me to finish both Log and Filters/Functions pages.\\
 
@@ -287,7 +287,7 @@ In the same way as the Log Page \ref{sub:sub:logp}, current documentation touche
     \item \texttt{SimpleForm} Page format is required due the lack of UCI settings to modify. However, the documentation explaining which is SimpleForm's API, differences between this solution and \texttt{Map}\footnote{Map is LUCI's alternative format page to define UI by \textit{mapping} fields into UCI properties} or possibilities using SimpleForm are not detailed enough.
     \item Local variables are not reliable. Because pages can be re-rendered depending on the event triggered, your stored variables could be overwritten with new values by these rendering functions.
     An example of this issue was my attempt use the Read-only field to store the path. Because \texttt{cfgvalue} (render) function is triggered several times in an uncontrolled manner (we have no control of it) your variable may have been overwritten several times. Therefore, if you switch the selected file, you were storing your data in the wrong file.
-    \item UI values can only be gathered or saved during specific events (i.e. on render or save functions).
+    \item UI values can only be gathered or saved during specific events (e.g. on render or save functions).
     \item Unable to refresh the file list on a render function. It has bee required to do it as part of Page's creation, therefore, needing to refresh the page to update the file list. This is \textit{annoying} if you have created a new file, because it may not be listed until you refresh the page.
     This has been documented as a known issue and will be resolved by using LUCI2 in a future release. 
     \item Trying to use nested events usually cause data misconfiguration.
@@ -327,7 +327,7 @@ Documentation repository with extra information:
 \section{Bird Daemon uBus integration investigation}
 uBus theoretical investigation is driven by the need of continuously monitor the status of our protocols and the critical historical data that it could bring any administrator managing any size and complexity networks. Current Bird's implementation provides a low consumption and powerful routing solution but its monitoring capabilities lay in a CLI\footnote{CLI: Command Line Interface.} mimicking other well-known plain text-based tools as Quagga, Cisco or Mikrotik's Consoles.
 
-OpenWrt/LEDE's Bird plain-text CLI tools are \texttt{birdc\{4|6\}} and \texttt{birdc\{4|6\}}\footnote{birdcl: Lightweight version of birdc. It does not support some commands (i.e. service management) or command history.} and provide administrators an API\footnote{Birdc documentation and API: \href{http://bird.network.cz/?get_doc&f=bird-4.html}{Link}.} in order to manage live system and gather information from it using UNIX Standard domain sockets (\texttt{bird.ctl}). As already mentioned, this CLI provides human readable plain-text information on specific queries, thus most of its outputs are not suitable or automatizable for scripting. Some example of Birdc's outputs are:
+OpenWrt/LEDE's Bird plain-text CLI tools are \texttt{birdc\{4|6\}} and \texttt{birdc\{4|6\}}\footnote{birdcl: Lightweight version of birdc. It does not support some commands (e.g. service management) or command history.} and provide administrators an API\footnote{Birdc documentation and API: \href{http://bird.network.cz/?get_doc&f=bird-4.html}{Link}.} in order to manage live system and gather information from it using UNIX Standard domain sockets (\texttt{bird.ctl}). As already mentioned, this CLI provides human readable plain-text information on specific queries, thus most of its outputs are not suitable or automatizable for scripting. Some example of Birdc's outputs are:
 
 \input{code/birdcex1}
 
@@ -349,12 +349,17 @@ LUCI2 introductory information is available in section \ref{sub:sub:luci2}, read
 LUCI2 main components are: 
 
 \begin{itemize}
-    \item Client-Side Browser: HTML/CSS/JS provided by service (i.e. luci-app-bird\{4|6\}) is executed on client's side.\\
+    \item Client-Side Browser: HTML/CSS/JS provided by service (e.g. luci-app-bird\{4|6\}) is executed on client's side.\\
     This approach generates a new requirement: to gather system resources from the server (LUCI's HTML generation and data injection happens in the server and using Lua).
     \item uBus and RPC Daemon:\\
     uBus is a rich tool (number of libraries, daemon and UNIX Socket) acting as a virtual pipe were system services registers and communicates to each other using uBus as a query broker exchanging JSON messages. uHTTP Server uses it via \texttt{uhttpd-mod-ubus} plugin to provide the API required by other services. However, it is required to heavily integrate target's service in order to use uBus. In order to avoid this, an alternative RPCd backend server is used.\\ RPCd is explained in the next section.
     \item uHTTPd Server: \textit{Server-side} HTTP server to satisfy queries.
 \end{itemize}
+
+\subsubsection{RPCd Backend Server}
+RPC Daemon is the backend server used in LUCI2 to receive Client requests for non-system (or non-fully-integrated) services registered in uBus. There is also a JavaScript framework to manage communication and queries against the server. It is important to highlight that any query fulfilled by RPCd will use XHR objects and APIs, which let client-side to refresh specific and self-contained page contents.
+
+\subsubsection{Example overview}
 
 Using Bird4, luci-app-bird4 and a fictional \textit{RPC-uBus Bird4 Service} as an example, this process' architecture is the following:
 
@@ -362,24 +367,132 @@ Using Bird4, luci-app-bird4 and a fictional \textit{RPC-uBus Bird4 Service} as a
     \centering
     \includegraphics[width=\textwidth]{images/luci2/luci2d}
     \caption{LUCI2 Communication architecture for Bird4 Service}
-    \label{fig:functionsp}
+    \label{fig:luci2arch}
 \end{figure}
 
+Taking in consideration that Bird Daemon has no integration with uBus, we need to connect to it through an RPCd \textit{pipe}. The steps followed for a Client to interact with Bird Service are shown in figure \ref{fig:functionsp}:
+\begin{enumerate}
+    \item Client queries Bird service data through a call in the UI (luci-app-bird4). JavaScript code in the page queries RPCd.
+    \item RPCd backend server passes this query to uBus who will check its registered RPC namespaces.
+    \item If uBus finds the given namespace and specific function, it is executed.
+    \item Bird4's API executes shell script commands to query Bird4 Daemon and returns their outputs to it.
+    \item The API will need to provide functionality to encapsulate Bird's outputs into JSON objects and send them back to uBus.
+    \item uBus sends any JSON object (or empty) to the RPCd server.
+    \item RPCd Server reports back to the client page and it is refreshed with new data.
+\end{enumerate}
 
-\subsubsection{RPCd Backend Server and communication process}
-RPC Daemon is the backend server used in LUCI2 to receive Client requests for non-system (or non-fully-integrated) services registered in uBus. There is also a JavaScript framework to manage communication and queries against the server.
-In order to register a service on uBus and to be able to called, a service developer requires to:
-
-\begin{itemize}
-    \item Implement the API and functions required to communicate through JSON objects with the Client.
-\end{itemize}
+\subsubsection{Server-side's implementation details}
+Following the bullets above, the first thing required is to create our \textit{Shell} API under the folder \texttt{/usr/libexec/rpcd} for uBus to be able to add it. This API needs to provide its own description (\texttt{list}) and functions (\texttt{call}) required to communicate your service through JSON objects with the Client. This example shows a Bird service management implementation using four RPC calls (see figure \ref{fig:functionsp}: step number 3).
 
 \input{code/rpcbird}
 
+On a new system, where no other services have been registered on RPCd, if we check what is registered on uBus, we will see only system services:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/luci2/step1}
+    \caption{uBus registered services (I)}
+    \label{fig:ubusrs1}
+\end{figure}
+
+We can see in the figure that no other services are providing an API using RPCd folder (it is empty) and we can only find services like network, UCI or system itself providing uBus integration.
+
+After adding our code shown in the snippet \ref{lst:rpcbird} in RPCd's folder and restarting RPCd service, we can now start querying it:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/luci2/step2}
+    \caption{uBus registered services (II)}
+    \label{fig:ubusrs2}
+\end{figure}
+
+The truncated output shows that uBus is now able to call bird functions. If we query uBus for specific, and verbose (\texttt{-v}), information about the provided API this would be the output:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/luci2/step3}
+    \caption{uBus registered services (III)}
+    \label{fig:ubusrs3}
+\end{figure}
+
+As show in the figure \ref{fig:ubusrs3}, this Bird RPCd API provides 3 functions requiring no parameters (an example of a parametrized API will be shown as an example for Client-side's example).
+
+Now we can test this API, which is interacting (in an over-simplified manner) with Bird Daemon:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/luci2/step4}
+    \caption{uBus registered services (IV)}
+    \label{fig:ubusrs4}
+\end{figure}
+
+As shown in the code snippet \ref{lst:rpcbird}, we are executing \texttt{*\_quiet} functions returning plain text responses from Bird service's management script. This output is wrapped in a JSON object and uBus will send this output back to the Client.
+
+With these steps, we have all the necessary elements to make RPCd communicate from server's side.
+
+\subsubsection{Client-side implementation details}
+
+This client-side example is different from the server-side one and has not been implemented in the development environment. It adds extra complexity in order to be able to tie it with the next subsection \ref{sub:sub:birdex}, which will cover required changes in Bird Daemon itself in order to support LUCI2.
+
+Code snippet \ref{lst:luci2rpc} could be part of a future version of luci-app-bird\{4|6\} or a new package adding this functionality separately as a plugin (e.g. \texttt{bird-mod-ubus}). This example explores the possibility of a future BGP monitoring page (or section in BGP Protocols Page) giving administrators live information about their sessions.
+
+\input{code/luci2js1} 
+
+This possible JavaScript code defines the API used in order to communicate with the backend server (\texttt{declare}) calling bird4's RPCd and querying the \texttt{getBGPNeighbour} function. This function would, somehow, query \texttt{birdc4} (e.g. \texttt{birdc4 show protocols "BCNPeerToTGN" -json '\{ 'bgpPeerID' : \{ \} \}'}) or whatever it is the tool designed for Bird to answer live data queries with JSON-formatted responses instead of human-readable ones.
+This snippet follows an oversimplified approach where we only ask Bird for a specific data and we use only a little portion of it (BGP Neighbour AS ID). However, I mention both \texttt{parseJSON} and \texttt{updateUIData} on purpose foreseeing that this RPC function would really return all BGP's data and populate the UI with it in a reasonable time lapse (snippet shows 1 second repetition).
+
+\subsubsection{Bird Service required changes}
+Previous sections have explained how we could implement an integration of Bird Daemon in uBus presupposing that Bird Daemon is already providing JSON-formatted outputs.
+This section focuses on Bird's implementation\footnote{Bird Daemon Repository: \href{https://gitlab.labs.nic.cz/labs/bird}{Link}.} and which changes would be required to support this new output format.
+
+For this investigation, I have reviewed three possible approaches:
+
+\begin{enumerate}
+    \item \textbf{Generate a new OpenWrt package to parse Bird's outputs from human-readable to JSON}:\\
+The first approach is to use Bird Remote Control's command outputs in the same human-readable format (see example shown in the snippet \ref{lst:birdchr}). This would require specific parsing functions for each possible output and variation (e.g. while established BGP sessions show detailed route data, non-established ones show no information). This solution would have no impact in Bird's official code as JSON parsing would occur in a separate software.
+    
+This option is totally dismissed as it adds two levels complexity by forcing the new package (or functionality) to be parsing messages and being completely coupled with a non-standard and unreliable communication \textit{API}. Therefore, any change in Bird's syntax and outputs would require the parser to require an \textit{API} refactor process, which could be challenging according to which non-standard part of the output has changed.
 
 
+    \item \textbf{Modify Bird Remote Control's implementation to parse from human-readable to JSON}:\\
+This second approach moves the JSON parsing closer to where it is originated. Birdc and Birdcl tools just \texttt{echo}es the data according to the CLI command executed. However, unlike the first approach, because the outputs are parsed on Bird's side, their community and developers would manage any required integration change in order to support the latest version of the Daemon. Hence, any external administrator or developer would be able to rely in a standardised API with JSON-formatted outputs.
+
+This option has also been dismissed because, although the parsing method occurs closer to the data, there is still a parsing method from Bird's human-readable output to JSON. Moreover, any external developer requiring live data would be forced to:
+
+\begin{itemize}
+    \item Forced to use or, at least, to install a tool not fit for purpose (CLI).
+    \item Use a socket to Bird which is not exclusive to his processes.
+    \item Use a socket to Bird which its \textit{private} API could be accessible from the CLI tool.
+    \item In order to get some data, it could be required to use CLI-based commands.
+\end{itemize}
+
+    \item \textbf{Modify Bird Daemon code to switch from human-readable to JSON outputs}:\\
+This third approach moves even further the problem. The solution proposed is tomodify Bird Daemon's code in order to add extra functions that would, together with the human-readable ones, present protocols' live status in JSON format. This means that we have to review Bird's code in order to find where each output is generated and create an extra function (or add a parameter) to send the data in JSON's format.
+
+This option requires a high number of changes in the official solution as well as tests to demonstrate that all generated outputs are RFC compliant\footnote{JSON's \href{https://tools.ietf.org/html/rfc7159}{RFC}.} and that this changes are not causing performance issues in the Daemon. Following this solution would open three new options to solve our current issues:
+   \begin{itemize}
+        \item Continue using Bird Remote Control but receiving JSON outputs instead of human-readable ones (may require improvements in birdc/birdcl tools).
+        This option has some of the 2nd proposal issues.
+        \item Create a new bird \textit{semi-official} (while not accepted) utility following the same approach of birdc (UNIX socket to connect to Bird) only being used for monitoring purposes.
+        This solution would require its own UNIX socket or to use the same as Bird Remote Control, which could create a conflict.
+        \item Create an integration package or specific Bird implementation with uBus Socket. This would be the desired solution as the communication and integration would be complete and Bird could be announced as uBus \textit{compliant} service. Moreover, on the one hand there would be no conflicts with Bird Remote Control but, on the other hand, there could be some performance issues derivatives from this (currently unknown) socket communication implementation.
+   \end{itemize}
+
+Finally, as an example of Bird's current output printing implementation, the following snippet shows part of BGP's  information presentation\footnote{Official Bird GitLab Repository: \href{https://gitlab.labs.nic.cz/labs/bird/blob/master/proto/bgp/bgp.c}{BGP Protocol implementation}}:
+
+\input{code/bgpcode}
+
+This code snippet \ref{lst:bgpcode} shows the first lines of BGP's information, available even if the session fails. The main idea from this snippet is that all the different protocols available in Bird are using C data structures in a non-obscured manner, with some of the almost identical to JSON:\\E.g. \texttt{p->rr\_client ? " route-reflector" : "",}\\Next code snippet shows BGP Connection structure (one of the different BGP structures):
+
+\input{code/bgpstruct}
+
+Therefore, we could make use of some available implementations to automate their parsing (e.g. json-c \footnote{JSON-C: JSON implementation for C language. \href{https://github.com/json-c/json-c}{Link}. This is just an example of implementation to be used, more rigurous tests would be required to confirm that, as their developers say in GitHub, the implementation conforms to RFC7159.}) and make the integration process much easier and facilitate its maintainability.
+\end{enumerate}
 
 
+\subsubsection{Analysis conclusions}
+Summarising this section, the conclusion I get from the analysis is that there is a lot of work to do before we get to the point where we can get live data from Bird natively but, in the same way, I get the clear idea that we need to follow the third approach, joining forces with Bird's community and developers in order to have JSON format natively supported following the latest standards. After achieving that, we can start defining how we want current LUCI or LUCI2 implementation to adopt this new API and how far we go with it (from simple refreshed fields to health historical charts, simulated connectivity maps and other relevant data).
 
-    RPCd is the back end server but also a framework implemented in JavaScript used on Client-side in order to query the Daemon using XHR Objects.
+Joining everything together, these requirements would easily  became a feasible future Open Source Software MSc. project requiring: network knowledge; C-language and Shell Scripting expertise; some JavaScript expertise to be able to do some LUCI2 scripting; to be prepared to agree some project's requirements and ideas with Bird's community and main developers in CZ.NIC Labs \footnote{CZ.NIC Research and Development department: \href{https://labs.nic.cz/en/}{Link}}; and also patience to deal with the lack of LUCI2, uBus and RPCd documentation in OpenWrt/LEDE being able to, together with the community, fill any knowledge gap and to feed it back to them.
 
+\newpage

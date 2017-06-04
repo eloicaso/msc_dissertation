@@ -1,0 +1,27 @@
+\begin{lstlisting}[language=javascript,label={lst:bgpstruct},caption={Bird's BGP Protocol Session C Structure.}]
+struct bgp_conn {
+  struct bgp_proto *bgp;
+  struct birdsock *sk;
+  uint state;				/* State of connection state machine */
+  struct timer *connect_retry_timer;
+  struct timer *hold_timer;
+  struct timer *keepalive_timer;
+  struct event *tx_ev;
+  int packets_to_send;			/* Bitmap of packet types to be sent */
+  int notify_code, notify_subcode, notify_size;
+  byte *notify_data;
+  u32 advertised_as;			/* Temporary value for AS number received */
+  int start_state;			/* protocol start_state snapshot when connection established */
+  u8 peer_refresh_support;		/* Peer supports route refresh [RFC2918] */
+  u8 peer_as4_support;			/* Peer supports 4B AS numbers [RFC4893] */
+  u8 peer_add_path;			/* Peer supports ADD-PATH [RFC7911] */
+  u8 peer_enhanced_refresh_support;	/* Peer supports enhanced refresh [RFC7313] */
+  u8 peer_gr_aware;
+  u8 peer_gr_able;
+  u16 peer_gr_time;
+  u8 peer_gr_flags;
+  u8 peer_gr_aflags;
+  u8 peer_ext_messages_support;		/* Peer supports extended message length [draft] */
+  unsigned hold_time, keepalive_time;	/* Times calculated from my and neighbor's requirements */
+};
+\end{lstlisting}

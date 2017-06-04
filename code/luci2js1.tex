@@ -1,0 +1,30 @@
+\begin{lstlisting}[language=javascript,label={lst:luci2rpc},caption={RPC Call Script.}]
+Luci2().ui.view.extend({
+[...]
+    getPeers  : Luci2().rpc.declare({
+        object: 'bird4',
+        method: 'getBGPNeighbour',
+        params: '[ "BGPSession" : "' + targetBGPSession + '" ]',
+        expect: { BGPNeighbourID: {} }
+    }),
+[...]
+    getNeighbourStatus : function() {
+        var targetBGPSession = "BCNPeerToTGN";
+        self.getPeers(targetBGPSession).then( function(JSONOutput)
+        {
+            // Parse any JSON Data received into a pre-defined and sanitised format
+            var bgpData = self.parseJSON(JSONOutput);
+    
+            // Update the UI according to the data received
+            self.updateUIData(bgpData);
+        });
+    },
+[...]
+    execute: function () {
+        [...]
+        // Force RPC call to be called each second
+        self.repeat(self.getNeighbourStatus, 1000);
+        [...]
+    }
+}
+\end{lstlisting}

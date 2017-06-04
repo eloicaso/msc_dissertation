@@ -1,0 +1,60 @@
+\ifglsentryexists{acr:oss}{}%
+{%
+\gls@defglossaryentry{acr:oss}%
+{%
+name={OSS},%
+sort={OSS},%
+type={main},%
+first={Open Source Software\glsspace (OSS)},%
+firstplural={Open Source Softwares\glsspace (OSSs)},%
+text={OSS},%
+plural={OSSs},%
+description={Open Source Software},%
+descriptionplural={Open Source Software\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Open Source Software},%
+longplural={Open Source Softwares},%
+short={OSS},%
+shortplural={OSSs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{gls:bird}{}%
+{%
+\gls@defglossaryentry{gls:bird}%
+{%
+name={Bird},%
+sort={Bird},%
+type={main},%
+first={Bird},%
+firstplural={Birds},%
+text={Bird},%
+plural={Birds},%
+description={Bird Daemon},%
+descriptionplural={Bird Daemon},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+}%
