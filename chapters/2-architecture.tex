@@ -1,9 +1,9 @@
 \chapter{Network Architecture}
 \label{ch:architecture}
 
-As shown in the figure \ref{fig:tarnet}, our targeted network is a mixed section requiring the use of Exterior Gateway Protocols (IGP) and Internal Gateway Protocols (EGP) in order be able to share routes between the two BGP ends (named \textit{E} and \textit{F}) going through a BMX6 Mesh Network (from report \cite{bgpbmx6} - in Catalan). 
+This project's target network is a new experimental-production network located in Barcelona. It has been deployed in order to prove its stability, robustness and feasibility to replicate it in other Barcelona's locations with similar topologies. This network's main particularity is that it merges different network topologies requiring the use of Exterior Gateway Protocols (BGP) together with Internal Gateway Protocols (BMX6) in order be able to share routes between different BGP ends (named \textit{E} and \textit{F} in the figure \ref{fig:tarnet}) going through a Mesh Network. The following information has been extracted from the report "Integració entre BMX6 i BGP en dispositius basats en LEDE" \cite{bgpbmx6} (in Catalan).
 
-As shown in the figure:
+As shown in the figure \ref{fig:tarnet}, network's elements are:
 \begin{itemize}
     \item \textbf{Infrastructure Super Node 1} (ISN1): BGP Supernode connected to the BGP network (Guifi.net, section 1) via wireless and to the MXN1 Router through Ethernet.     
     \item \textbf{Mesh eXchange Node 1} (MXN1): LEDE/OpenWRT router connected via Ethernet to the ISN1 and to the antenna (or an Ethernet port) providing access to the Mesh Network. This frontier node provides BGP to BMX6 route-sharing capabilities using Bird Daemon.
@@ -30,9 +30,9 @@ Routing requirements to successfully ensure that all routes are shared between b
 \subsection{Caveats}
 There is an important caveat with this network distribution:
 
-Current version of BMX6 is not able to handle the number of routes that this Guifi.net BGP section is sharing (2.500+). Therefore, BMX6 starts aggregating routes, which eventually shut-downs the service and leaves the node overloaded as it is not able to achieve it.
+Current version of BMX6 is not able to handle the number of announced prefixes that Barcelona's Guifi.net BGP sessions are currently sharing (3.500+). Therefore, in order to be able to handle those received network prefixes, BMX6 will have to start aggregating its routes, which eventually would shut-down the service and leave the node overloaded or even unresponsive.
 
-In order to avoid this disruptive issue, Bird Daemon filter scripting capabilities available in MXN1 and MXN2 allow to reduce the geographical scope of the routes imported and exported to/from the Barcelon\`{e}s\footnote{\href{https://guifi.net/en/barcelones}{Barcelon\`{e}s}: Network Zone including Badalona, Barcelona, Hospitalet del Llobregat, Sant Adri\`{a} del Besos and Santa Coloma de Gramanet.} Zone.
+In order to avoid this disruptive behaviour, Bird Daemon filter scripting capabilities available in MXN1 and MXN2 allow to reduce the geographical scope of the prefixes imported and exported to and from the Barcelon\`{e}s zone (including cities: Badalona, Barcelona, Hospitalet del Llobregat, Sant Adri\`{a} del Besos and Santa Coloma de Gramanet).
 
 \begin{landscape}
 

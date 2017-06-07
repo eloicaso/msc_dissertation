@@ -344,20 +344,18 @@ As shown in the snippet above, we can query Bird to get base BGP information: na
 Understanding that our main goal is to, somehow, integrate monitoring capabilities into the Package, the next step is to see which tools would support us doing it.
 
 \subsection{LUCI2 new architecture: WebUI-uBus-RPCd-Service}
-LUCI2 introductory information is available in section \ref{sub:sub:luci2}, for reference of the acronyms, see it before this section to know the acronyms.
+\label{sub:luci2arch}
+LUCI2 introductory information is available in section \ref{sub:sub:luci2}, see it for reference of the acronyms.
 
 LUCI2 main components are: 
 
 \begin{itemize}
-    \item Client-Side Browser: HTML/CSS/JS provided by service (e.g. luci-app-bird\{4|6\}) is executed on client's side.\\
-    This approach generates a new requirement: to gather system resources from the server (LUCI's HTML generation and data injection happens in the server and using Lua).
-    \item uBus and RPC Daemon:\\
-    uBus is a rich tool (number of libraries, daemon and UNIX Socket) acting as a virtual pipe were system services registers and communicates to each other using uBus as a query broker exchanging JSON messages. uHTTP Server uses it via \texttt{uhttpd-mod-ubus} plugin to provide the API required by other services. However, it is required to heavily integrate target's service in order to use uBus. In order to avoid this, an alternative RPCd backend server is used.\\ RPCd is explained in the next section.
+    \item Client-Side Browser: HTML/CSS/JS provided by service (e.g. luci-app-bird\{4|6\}) is executed on client's side.
+    \item uBus Service: Client-Server-based query broker to communicate different system services.
     \item uHTTPd Server: \textit{Server-side} HTTP server to satisfy queries.
+    \item RPC Daemon: HTTP backend server acting as a query broker for packages not integrated with uBus service but providing an API to use it.
 \end{itemize}
 
-\subsubsection{RPCd Backend Server}
-RPC Daemon is the backend server used in LUCI2 to receive Client requests for non-system (or non-fully-integrated) services registered in uBus. There is also a JavaScript framework to manage communication and queries against the server. It is important to highlight that any query fulfilled by RPCd will use XHR objects and APIs, which let client-side to refresh specific and self-contained page contents.
 
 \subsubsection{Example overview}
 
@@ -370,15 +368,15 @@ Using Bird4, luci-app-bird4 and a fictional \textit{RPC-uBus Bird4 Service} as a
     \label{fig:luci2arch}
 \end{figure}
 
-Taking in consideration that Bird Daemon has no integration with uBus, we need to connect to it through an RPCd \textit{pipe}. The steps followed for a Client to interact with Bird Service are shown in figure \ref{fig:functionsp}:
+Taking in consideration that Bird Daemon has no integration with uBus, we need to connect to it through an RPCd service. The steps followed for a Client to interact with Bird Service are shown in figure \ref{fig:functionsp}:
 \begin{enumerate}
-    \item Client queries Bird service data through a call in the UI (luci-app-bird4). JavaScript code in the page queries RPCd.
-    \item RPCd backend server passes this query to uBus who will check its registered RPC namespaces.
-    \item If uBus finds the given namespace and specific function, it is executed.
-    \item Bird4's API executes shell script commands to query Bird4 Daemon and returns their outputs to it.
-    \item The API will need to provide functionality to encapsulate Bird's outputs into JSON objects and send them back to uBus.
-    \item uBus sends any JSON object (or empty) to the RPCd server.
-    \item RPCd Server reports back to the client page and it is refreshed with new data.
+    \item Client's browser wants to query Bird service to populate a number of fields the UI (luci-app-bird4). These queries are done using JavaScript using RPCd's API.
+    \item RPCd backend server passes Bird's UI query to uBus, who will check if Bird has an API registered in  its namespace.
+    \item If uBus finds the given API, it checks the specific call sent and it is executed.
+    \item Bird4's API executes shell script commands to directly query Bird4 Daemon and returns any outputs generated.
+    \item The API will need to handle Bird's outputs and to encapsulate them into JSON objects. After doing that, any generated output is sent back to uBus.
+    \item uBus sends any object received to the RPCd server.
+    \item RPCd Server sends this object back to the client and it refreshes any targeted component with this new data.
 \end{enumerate}
 
 \subsubsection{Server-side's implementation details}
