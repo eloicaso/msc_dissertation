@@ -3,11 +3,11 @@
 \pagenumbering{arabic}
 \pagestyle{headings}
 
-This project aims to simplify and enhance management and monitoring capabilities of network administrators using Bird Daemon software on top of an OpenWrt/LEDE-based Firmware. It is a second iteration in the development of an existing configuration integration package already being used by OpenWRT/LEDE's community. The following section \ref{ch:backc} introduces the key concepts used in in the introduction and as part of the dissertation itself.
+This project aims to simplify and enhance management and monitoring capabilities of network administrators using Bird Daemon software on top of an OpenWrt/LEDE-based Firmware. It is a second iteration in the development of an existing configuration integration package already being used by OpenWRT/LEDE's community. Section \ref{ch:backc} introduces the key concepts used in in the introduction and as part of the dissertation itself.
 
 \section{Background Concepts}
 \label{ch:backc}
-
+The following subsections are intended to be self-contained definitions for contents recurrently referenced in this dissertation, sorting them by scope (from top to bottom). The two highest-level topics covered are OpenWrt and LEDE environments and project's target network.
 \subsection{OpenWrt/LEDE Project}
 \label{subsec:owrtlp}
 OpenWrt, and its Fork LEDE (Linux Embedded Development Environment), are Open Source Linux-based firmwares primarily focused on commodity routers, but aiming to work in any Linux-based system. This firmware supports a wide variety of manufacturer's hardware and also a wide range of software, services and routing protocols to enhance, secure and efficiently operate as a standalone router and service provider. This community-driven firmware uses different internal GIT source repositories as well as GitHub service, which is the most widely used. As any other open source project using GIT, it allows users to contribute to it by doing changes in their own repository forks and then creating Pull Requests in GitHub's website in order to get their changes approved and integrated in the official stream. This procedure is followed in all the different repositories the project owns and has a big number of reviewers to protect project's code quality and system's stability.
@@ -52,13 +52,13 @@ Bird current version is 1.6.3 and its functionality is split in two different Da
 
 \subsubsection{Routing Protocols}
 \begin{itemize}
-    \item \textbf{\href{https://www.irif.fr/~jch//software/babel/}{Babel}}: IGP\footnote{Interior Gateway Protocol: routing protocols being used in internal Autonomous Systems to manage their connectivity and paths.}\footnote{Autonomous System: Single-administrated network behaving as an entity.} distance-vector protocol stated as being in alpha stage of adoption.
+    \item Babel: IGP (\Gls{igp}) distance-vector protocol stated as being in alpha stage of adoption.
     This protocol is not available to automate through our Package yet.
-    \item \textbf{Open Shortest Path First - OSPF}: IGP link-state protocol fully supported for both IPv4 \href{https://tools.ietf.org/html/rfc2328}{OSPFv2} and IPv6 \href{https://tools.ietf.org/html/rfc5340}{OSPFv3}.
+    \item \textbf{Open Shortest Path First - OSPF}: IGP link-state protocol fully supported for both IPv4 OSPFv2 and IPv6 OSPFv3.
     This protocol has some functionality available for IPv4 in the Package but is not fully functional and there is no UI supporting it. OSPF support is one of the top priorities for future Package improvements.
-    \item \textbf{\href{https://www.rfc-editor.org/rfc/rfc2453.txt}{Routing Information Protocol - RIP}}: IGP distance-vector protocol fully supported. This protocol is completely deprecated by other distance-vector protocols as OSPF, which are less constrained by network's scale.
+    \item \textbf{Routing Information Protocol - RIP}: IGP distance-vector protocol fully supported. This protocol is completely deprecated by other distance-vector protocols as OSPF, which are less constrained by network's scale.
     This protocol is not available to automate through our Package and, because it is obsolete, there are not plans to implement it in short term.
-    \item \textbf{\href{https://www.rfc-editor.org/rfc/rfc4271.txt}{Border Gateway Protocol - BGP}}: EGP\footnote{Exterior Gateway Protocol: routing protocols managing connectivity and paths on networks compound by Autonomous System entities.} path-vector protocol fully supported. This is the most common protocol for backbone networks and the key protocol for this project.
+    \item \textbf{Border Gateway Protocol - BGP}: EGP (\Gls{egp}) path-vector protocol fully supported. This is the most common protocol for backbone networks and the key protocol for this project.
     This protocol is available to automate through the Package but only the most common or relevant options have been implemented. BGP's support finalisation is one of the top priorities for future Package improvements. 
 \end{itemize}.
 
@@ -77,9 +77,9 @@ The following list of Bird utilities have been named protocols. However, these a
     Device Protocol is available to automate through the Package.
     \item \textbf{Kernel Protocol}: Bird's implementation to allow sharing routes between the Operative System Kernel Routing Tables and the ones designated by Bird.
     Kernel Protocol is available to automate through the Package. There are plans to improve this protocol as there is one process left to be automated through UI and it is top priority.
-    \item \textbf{RAdv Protocol}: Implementation of the Router Advertisement Protocol (\href{https://tools.ietf.org/html/rfc4861}{IPV6's Neighbour Discovery}) allowing a fine-grained control of how often the neighbour discovery information is sent and which information is shared on them per target.
+    \item \textbf{RAdv Protocol}: Implementation of the Router Advertisement Protocol (IPV6's Neighbour Discovery) allowing a fine-grained control of how often the neighbour discovery information is sent and which information is shared on them per target.
     RAdv Protocol is not available to automate through the Package. There are not plans to implement it in short term.
-    \item \textbf{\href{https://www.rfc-editor.org/rfc/rfc5880.txt}{Biderectional Forwarding Detection - BFD Protocol}}: This utility is a standalone tool for neighbours monitoring in order to foresee some protocol service disruptions by monitoring peers in a more efficient way than most protocols do. This protocol consists in a session created by real routing protocols (e.g OSPF and BGP) and its sole role is to notify them in case of an event. This protocol is almost fully supported (except of verbose mode and authentication).
+    \item \textbf{Biderectional Forwarding Detection - BFD Protocol}: This utility is a standalone tool for neighbours monitoring in order to foresee some protocol service disruptions by monitoring peers in a more efficient way than most protocols do. This protocol consists in a session created by real routing protocols (e.g OSPF and BGP) and its sole role is to notify them in case of an event. This protocol is almost fully supported (except of verbose mode and authentication).
     BFD Protocol is not available to automate through the Package. There are not plans to implement it in short term.
 \end{itemize}
 
@@ -100,11 +100,11 @@ This Package is currently part of OpenWrt's official stream (version 0.2) in Git
 
 \subsection{Guifi.net}
 \label{subsec:gn}
-Guifi.net is a community-driven network working for and by its own users providing an affordable alternative for anyone willing to connect to the Internet. This network's principles are freedom; open design, administration and management; and neutrality. It was born in Catalonia as a wireless network (Access Point to Endpoint and Access Point to Access Point) but it has spread all over the world with about 33.124\footnote{Guifi.net live statistics: \href{https://guifi.net/guifi/menu/stats/nodes}{Link}} active nodes (as 26/05/17) using roof antennas and, more recently, optical fiber deployments. This has made auspicious for other network topologies as mesh networks, making of Guifi.net a rich and heterogeneous network.
+Guifi.net is a community-driven network working for and by its own users providing an affordable alternative for anyone willing to connect to the Internet. This network's principles are freedom; open design, administration and management; and neutrality. It was born in Catalonia as a wireless network (Access Point to Endpoint and Access Point to Access Point) but it has spread all over the world with about 33.124 active nodes (as 26/05/17) using roof antennas and, more recently, optical fiber deployments. This has made auspicious for other network topologies as mesh networks, making of Guifi.net a rich and heterogeneous network.
 
-This network has its own Government Foundation, La Fundació Guifi.net, which main goals are to promote and protect network's principles defined in an operational and behavioural common regulation named Els Comuns - XOLN, support any company that adheres to XOLN's principles allowing them to be able to professionally operate and advertise themselves as Guifi.net service providers and, last but not least, to represent Guifi.net network and the internal service providers as a member (peer) of Catalan's Internet Exchange Point (CATNIX) bringing the possibility for any internal service provider to peer with other members to exchange traffic and routes\footnote{For reference, one of the latest incorporations as a member to CATNIX is AKAMAI service provider, thus making feasible for Guifi.net internal service providers to peer with this worldwide Content Delivery Network.}.
+This network has its own Government Foundation, La Fundació Guifi.net, which main goals are to promote and protect network's principles defined in an operational and behavioural common regulation named \Gls{xoln}, support any company that adheres to XOLN's principles allowing them to be able to professionally operate and advertise themselves as Guifi.net service providers and, last but not least, to represent Guifi.net network and the internal service providers as a member (peer) of Catalan's Internet Exchange Point (CATNIX) bringing the possibility for any internal service provider to peer with other members to exchange traffic and routes\footnote{For reference, one of the latest incorporations as a member to CATNIX is AKAMAI service provider, thus making feasible for Guifi.net internal service providers to peer with this worldwide Content Delivery Network.}.
 
-Finally, although Guifi.net main routing protocol is BGP for infrastructure and OSPF for internal routing, there are several isles\footnote{Guifi.net Mesh Networks: \href{http://ca.wiki.guifi.net/wiki/Annex:subxarxes_mesh}{Link}}\footnote{\href{http://qmp.party/Documentation}{qMp}: Most commonly used firmware in Guifi.net for mesh networks. This OpenWrt fork aims to simplify and automate mesh deployments.} operating as Mesh Networks using BMX6 dynamic routing protocol.
+Finally, although Guifi.net main routing protocol is BGP for infrastructure and OSPF for internal routing, there are several isles operating as Mesh Networks using BMX6 dynamic routing protocol.
 
 
 \subsection{Infrastructure vs Mesh Network Routing Protocols}
@@ -131,7 +131,7 @@ Batman-eXperimental6 \cite{bmx6} is a BATMAN (Better Approach To Mobile Adhoc Ne
 
 \section{Motivation}
 \label{sec:motivation}
-Back in 2014, while working on my BSc. dissertation in the Universitat Politècnica de Catalunya, the department and, specifically, the investigation team I was working with, gave me the opportunity to participate in a GSoC\footnote{Google Summer of Code (\href{https://www.google-melange.com/archive/gsoc/2014/orgs/freifunk/projects/eloicaso.html}{2014})} project under the umbrella of Freifunk, to design, develop and demonstrate a package that would help simplifying the configuration of Bird Daemon as a software able to share routes between BMX6 mesh and BGP infrastructure networks deployed in \textit{border} nodes deployed in the Catalan community network Guifi.net.
+Back in 2014, while working on my BSc. dissertation in the Universitat Politècnica de Catalunya, the department and, specifically, the investigation team I was working with, gave me the opportunity to participate in a \Gls{gsoc} project under the umbrella of Freifunk, to design, develop and demonstrate a package that would help simplifying the configuration of Bird Daemon as a software able to share routes between BMX6 mesh and BGP infrastructure networks deployed in \textit{border} nodes deployed in the Catalan community network Guifi.net.
 
 That project was successful and the result was an integration package using OpenWrt's well-known UCI/LUCI configuration mechanism to set up Bird through a user-friendly Web UI even without deep knowledge of Bird's syntax. GSoC's time frame though was not enough to polish the package and add some secondary protocols and the package stopped getting maintenance from myself later that year. However, it has been an OSS project that has been on my \textit{backlog} of things I want to keep improving and also been queried some times by Víctor Oncins as it is really helpful for network administrators but it is not mature enough for complex production environments available in Guifi.net.
 
@@ -176,7 +176,7 @@ While agreeing the original scope of the project, few extra ideas and tasks were
     \item Comparative set of tests between Quagga and Bird Daemon solutions.
 \end{itemize}
 
-Most of these extra tasks are already documented as part of the Package Documentation Reporitory\footnote{GitHub TODO List: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/TODO.md}{Link}.} and open for discussion if new requirements arise.
+Most of these extra tasks are already documented as part of the Package Documentation Reporitory (\href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/TODO.md}{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/TODO.md}) and open for discussion if new requirements arise.
 
 \subsubsection{Bird Daemon Vs. Quagga deployments}
 There is a special reasoning behind not doing a comparative analysis of these two solutions. Of course, the timing constrains have strongly influenced the decision of dropping this comparison from this project's scope, but there is also the big amount of evidence already collected for my GSoC2014 project as well as some new evidence found either in some reputable sources as well as from Bird's own OSS Community proving that Bird Daemon has been far more stable, less resource eater and flexible (thanks to its Filter\&Function scripting language) than other well-known enterprise level solutions. This evidence and where it is coming from is available in the Appendix \ref{app:ch:blinks}.
@@ -194,12 +194,12 @@ After this initial phase, the implementation tasks will be executed in a Kanban-
 \begin{itemize}
     \item Features will be executed following Backlog's priority order and one at a time.
     \item Each \textit{feature} or \textit{requirement} must be self-contained and the Package should be releasable at any time.
-    \item There is no Board or framework to introduce the data (e.g time spent or state of the tasks) as such as the overhead of doing it is not proportional to the number of tasks or value of the data that could be collected. However, during the first \textit{Cycle} of the project (first two weeks), in order to illustrate how could this project look like using Kanban, I did use an online OSS tool called \textit{Taiga.io}\footnote{\href{https://taiga.io/}{Taiga.io}: Online project management tool working either with Kanban or SCRUM Agile methodologies. This tool is widely used in OSS projects due to its power, simplicity and plugins (open API) and has also enterprise options.}. See Appendix \ref{app:sec:kanban} in order to see some captures of the initial tasks created using the tool.
+    \item There is no Board or framework to introduce the data (e.g time spent or state of the tasks) as such as the overhead of doing it is not proportional to the number of tasks or value of the data that could be collected. However, during the first \textit{Cycle} of the project (first two weeks), in order to illustrate how could this project look like using Kanban, I did use an online OSS tool called \textit{\Gls{taiga}}. Appendix \ref{app:sec:kanban} includes some screenshots  showing initial tasks created using the tool.
     \item There will be weekly/bi-weekly meetings with the Stakeholder in order to discuss progress, any blocker or issue and rearrange priorities if required.
     \item There will be a \textit{demo} to the Stakeholder to show progress in a weekly/bi-weekly basis.
 \end{itemize}
 
-The communication, as already mentioned, will be done through regular meetings with the External Consultant (Stakeholder) using the Jitsi\footnote{\href{https://jitsi.org/}{Jitsi}: Open Source multiplatform VoIP conference service.} conference service, which allows screen sharing and text communication while in conference, simplifying demoing and code reviews. Regular communication will be also done through Hangouts instant messaging service and by email to share progress, risks or blockers.
+The communication, as already mentioned, will be done through regular meetings with the External Consultant (Stakeholder) using the Jitsi (\href{https://jitsi.org/}{https://jitsi.org/}) VoIP conference service, which allows screen sharing and text communication while in conference, simplifying demoing and code reviews. Regular communication will be also done through Hangouts instant messaging service and by email to share progress, risks or blockers.
 
 \subsubsection{Gantt Diagram}
 Tasks' delivery forecast can be seen in Figures  \ref{fig:general_gantt} and \ref{fig:detail_gantt}:
@@ -234,13 +234,20 @@ Key milestones:
 \section{Obtained results' brief summary}
 % Actualitzacio del paquet bird-OpenWrt
 % Analisis de les possibles integracions amb uBus i proposta de projecte futur per a implementar-ho
+This project has two main achievements:
 
+First one is the self-contained major update for bird-openwrt package, which has not only brought support for the latest Bird Daemon API, but also introduced a number of new functionalities and process automations critical for its adoption by our target administrators and the rest of OpenWrt's community.
+The second main achievement is the detailed uBus integration analysis including some implementation examples and foreseen future development paths. As part of the analysis, I have also detailed a possible project proposal following the most promising implementation path for a future students willing to learn about OpenWrt/LEDE, Bird Daemon and uBus communication architecture.
 
+All contents mentioned in this dissertation are available on GitHub:
 
-
-
+\begin{itemize}
+    \item Bird-OpenWrt Package: \href{https://github.com/eloicaso/bird-openwrt}{https://github.com/eloicaso/bird-openwrt}
+    \item Project's extra documentation: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn}{https://github.com/eloicaso/bgp-bmx6-bird-docn}
+    \item This dissertation (LaTeX): \href{https://github.com/eloicaso/msc_dissertation}{https://github.com/eloicaso/msc\_dissertation}
+\end{itemize}
 
 \section{Structure of the document}
 \label{sec:sod}
-
+This dissertation is organized as follows: Chapter \ref{ch:introduction} introduces background concepts to understand this project's scope and basic management information. Chapter \ref{ch:architecture} presents target and tested network architectures and its requirements. Chapter \ref{ch:implementation} goes in depth detail about which have been Package's main improvements and also briefly describing previous capabilities. Moreover, this chapter also details the theoretical analysis done on Bird's uBus integration feasibility. Chapter \ref{ch:tresults} brings exhaustive information regarding performed tests in both initial development and virtual real scenario networks, detailed information of main differences between the original Package version and this project's enhancements and also common Bird errors and how to solve them. Finally, Chapter \ref{ch:conclusions} summarises main achievements, main challenges and if have been solved or not and also future development lines. 
 

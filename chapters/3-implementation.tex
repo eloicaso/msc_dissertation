@@ -303,6 +303,8 @@ In the same way as the Log Page \ref{sub:sub:logp}, current documentation touche
     This issue was finally solved by adding an extra level of complexity on both write Lua functions as well as storing our target path in a file in the system (\texttt{/etc/bird\{4|6\}/filter\_lock} and \texttt{/etc/bird\{4|6\}/ffunction\_lock}).
 \end{itemize}
 
+
+
 \subsection{Align documentation and upgrade to Markdown}
 Documentation has been one of the biggest disappointments while working with LUCI/LUCI2. To use a project or a technology and find that there is not enough detail, if any, about what you can do and how, is really disappointing and causes frustration while trying to figure it out. Therefore, I have put a lot of efforts on updating all the documentation available in the Package, as well as added an extra repository with other data that supports it, without bloating it (this Package will be Pulled to the official repository, so it is desirable to have the minimum contents in this one, and everything else linked). Moreover, because the old documentation was plain text, it was unpleasant to read. In order to facilitate Package's configuration and daily usage, I have upgraded old documents to MarkDown\footnote{MarkDown: Programmatic documentation syntax to convert plain text documentation into HTML. There are several different implementations with slight differences. \href{https://daringfireball.net/projects/markdown/}{Original specification - 2004}.}
 

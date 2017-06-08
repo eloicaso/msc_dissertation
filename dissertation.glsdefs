@@ -1,16 +1,16 @@
-\ifglsentryexists{acr:oss}{}%
+\ifglsentryexists{xoln}{}%
 {%
-\gls@defglossaryentry{acr:oss}%
+\gls@defglossaryentry{xoln}%
 {%
-name={OSS},%
-sort={OSS},%
+name={XOLN},%
+sort={XOLN},%
 type={main},%
-first={Open Source Software\glsspace (OSS)},%
-firstplural={Open Source Softwares\glsspace (OSSs)},%
-text={OSS},%
-plural={OSSs},%
-description={Open Source Software},%
-descriptionplural={Open Source Software\acrpluralsuffix },%
+first={XOLN},%
+firstplural={XOLNs},%
+text={XOLN},%
+plural={XOLNs},%
+description={El Comuns de la Xarxa Oberta, Lliure i Neutral document. Guifi.net's principles to guarantee a Free, Open and Neutral Network. This principles guide both users and service providers how to interact in a fair manner. La Fundaci\'{o} Guifi.net is network's institution to arbitrate any issue arisen due to this principles non-compliance.},%
+descriptionplural={El Comuns de la Xarxa Oberta, Lliure i Neutral document. Guifi.net's principles to guarantee a Free, Open and Neutral Network. This principles guide both users and service providers how to interact in a fair manner. La Fundaci\'{o} Guifi.net is network's institution to arbitrate any issue arisen due to this principles non-compliance.},%
 symbol={\relax },%
 symbolplural={\relax },%
 user1={},%
@@ -19,28 +19,118 @@ user3={},%
 user4={},%
 user5={},%
 user6={},%
-long={Open Source Software},%
-longplural={Open Source Softwares},%
-short={OSS},%
-shortplural={OSSs},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
 counter={page},%
 parent={},%
 %
 }%
 }%
-\ifglsentryexists{gls:bird}{}%
+\ifglsentryexists{igp}{}%
 {%
-\gls@defglossaryentry{gls:bird}%
+\gls@defglossaryentry{igp}%
 {%
-name={Bird},%
-sort={Bird},%
+name={Interior Gateway Protocol},%
+sort={Interior Gateway Protocol},%
 type={main},%
-first={Bird},%
-firstplural={Birds},%
-text={Bird},%
-plural={Birds},%
-description={Bird Daemon},%
-descriptionplural={Bird Daemon},%
+first={Interior Gateway Protocol},%
+firstplural={Interior Gateway Protocols},%
+text={Interior Gateway Protocol},%
+plural={Interior Gateway Protocols},%
+description={routing protocols being used in internal Autonomous Systems (single-administrated network behaving as an entity) to manage their connectivity and paths.},%
+descriptionplural={routing protocols being used in internal Autonomous Systems (single-administrated network behaving as an entity) to manage their connectivity and paths.},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{egp}{}%
+{%
+\gls@defglossaryentry{egp}%
+{%
+name={Exterior Gateway Protocol},%
+sort={Exterior Gateway Protocol},%
+type={main},%
+first={Exterior Gateway Protocol},%
+firstplural={Exterior Gateway Protocols},%
+text={Exterior Gateway Protocol},%
+plural={Exterior Gateway Protocols},%
+description={routing protocols managing connectivity and paths on networks compound by Autonomous System entities.},%
+descriptionplural={routing protocols managing connectivity and paths on networks compound by Autonomous System entities.},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{gsoc}{}%
+{%
+\gls@defglossaryentry{gsoc}%
+{%
+name={Google Summer of Code},%
+sort={Google Summer of Code},%
+type={main},%
+first={Google Summer of Code},%
+firstplural={Google Summer of Codes},%
+text={Google Summer of Code},%
+plural={Google Summer of Codes},%
+description={Annual open source software development program (6 months) driven and sponsored by Google to support students looking for OSS projects and getting rewarded for developing them.},%
+descriptionplural={Annual open source software development program (6 months) driven and sponsored by Google to support students looking for OSS projects and getting rewarded for developing them.},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{taiga}{}%
+{%
+\gls@defglossaryentry{taiga}%
+{%
+name={Taiga.io},%
+sort={Taiga.io},%
+type={main},%
+first={Taiga.io},%
+firstplural={Taiga.ios},%
+text={Taiga.io},%
+plural={Taiga.ios},%
+description={online project management tool working either with Kanban or SCRUM Agile methodologies. This tool is widely used in OSS projects due to its power, simplicity and plugins (open API) and has also enterprise options.},%
+descriptionplural={online project management tool working either with Kanban or SCRUM Agile methodologies. This tool is widely used in OSS projects due to its power, simplicity and plugins (open API) and has also enterprise options.},%
 symbol={\relax },%
 symbolplural={\relax },%
 user1={},%

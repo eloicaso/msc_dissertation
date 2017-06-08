@@ -22,6 +22,7 @@
 \usepackage{textcomp}
 \usepackage{pdflscape}
 \usepackage{colortbl}
+\usepackage[xindy]{glossaries}
 \usepackage[toc,title]
 {appendix}
 
@@ -115,9 +116,11 @@
 \makeatletter
 \@addtoreset{footnote}{chapter}
 \makeatother
+\makeglossaries
 
 \begin{document} 
 \input{cover}
+\input{glossary}
 \input{chapters/1-introduction}
 \input{chapters/2-architecture}
 \input{chapters/3-implementation}
@@ -125,13 +128,14 @@
 \input{chapters/5-conclusions}
 
 \newpage
-\addcontentsline{toc}{chapter}{{\small Glossary of Terms}}
-\input{glossary}
+\printglossary[title=List of Terms,toctitle=Terms and abbreviations]
+
 
 \newpage
 \bibliographystyle{ieeetr}
 \bibliography{references}
 \addcontentsline{toc}{chapter}{{\small Bibliography}}
+
 
 \newpage
 \input{appendix}

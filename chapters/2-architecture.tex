@@ -46,9 +46,9 @@ In order to avoid this disruptive behaviour, Bird Daemon filter scripting capabi
 \newpage
 
 \section{Testing Scenarios}
-Although it has not been possible to test Package's improvements in the target production network as the changes would incur in service disruption for up to 1500+ nodes\footnote{Font: https://guifi.net/en/node/2435/view/nodes} in the \textit{Barcelon\`{e}s} Zone, it is foreseen to update target \textbf{MXN} Nodes after agreeing it with all the involved parts.
+Although it has not been possible to test Package's improvements in the target production network as the changes would incur in service disruption for up to 1500+ nodes in the Barcelon\`{e}s Zone, it is foreseen to update target \textit{MXN} Nodes after agreeing it with all the involved parts.
 
-Nevertheless, this Package's improvements have been tested in two environments connected directly with Guifi.net thanks to  Universitat Oberta de Catalunya and V\'{i}ctor's support, who have provided and helped me configuring a number of Virtual Machines, virtual network resources and also agreed permission to connect through another university's network (UPF\footnote{UPF: Universitat Pompeu Fabra (Barcelona)}) in order to simulate different BGP Peers communication and route sharing: 
+Nevertheless, this Package's improvements have been tested in two different environments connected directly with Guifi.net thanks to Universitat Oberta de Catalunya and V\'{i}ctor's support, who have provided and helped me configuring a number of Virtual Machines, virtual network resources and also agreed permission to get through another university's network, Universitat Pompeu Fabra, in order to connect to a different network section, but still in Barcelona, thus following the same approach of different BGP Peers being able to route and share prefixes: 
 
 \subsubsection{Internal Development Testing}
 Package development tests have been done inside UOC's network using a really simple network topology where our target Bird Node VM is connected to Guifi.net using UOC's Infrastructure Node (UOC receives/announces 3000+ BGP Routes). 
@@ -61,21 +61,21 @@ Package development tests have been done inside UOC's network using a really sim
 	\end{figure}
 
 \subsubsection{Final Package Testing}
-As can be seen in the Figure \ref{fig:devnet}, the final testing environment is a mirror of the target network. This environment has been created in order to do the final tests after \textit{releasing} the final version of the Package to test it without the risk of damaging the production network or flooding unwanted routes to Guifi.net. This network section routes to two Infrastructure Super Nodes connected to two geographically-separated Barcelona well-known Universities, being almost, if not exactly, a mirror of what our target network is.
+As can be seen in the Figure \ref{fig:devnet}, the final testing environment is a virtual mirror of the target network. This environment has been created in order to do the final tests after \textit{releasing} the final version of the Package to test it without the risk of damaging the production network or flooding unwanted routes to Guifi.net. This network section routes to two Infrastructure Super Nodes connected to two geographically-separated Barcelona well-known Universities, being almost, if not exactly, a mirror of what our target network is.
 
 The components provided in order to achieve this network have been:
 \begin{itemize}
     \item VPN access to the Guifi Network using UOC's resources.
     \item 4 Virtual Machines using LEDE17.01 Firmware in University's network.
-    \item Virtual Bridge to connect the VMs simulating a Mesh Network.
-    \item Network way through two different network sections.
+    \item Virtual Bridge to connect the VMs simulating a fully connected Mesh Network.
+    \item Network way through two different Barcelona's network sections.
     \begin{itemize}
-        \item Connection using UOC's Super Node
-        \item Virtual Machine 4 connects through UPF\footnote{UPF: Universitat Pompeu Fabra (Barcelona)}'s internal network to find path out to a near Guifi network.
-        \item Both Infrastructure SuperNodes have Import ALL policy applied to our network
+        \item Virtual Machine 1 connects through UOC's Super Node
+        \item Virtual Machine 4 connects through UPF's internal network, to a near Guifi network section.
+        \item Both Infrastructure SuperNodes are importing all their routes to our network
         \item UPF's SuperNode throughput has been limited to avoid disruption in their internal network.
         \begin{itemize}
-            \item Connection through UPF's internal network using a IPIP Tunnel\footnote{IP in IP tunnel: Simple encapsulation of an IP Address and its datagram inside another IP Address. \href{https://tools.ietf.org/html/rfc2003}{RFC Definition}.}
+            \item Connection through UPF's internal network using a IPIP Tunnel: IP inside IP encapsulates IP Addresses and their datagram inside other IP Addresses.
             \item We have agreed to do this testing in a limited time-frame to avoid disruption in their services as we are sharing routes between Guifi.net-UOC-UPF-Guifi.net.
         \end{itemize}
     \end{itemize}
