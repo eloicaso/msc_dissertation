@@ -89,7 +89,7 @@ However, \textit{bird-uci} Package uses the UCI configuration file in a non-clas
 
 \begin{itemize}
     \item As part of Bird's v1.4.3 to v1.6.3 API reviewing, some options have required tweaking in order to be compliant to the latest API.
-    \item Most of the UCI improvements are tied to LUCI improvements (see section \ref{sec:luciimp}) in order to enhance User eXperience.
+    \item Most of the UCI improvements are tied to LUCI improvements (see section \ref{sec:luciimp}) in order to enhance \acrshort{ux}.
     For example, BGP Protocol allows you to execute an action once a number of routes is reached (imported, exported or received). This is shown as a pair of settings in the UI. Previously, each setting was independent, which was a problem as both are optional and hidden for simplicity reasons.
     By adding the extra option, I have been able to tie both options graphically and make them work as expected.
     From /etc/config/bird4:
@@ -116,7 +116,7 @@ As shown in both figures \ref{fig:uitiedn} and \ref{fig:uitiedy} LUCI brings bot
 
 This tying improvement has been done in the web UI's and not in UCI translation time because, as can be seen in the following code snippet, it is easier to let LUCI configuration management process to add/remove those attributes automatically on settings save time, than doing some hand-made if statements.
 
-In the following LUA snippet, LUCI creates a UI Flag option (our trigger) which is mandatory (\texttt{optional = false}). The other two options (\texttt{limit} and \texttt{limit\_action}) are both optional and dependant on the value of our flag (\texttt{depends({import\_trigger = "1"})}.
+In the following Lua snippet, LUCI creates a UI Flag option (our trigger) which is mandatory (\texttt{optional = false}). The other two options (\texttt{limit} and \texttt{limit\_action}) are both optional and dependant on the value of our flag (\texttt{depends({import\_trigger = "1"})}.
 
 \input{code/tieduci3}
 \end{itemize}
@@ -144,7 +144,7 @@ The contents of this page are:
     \label{fig:statusp}
 \end{figure}
 
-Although contents of this page are simple and straightforward, the result shown in figure \ref{fig:statusp} is not the desired one. The initial idea was to use a single button for starting and stopping the service, and none for restart. Moreover, the button would be automatically switched between states showing, when started, service's PID. In Appendix \ref{app:ch:extrap} you can see the expected behaviour in the implementation of Privoxy's OpenWrt Package.
+Although contents of this page are simple and straightforward, the result shown in figure \ref{fig:statusp} is not the desired one. The initial idea was to use a single button for starting and stopping the service, and none for restart. Moreover, the button would be automatically switched between states showing, when started, service's \acrshort{pid}. In Appendix \ref{app:ch:extrap} you can see the expected behaviour in the implementation of Privoxy's OpenWrt Package.
 
 The reason behind not doing it is that this simple change would require to change from using LUCI's CBI (Lua) to LUCI2 (JavaScript). Lua's implementation allows you to trigger a number of actions according to a specific element state, if an action (e.g. button clicked) is triggered or during page's rendering. However, Bird's startup can take few seconds and LUCI has no granular control or a polling mechanism on rendering time to allow this behaviour. To do so, it would be required to force the page to wait (manual OS \texttt{sleep} command) which would block page's loading and leave it in an incorrect state depending on Bird's time to start.
 
@@ -314,7 +314,7 @@ The main documentation is now separated between:
     \item LUCI: Web UI Pages' composition, field description, default values and any known issue.
     \item README.md: Development notes about how to build and enhance the Package and known issues on current Package version.
     \item Changelog.md: Exhaustive list of enhancements added as part of this project (v0.3)
-    \item COPYING.md: Markdown version of GPLv3.0
+    \item COPYING.md: Markdown version of \acrshort{gpl3}
     \item AUTHORS.md: List of the contributors.
 \end{itemize}
 
@@ -322,7 +322,7 @@ Documentation repository with extra information:
 \begin{itemize}
     \item Repository-Contents.md: This file includes the tree structure of Packages repository as well as a description of what each file is.
     \item Manual-Procedures.md: List of manual procedures that have not been automated in this Package's version and may require an administrator to do them on command line.
-    Currently the use of secondary Routing Tables with custom table IDs has to be done following the procedure shown.
+    Currently, the use of secondary Routing Tables with custom table IDs has to be done following the procedure shown.
     \item TODO.md: Unsorted and non-prioritised list of tasks pending for future releases.
 \end{itemize}
 
@@ -494,6 +494,6 @@ Therefore, we could make use of some available implementations to automate their
 \subsubsection{Analysis conclusions}
 The conclusion I reached from this theoretical analysis about the feasibility of integrating uBus on Bird is that, although it would require a lot of efforts until we can viably get JSON-formatted live data from Bird, it is possible to achieve it if the third approach I have presented is followed. This approach will require Bird community and developers' support in order to implement it in the official stream and this solution must follow JSON standards. After achieving that, we can start defining how we want current LUCI or LUCI2 implementation's to adopt this new API and how much it can be delivered in an initial phase (from simple auto-refreshed text fields to historical health charts, simulated connectivity maps and other relevant data).
 
-Joining everything together, these requirements would easily  become a feasible future Open Source Software MSc. project. This project's requirements would be: to have network's knowledge or willingness to learn about it; to have some level of C, Shell and JavaScript expertise; to be prepared to agree project's requirements, ideas and approaches with Bird's community and developers; and also patience to deal with the lack of LUCI2, uBus and RPCd documentation in OpenWrt/LEDE, being a bonus if, together with the community, the student helps to fill any knowledge gaps and to feed them back to them.
+Joining everything together, these requirements would easily  become a feasible future Open Source Software MSc. project. This project's requirements would be: to have network's knowledge or willingness to learn about it; to have some level of C, Shell and JavaScript expertise; to be prepared to agree project's requirements, ideas and approaches with Bird's community and developers; and also, patience to deal with the lack of LUCI2, uBus and RPCd documentation in OpenWrt/LEDE, being a bonus if, together with the community, the student helps to fill any knowledge gaps and to feed them back to them.
 
 \newpage
