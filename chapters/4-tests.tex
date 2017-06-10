@@ -3,31 +3,31 @@
 
 \section{Package Testing}
 Testing an integration/translation Package, and this one specifically, is a rather complex task to evaluate as Bird configuration files are modular and desired settings can be achieved in different ways.
-Even more, although a \textit{it works/it does not work} policy could be accepted, it does not mean that there are not other possible implementations that could work in a better way.
+Even more, although a \textit{it works/it does not work} policy could be accepted, it does not mean that there are no other possible implementations that could work in a better way.
 For example, filters and functions can be either written in the \textit{.conf} file or included using \texttt{\%include} mechanism, being the second one a better approach as it enhances code readability as well as it avoids bloating the configuration file unnecessarily.
 
 With this introduction in mind, the following sections will explain how this package has been tested following Bird's configuration base requirements and service behaviour and some \textit{future work} ideas to achieve automatic and unit tests.
 
 
-\subsection{Configuration Translation Tests (future work)}
-To perform configuration integrity tests in current package, it is required to repeat the execution of \texttt{/etc/bird\{4|6\}/init.d/bird4 restart} in order to trigger the UCI-bird.conf translation from a target UCI file. The code to do this translation has been refactored in an functional manner to allow future unit tests or, at least, make it easier to integrate in an automated test framework or process. For example, an automated CI/CD build process could build an update of the package, push it into a test node, execute the translation process and compare it against the previous (or a stable) version as well as check its correctness by querying Bird's status.
+\subsection{Configuration of the \textit{translation} tests (future work)}
+To perform configuration integrity tests in current package, it is required to repeat the execution of \texttt{/etc/bird\{4|6\}/init.d/bird4 restart} in order to trigger the UCI-bird.conf translation from a target UCI file. The code to do this translation has been refactored in an functional manner to allow future unit tests or, at least, make it easier to integrate in an automated test framework or process. For example, an automated CI/CD build process could build an update of the package, push it into a test node, execute the translation process and compare it against the previous (or a stable) version, as well as check its correctness by querying Bird's status.
 
 \subsubsection{Reviewing v0.2 against v0.3}
 Testing the outputs from the old and new packages, and taking into account that there are some manual changes in the old one, the following example is configured as follows:
 
 \begin{itemize}
-    \item Router IDs follow node's IP Address
-    \item Kernel, Device and Static Protocols have been set by default
-    \item A Static Route has been added  (identical)
-    \item BGP Template and Instance have been configured following v0.2 scheme with matching settings to avoid Bird failures
-    \item BGP Instance AS and Neighbours are dummy values
+    \item Router IDs follow node's IP Address.
+    \item Kernel, Device and Static Protocols have been set by default.
+    \item A Static Route has been added  (identical).
+    \item BGP Template and Instance have been configured following v0.2 scheme with matching settings to avoid Bird failures.
+    \item BGP Instance AS and Neighbours are dummy values.
     \item A BGP Filter called "all\_ok" (accept all routes) has been added using each version's process.
 \end{itemize}
 
 In the new package, we have instantaneous configuration correctness feedback as we can check Bird's status in the Status Page. 
 In the old package, after executing \texttt{/etc/bird\{4|6\}/init.d/bird4 start}, Bird will fail and it is required to move the Filter "all\_ok" to the top of the document. Bird will start correctly after this modification.
 
-After checking that both daemons are running, we can then perform a \textit{diff} between the configuration files and look for any noticeable difference
+After checking that both daemons are running, we can then perform a \textit{diff} between the configuration files and look for any noticeable difference.
 
 \input{code/conf2vs3}
 

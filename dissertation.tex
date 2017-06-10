@@ -9,22 +9,21 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{booktabs}
-\usepackage{url}
+\usepackage[hyphens]{url}
 \usepackage{xcolor}  
 \usepackage{verbatim}
-\usepackage{hyperref}
+\usepackage[breaklinks=true]{hyperref}
 \usepackage{parcolumns}
 \usepackage{fancyvrb}
 \usepackage{verbatimbox}
 \usepackage{threeparttable}
-\usepackage{acronym}
+\usepackage[xindy,acronym,toc]{glossaries}
 \usepackage{listings}
 \usepackage{textcomp}
 \usepackage{pdflscape}
 \usepackage{colortbl}
 \usepackage[xindy]{glossaries}
-\usepackage[toc,title]
-{appendix}
+\usepackage[toc,title]{appendix}
 
 %%%%%%%%%%%%%%% LUA SCRIPTING FOR LSTLISTING CODES! %%%%%%%%%%%%%%%%%
 \lstdefinelanguage{Lua} 
@@ -117,10 +116,10 @@
 \@addtoreset{footnote}{chapter}
 \makeatother
 \makeglossaries
+\input{glossary}
 
 \begin{document} 
 \input{cover}
-\input{glossary}
 \input{chapters/1-introduction}
 \input{chapters/2-architecture}
 \input{chapters/3-implementation}
@@ -128,8 +127,8 @@
 \input{chapters/5-conclusions}
 
 \newpage
-\printglossary[title=List of Terms,toctitle=Terms and abbreviations]
-
+\printglossary[title=List of Terms,toctitle=List of Terms,type=\glsdefaulttype]
+\printglossary[title=List of abbreviations,type=\acronymtype]
 
 \newpage
 \bibliographystyle{ieeetr}

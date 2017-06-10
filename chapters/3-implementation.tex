@@ -9,36 +9,36 @@ Administrators require:
     \item A full-featured tool with an easy and intuitive UI to manage and monitor protocol health and data efficiently and avoiding any handmade/custom edit, reducing configuration's complexity.
     \item Use of LEDE/OpenWRT-based firmwares widely used in the target network.
     \item A Routing Protocols' management tool that, at least, supports BGP Static Routing Protocol and it is able to share routes with BMX6 Dynamic Routing Protocol in a manageable way.
-    \item Use Bird Daemon instead of Quagga to make use of its proven efficiency, low resource consumption and powerful filter capabilities, which is critical to some of the widely used commodity hardware in Guifi.net.
-    \item Use and improve Bird Daemon's configuration integration package (bird-uci and luci-app-bird) available in the official Routing Repository of LEDE/OpenWRT.
+    \item Use Bird instead of Quagga to make use of its proven efficiency, low resource consumption and powerful filter capabilities, which is critical to some of the widely used commodity hardware in Guifi.net.
+    \item Use and improve Bird's configuration integration package (bird-uci and luci-app-bird) available in the official Routing Repository of LEDE/OpenWRT.
     \item Avoid project-specific customisations in the integration package that would not benefit all the community. If required, add those custom enhancements in a development branch.
     \item Update Package's documentation and create new topics to cover Web UI interface and any manual process not covered by package's improvements.
     \item Update Bird integration package in order to be compliant to the latest API (v1.6.3 when this document was written).
     \item Enhance Web UI to support user-friendly configuration and visualisation of the following:
     \begin{itemize}
-        \item Bird Daemon service status.
-        \item Bird Daemon events information (Logs).
+        \item Bird service status.
+        \item Bird events information (Logs).
         \item Filters and Functions editing using an embedded HTML text editor.
         \item Update old configuration Web pages, fix some outdated options and re-sort them to a more logically order.
     \end{itemize}
-    \item Do theoretical viability investigation to use uBus Daemon as a mechanism to communicate with Bird Daemon and get health information and current-status information for handled protocol using JSON messages.
+    \item Do theoretical viability investigation to use uBus as a mechanism to communicate with Bird and get health information and current-status information for handled protocol using JSON messages.
 \end{itemize}
 
 \section{Implemented changes and improvements}
-The following sections summarises what has been changed as part of this project's development, which changes have been successful, challenges found and lessons learnt that will help towards future versions of the Package.
+The following sections summarise what has been changed as part of this project's development, which changes have been successful, challenges found and lessons learnt that will help towards future versions of the Package.
 
-\subsection{Build and deployment process documentation update}
+\subsection{Building and deployment process documentation update}
 One of the first challenges I found during the initial investigation was that the documented process for building the Package was wrong. Because this process was originally written and tested on 2014 using OpenWrt, it was misaligned and  led into few days testing this process using the latest version of the development environment in order to tune it. Main changes are:
 
 \begin{itemize}
     \item Generalise Makefiles: remove hardcoded references to bird4/bird6 where possible on Makefile and post installation scripts.
     \item Re-test and update steps: Refresh steps required to compile (\texttt{make}) and deploy the Package in the target test environment.
-    \item Add extra useful information: Package version information, dependencies, links to documentation and known issues,  \end{itemize}
+    \item Add extra useful information: Package version's information, dependencies, links to documentation and known issues,  \end{itemize}
 
 \subsection{Apply code standards}
 As a daily Bash user, one of the main concerns that I had once I did retake the project was the state of the code because I did stop giving support to the Package on 2014 and I have improved drastically my consciousness towards clean, standard and following-best-practises code. Therefore, the top priority task I got was to normalise the code, apply best practises and, where possible, refactor it to follow a \textit{library}-pattern to be able to formalise an API and, in future releases, even to create unitary tests that would automate Package's tests.
 
-The first challenge I found was that LEDE/OpenWRT firmwares use the light compound of Linux tools BusyBox\footnote{\href{https://busybox.net/downloads/BusyBox.html}{BusyBox}: light and optimised UNIX tools including most of the widely used terminal commands (e.g. \texttt{ash}, \texttt{cat} or \texttt{rm}).}. This all-in-one tool comes really handy in embedded environments where performance and storage are critical but some of its tools are limited versions of the original ones.
+The first challenge I found was that LEDE/OpenWRT firmwares use the light compound of Linux tools \Gls{busybox}. This all-in-one tool comes really handy in embedded environments where performance and storage are critical but some of its tools are limited versions of the original ones.
 
 Particularly, the tool that has been more challenging is \textit{ash}, which is the built-in Shell Command Line included instead of \textit{Bash} and, although it includes most of its features, there are few others like Arrays that are not available and require the developer to re-think the solution (Ash readme page suggest the use of \texttt{set} command).
 
@@ -55,7 +55,7 @@ Some examples of the improvements applied are:
 
 \subsection{init.d script and service management}
 \label{sec:initd}
-Bird's init.d script (\texttt{/etc/init.d/bird4}) manages the service on boot or on demand. Bird Daemon's init.d file is substituted on the installation time by \texttt{/etc/bird\{4|6\}/init.d/bird\{4|6\}} script, and the original one backed up as \texttt{/etc/bird\{4|6\}/init.d/bird\{4|6\}.orig} to be restorable in the event of uninstalling the Package.
+Bird's init.d script (\texttt{/etc/init.d/bird4}) manages the service on boot or on demand. Bird's init.d file is substituted on the installation time by \texttt{/etc/bird\{4|6\}/init.d/bird\{4|6\}} script, and the original one backed up as \texttt{/etc/bird\{4|6\}/init.d/bird\{4|6\}.orig} to be restorable in the event of uninstalling the Package.
 
 Improvements introduced are:
 \begin{itemize}
@@ -171,7 +171,7 @@ This page has been implemented using mixed capabilities from LUCI and LUCI2. Bec
 
 Because of the lack of documentation in this area, I spent weeks investigating it by my own using the available package sources in OpenWrt's repositories. However, because what the other packages usually do is to use XHR polls as a communication broker method (e.g. get a specific data from a specific UCI file, apply some filtering/transformation if the data is not in the desired state and, finally, populate specific UI fields available in the HTML page) it was not clear what exactly I had to do as I only needed to: read last 30 lines of a file (Bird's Log File) and populate the Text View (Plain text data).
 
-Finally, after spending some days trying to contact experienced LEDE/OpenWrt developers using community's contact channels\footnote{LEDE community contact methods: \href{https://lede-project.org/contact}{Link}}, I could have few conversations with one of the main contributors of LEDE, OpenWrt and also main author of LUCI/LUCI2 \texttt{jow-}\footnote{Jo-Philip Wich: \href{https://github.com/jow-}{Github Profile}.}, who gave me some hints, examples of LUCI2 pages and also helped me debugging some issues I had during the development that allowed me to finish both Log and Filters/Functions pages.\\
+Finally, after spending some days trying to contact experienced LEDE/ OpenWrt developers using community's contact channels, I could have few conversations with one of the main contributors of LEDE, OpenWrt and also main author of LUCI/LUCI2 \texttt{jow-}\footnote{Jo-Philip Wich: LEDE-Project and OpenWrt core developer. \href{https://github.com/jow-}{Github Profile}.}, who gave me some hints, examples of LUCI2 pages and also helped me debugging some issues I had during the development that allowed me to finish both Log and Filters/Functions pages.\\
 
 \textbf{Log File Source key highlights:}
 \input{code/logfile1}
@@ -185,7 +185,7 @@ The Overview Page shows base Bird Service settings:
     \item Definition of any Routing Table that will be used in the Protocols.
     \item Router's ID (some protocols can overwrite it for their own purposes)
     \item Debug and Log settings and where to store them.
-    This option is currently configured to use a single file for logging. However, Bird allows to set any number of different instances with any set of options. Although this would be the desired state, given the resources of most of LEDE/OpenWrt's nodes, the log partition gets filled fast enough with a single file\footnote{If the Log Partition is filled and Bird is unable to access it, Bird service is dropped and blocked until more space is added.}.
+    This option is currently configured to use a single file for logging. However, Bird allows to set any number of different instances with any set of options. Although this would be the desired state, given the resources of most of LEDE/OpenWrt's nodes, the log partition gets filled fast enough with a single file. It is important to know that if the Log Partition is filled and Bird is unable to access it, Bird service will be stopped and blocked until the issue is solved.
 \end{itemize}
 
 \begin{figure}[H]
@@ -196,10 +196,10 @@ The Overview Page shows base Bird Service settings:
 \end{figure}
 
 \textbf{Changes and Improvements:}
-This section has not been severely modified. The only big change has been the Log\&Debug settings, because there were some issues using \textit{All} together with other options. By definition, \textit{All} implicitly includes the other options and should be not passed to the configuration.
+This section has not been severely modified. The only big change has been the Log\&Debug settings, because there were some issues using \textit{All} together with other options. By definition, \textit{All} implicitly includes the other options and should not be passed to the configuration.
 
 \subsubsection{General Protocols Page}
-The General Protocols Page shows the configuration of some of the supportive protocols described in section \ref{sub:sub:supproto}.
+The General Protocols Page shows the configuration of some of the Bird support protocols described in section \ref{sub:sub:supproto}.
 
 \begin{itemize}
     \item Kernel Protocol (1 mandatory as base Routing Table talking to the OS. Any extra kernel protocol is optional).
@@ -218,7 +218,7 @@ The General Protocols Page shows the configuration of some of the supportive pro
 \end{figure}
 
 \textbf{Changes and Improvements:}
-Main change in this page has been the recovery of both PIPE and Direct Protocols, disabled during the original Project because they were not relevant (there was no coexistence of protocols in Bird). 
+The main change in this page has been the recovery of both PIPE and Direct Protocols, disabled during the original Project because they were not relevant (there was no coexistence of protocols in Bird). 
 These two protocols are now required as they allow to communicate routing tables (PIPE) and to mark the routes as device ones on specific \textit{local} interfaces (DEVICE) to feed the kernel table.
 
 \subsubsection{BGP Protocol Page}
@@ -240,7 +240,7 @@ The BGP Protocol Page is the most important for this project as it allows us to 
 BGP Templates and Instances options have been re-sorted in order to follow a logical order when configuring them. Moreover, all the shown options have been reviewed and re-targeted as optional or mandatory and also, as explained in previous section \ref{sec:uciimp}, some of the options required to configure route sharing limits were not displayed together, which was prone to misconfiguration.
 
 \subsubsection{Filters \& Functions Page}
-Two new Pages empowering Filters\&Functions file edition without requiring terminal-based processes. This feature is one of this project's main goals because it completely removes the need for administrators to go to command line, which is a barrier for some non-expert administrators. Page's composition is the following (for both functions and filters):
+Two new Pages empowering Filters\&Functions file edition without requiring terminal-based processes. This feature is one of this project's main goals because it completely removes the need for administrators to go to command line, which is a barrier for some non-expert administrators. The page's composition is the following (for both functions and filters):
 
 \begin{itemize}
     \item Disclaimer: informative message about how to rename new files and how to visualise them after creation.
@@ -282,7 +282,7 @@ These two pages have been implemented using LUCI capabilities only (Lua Model) p
 \textbf{Caveats}\\
 The biggest challenge has been to be able to select different files to store our filters and functions. This Page has required a couple of weeks of development because of its functionality, the already mentioned file selection flexibility and what is required from the Text Area is not something easy to do with current LUCI documentation.
 
-In the same way as the Log Page \ref{sub:sub:logp}, current documentation touches most common uses but pages where no UCI configuration is involved are almost an unknown. Some of the challenges found are:
+In the same way as the Log Page \ref{sub:sub:logp}, current documentation refers to the most common uses but pages where no UCI configuration is involved are just briefly mentioned. Some of the challenges found are:
 \begin{itemize}
     \item \texttt{SimpleForm} Page format is required due the lack of UCI settings to modify. However, the documentation explaining which is SimpleForm's API, differences between this solution and \texttt{Map}\footnote{Map is LUCI's alternative format page to define UI by \textit{mapping} fields into UCI properties} or possibilities using SimpleForm are not detailed enough.
     \item Local variables are not reliable. Because pages can be re-rendered depending on the event triggered, your stored variables could be overwritten with new values by these rendering functions.
@@ -306,12 +306,12 @@ In the same way as the Log Page \ref{sub:sub:logp}, current documentation touche
 
 
 \subsection{Align documentation and upgrade to Markdown}
-Documentation has been one of the biggest disappointments while working with LUCI/LUCI2. To use a project or a technology and find that there is not enough detail, if any, about what you can do and how, is really disappointing and causes frustration while trying to figure it out. Therefore, I have put a lot of efforts on updating all the documentation available in the Package, as well as added an extra repository with other data that supports it, without bloating it (this Package will be Pulled to the official repository, so it is desirable to have the minimum contents in this one, and everything else linked). Moreover, because the old documentation was plain text, it was unpleasant to read. In order to facilitate Package's configuration and daily usage, I have upgraded old documents to MarkDown\footnote{MarkDown: Programmatic documentation syntax to convert plain text documentation into HTML. There are several different implementations with slight differences. \href{https://daringfireball.net/projects/markdown/}{Original specification - 2004}.}
+Documentation has been one of the biggest disappointments while working with LUCI/LUCI2. To use a project or a technology and find that there is not enough detail, if any, about what you can do and how, is really disappointing and causes frustration while trying to figure it out. Therefore, I have put a lot of efforts on updating all the documentation available in the Package, as well as added an extra repository with other data that supports it, without bloating it (this Package will be Pulled to the official repository, so it is desirable to have the minimum contents in this one, and everything else linked). Moreover, because the old documentation was plain text, it was unpleasant to read. In order to facilitate Package's configuration and daily usage, I have upgraded old documents to \Gls{markd}.
 
 The main documentation is now separated between:
 \begin{itemize}
-    \item UCI\footnote{UCI-DOCN: \href{https://github.com/eloicaso/bird-openwrt/blob/master/UCI-DOCUMENTATION.md}{Link}.}: UCI definition and examples and any terminal-based function or command required to use the Package without UI.
-    \item  LUCI\footnote{LUCI-DOCN: \href{https://github.com/eloicaso/bird-openwrt/blob/master/LUCI-DOCUMENTATION.md}{Link}.}: Web UI Pages' composition, field description, default values and any known issue.
+    \item UCI: UCI definition and examples and any terminal-based function or command required to use the Package without UI.
+    \item LUCI: Web UI Pages' composition, field description, default values and any known issue.
     \item README.md: Development notes about how to build and enhance the Package and known issues on current Package version.
     \item Changelog.md: Exhaustive list of enhancements added as part of this project (v0.3)
     \item COPYING.md: Markdown version of GPLv3.0
@@ -320,16 +320,16 @@ The main documentation is now separated between:
 
 Documentation repository with extra information:
 \begin{itemize}
-    \item Repository-Contents.md\footnote{Repository-Contents: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/Repository-Contents.md}{Link}.} This file includes the tree structure of Packages repository as well as a description of what each file is.
-    \item Manual-Procedures.md\footnote{Manual\_Procedures.md: \href{https://github.com/eloicaso/bgp-bmx6-bird-docn/blob/master/EN/manual_procedures.md}{Link}.}: List of manual procedures that have not been automated in this Package's version and may require an administrator to do them on command line.
+    \item Repository-Contents.md: This file includes the tree structure of Packages repository as well as a description of what each file is.
+    \item Manual-Procedures.md: List of manual procedures that have not been automated in this Package's version and may require an administrator to do them on command line.
     Currently the use of secondary Routing Tables with custom table IDs has to be done following the procedure shown.
     \item TODO.md: Unsorted and non-prioritised list of tasks pending for future releases.
 \end{itemize}
 
 \section{Bird Daemon uBus integration investigation}
-uBus theoretical investigation is driven by the need of continuously monitor the status of our protocols and the critical historical data that it could bring any administrator managing any size and complexity networks. Current Bird's implementation provides a low consumption and powerful routing solution but its monitoring capabilities lay in a CLI\footnote{CLI: Command Line Interface.} mimicking other well-known plain text-based tools as Quagga, Cisco or Mikrotik's Consoles.
+uBus theoretical investigation is driven by the need of continuously monitor the status of our protocols and the critical historical data that it could bring any administrator managing any size and complexity networks. Current Bird's implementation provides a low consumption and powerful routing solution but its monitoring capabilities lay in a \acrshort{cli} mimicking other well-known plain text-based tools as Quagga, Cisco or Mikrotik's Consoles.
 
-OpenWrt/LEDE's Bird plain-text CLI tools are \texttt{birdc\{4|6\}} and \texttt{birdcl\{4|6\}}\footnote{birdcl: Lightweight version of birdc. It does not support some commands (e.g. service management) or command history.} and provide administrators an API\footnote{Birdc documentation and API: \href{http://bird.network.cz/?get_doc&f=bird-4.html}{Link}.} in order to manage live system and gather information from it using UNIX Standard domain sockets (\texttt{bird.ctl}). As already mentioned, this CLI provides human readable plain-text information on specific queries, thus most of its outputs are not suitable or automatizable for scripting. Some example of Birdc's outputs are:
+OpenWrt/LEDE's Bird plain-text CLI tools are \texttt{birdc\{4|6\}} and \texttt{birdcl\{4|6\}}. Birdcl is the lightweight version of birdc. It does not support some commands (e.g. service management) or command history. Both tools provide the administrators an API \cite{birdcapi} in order to manage the live system and gather information from it using UNIX Standard domain sockets (\texttt{bird.ctl}). As already mentioned, this CLI provides human readable plain-text information on specific queries, thus most of its outputs are not suitable or automatizable for scripting. Some example of Birdc's outputs are:
 
 \input{code/birdcex1}
 
@@ -370,12 +370,12 @@ Using Bird4, luci-app-bird4 and a fictional \textit{RPC-uBus Bird4 Service} as a
     \label{fig:luci2arch}
 \end{figure}
 
-Taking in consideration that Bird Daemon has no integration with uBus, we need to connect to it through an RPCd service. The steps followed for a Client to interact with Bird Service are shown in figure \ref{fig:functionsp}:
+Taking in consideration that Bird has no integration with uBus, we need to connect to it through an RPCd service. The steps followed for a Client to interact with Bird Service are shown in figure \ref{fig:functionsp}:
 \begin{enumerate}
     \item Client's browser wants to query Bird service to populate a number of fields the UI (luci-app-bird4). These queries are done using JavaScript using RPCd's API.
     \item RPCd backend server passes Bird's UI query to uBus, who will check if Bird has an API registered in  its namespace.
     \item If uBus finds the given API, it checks the specific call sent and it is executed.
-    \item Bird4's API executes shell script commands to directly query Bird4 Daemon and returns any outputs generated.
+    \item Bird4's API executes shell script commands to directly query Bird4 and returns any outputs generated.
     \item The API will need to handle Bird's outputs and to encapsulate them into JSON objects. After doing that, any generated output is sent back to uBus.
     \item uBus sends any object received to the RPCd server.
     \item RPCd Server sends this object back to the client and it refreshes any targeted component with this new data.
@@ -406,7 +406,7 @@ After adding our code shown in the snippet \ref{lst:rpcbird} in RPCd's folder an
     \label{fig:ubusrs2}
 \end{figure}
 
-The truncated output shows that uBus is now able to call bird functions. If we query uBus for specific, and verbose (\texttt{-v}), information about the provided API this would be the output:
+The truncated output shows that uBus is now able to call bird functions. If we query uBus for specific and verbose (\texttt{-v}) information about the provided API this would be the output:
 
 \begin{figure}[H]
     \centering
@@ -417,7 +417,7 @@ The truncated output shows that uBus is now able to call bird functions. If we q
 
 As show in the figure \ref{fig:ubusrs3}, this Bird RPCd API provides 3 functions requiring no parameters (an example of a parametrized API will be shown as an example for Client-side's example).
 
-Now we can test this API, which is interacting (in an over-simplified manner) with Bird Daemon:
+Now we can test this API, which is interacting (in an over-simplified manner) with Bird:
 
 \begin{figure}[H]
     \centering
@@ -432,7 +432,7 @@ With these steps, we have all the necessary elements to make RPCd communicate fr
 
 \subsubsection{Client-side implementation details}
 
-This client-side example is different from the server-side one and has not been implemented in the development environment. It adds extra complexity in order to be able to tie it with the next subsection \ref{sub:sub:birdex}, which will cover the required changes in Bird Daemon itself in order to support LUCI2.
+This client-side example is different from the server-side one and has not been implemented in the development environment. It adds extra complexity in order to be able to tie it with the next subsection \ref{sub:sub:birdex}, which will cover the required changes in Bird itself in order to support LUCI2.
 
 Code snippet \ref{lst:luci2rpc} could be part of a future version of luci-app-bird\{4|6\} or a new package adding this functionality separately as a plugin (e.g. \texttt{bird-mod-ubus}). This example explores the possibility of a future BGP monitoring page (or section in BGP Protocols Page) giving administrators live information about their sessions.
 
@@ -441,10 +441,10 @@ Code snippet \ref{lst:luci2rpc} could be part of a future version of luci-app-bi
 This possible JavaScript code defines the API used in order to communicate with the backend server (\texttt{declare}) calling bird4's RPCd and querying the \texttt{getBGPNeighbour} function. This function would, somehow, query \texttt{birdc4} (e.g. \texttt{birdc4 show protocols "BCNPeerToTGN" -json '\{ 'bgpPeerID' : \{ \} \}'}) or any other tool designed for Bird to answer live data queries with JSON-formatted responses instead of human-readable ones.
 This snippet follows an oversimplified approach where we only ask Bird for a specific data and we use only a little portion of it (BGP Neighbour AS ID). However, I mention both \texttt{parseJSON} and \texttt{updateUIData} on purpose foreseeing that this RPC function would really return all BGP's data and populate the UI with it in a reasonable time lapse (snippet shows 1 second repetition).
 
-\subsubsection{Bird Service required changes}
+\subsubsection{Bird Service's required changes}
 \label{sub:sub:birdex}
-Previous sections have explained how we could implement an integration of Bird Daemon in uBus presupposing that Bird Daemon is already providing JSON-formatted outputs.
-This section focuses on Bird's implementation\footnote{Bird Daemon Repository: \href{https://gitlab.labs.nic.cz/labs/bird}{Link}.} and which changes would be required to support this new output format.
+Previous sections have explained how we could implement an integration of Bird in uBus presupposing that it is already providing JSON-formatted outputs.
+This section focuses on Bird's implementation and which changes would be required to support this new output format.
 
 For this investigation, I have reviewed three possible approaches:
 
@@ -467,10 +467,10 @@ This option has also been dismissed because, although the parsing method occurs 
     \item In order to get some data, it could be required to use CLI-based commands.
 \end{itemize}
 
-    \item \textbf{Modify Bird Daemon code to switch from human-readable to JSON outputs}:\\
-This third approach moves the problem even further. The solution proposed is to modify Bird Daemon's code in order to add extra functions that would, together with the human-readable ones, present protocols' live status in JSON format. This means that we have to review Bird's code in order to find where each output is generated and create an extra function (or add a parameter) to send the data in JSON's format.
+    \item \textbf{Modify Bird's code to switch from human-readable to JSON outputs}:\\
+This third approach moves the problem even further. The solution proposed is to modify Bird's code in order to add extra functions that would, together with the human-readable ones, present protocols' live status in JSON format. This means that we have to review Bird's code in order to find where each output is generated and create an extra function (or add a parameter) to send the data in JSON's format.
 
-This proposal requires a high number of changes in the official solution as well as tests to prove that all generated outputs are RFC compliant\footnote{JSON's \href{https://tools.ietf.org/html/rfc7159}{RFC}.} and that this changes are not causing performance issues in the Daemon. Following this solution, it could open three new options to solve our current issues:
+This proposal requires a high number of changes in the official solution as well as tests to prove that all generated outputs are RFC compliant \cite{json} and that this changes are not causing performance issues in the Daemon. Following this solution, it could open three new options to solve our current issues:
    \begin{itemize}
         \item Continue using Bird Remote Control but receiving JSON outputs instead of human-readable ones (may require improvements in birdc/birdcl tools).
         This option has some of the 2\textsuperscript{nd} proposal issues.
@@ -479,7 +479,7 @@ This proposal requires a high number of changes in the official solution as well
         \item Create an integration package or specific Bird implementation with uBus Socket. This would be the desired solution as the communication and integration would be complete and Bird could be announced as uBus \textit{compliant} service. Moreover, on the one hand there would be no conflicts with Bird Remote Control but, on the other hand, there could be some performance issues derivatives from this (currently unknown) socket communication implementation.
    \end{itemize}
 
-Finally, as an example of Bird's current output printing implementation, the following snippet shows part of BGP's  information presentation\footnote{Official Bird GitLab Repository: \href{https://gitlab.labs.nic.cz/labs/bird/blob/master/proto/bgp/bgp.c}{BGP Protocol implementation}}:
+Finally, as an example of Bird's current output printing implementation, the following snippet shows part of BGP's  information presentation \cite{bgpsn}:
 
 \input{code/bgpcode}
 
@@ -487,13 +487,13 @@ This code snippet \ref{lst:bgpcode} shows the first lines of BGP's information, 
 
 \input{code/bgpstruct}
 
-Therefore, we could make use of some available implementations to automate their parsing (e.g. json-c \footnote{JSON-C: JSON implementation for C language. \href{https://github.com/json-c/json-c}{Link}. This is just an example of implementation to be used, more rigurous tests would be required to confirm that, as their developers say in GitHub, the implementation conforms to RFC7159.}) and make the integration process much easier and facilitate its maintainability.
+Therefore, we could make use of some available implementations to automate their parsing (e.g. \Gls{jsonc}) and make the integration process much easier and facilitate its maintainability.
 \end{enumerate}
 
 
 \subsubsection{Analysis conclusions}
-The conclusion I reached from this theoretical analysis about the feasibility of integrating uBus on Bird Daemon is that, although it would require a lot of efforts until we can viably get JSON-formatted live data from Bird, it is possible to achieve it if the third that approach I have presented is followed. This approach will require Bird community and developers' support in order to implement it in the official stream and this solution must follow JSON standards. After achieving that, we can start defining how we want current LUCI or LUCI2 implementation's to adopt this new API and how much it can be delivered in an initial phase (from simple auto-refreshed text fields to historical health charts, simulated connectivity maps and other relevant data).
+The conclusion I reached from this theoretical analysis about the feasibility of integrating uBus on Bird is that, although it would require a lot of efforts until we can viably get JSON-formatted live data from Bird, it is possible to achieve it if the third approach I have presented is followed. This approach will require Bird community and developers' support in order to implement it in the official stream and this solution must follow JSON standards. After achieving that, we can start defining how we want current LUCI or LUCI2 implementation's to adopt this new API and how much it can be delivered in an initial phase (from simple auto-refreshed text fields to historical health charts, simulated connectivity maps and other relevant data).
 
-Joining everything together, these requirements would easily  became a feasible future Open Source Software MSc. project requiring: network knowledge; C-language and Shell Scripting expertise; some JavaScript expertise to be able to do some LUCI2 scripting; to be prepared to agree some project's requirements and ideas with Bird's community and main developers in CZ.NIC Labs \footnote{CZ.NIC Research and Development department: \href{https://labs.nic.cz/en/}{Link}}; and also patience to deal with the lack of LUCI2, uBus and RPCd documentation in OpenWrt/LEDE and being able to, together with the community, fill any knowledge gap and to feed it back to them.
+Joining everything together, these requirements would easily  become a feasible future Open Source Software MSc. project. This project's requirements would be: to have network's knowledge or willingness to learn about it; to have some level of C, Shell and JavaScript expertise; to be prepared to agree project's requirements, ideas and approaches with Bird's community and developers; and also patience to deal with the lack of LUCI2, uBus and RPCd documentation in OpenWrt/LEDE, being a bonus if, together with the community, the student helps to fill any knowledge gaps and to feed them back to them.
 
 \newpage

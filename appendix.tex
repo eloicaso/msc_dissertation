@@ -11,8 +11,50 @@
 \input{code/uoc_vm2}
 
 
-\chapter{Bird Daemon presence in Worldwide IXPs and other institutions}
+
+\chapter{Bird Daemon vs. other solutions analysis from IXNs perspective}
 \label{app:ch:blinks}
+
+On large-scale routing deployments, for example an Internet eXchange Point (IXP), the most well-known OSS solution is Quagga. However, there are other alternatives as powerful as Quagga and even less resource eater. Although Bird Daemon is a less known technology, it has presence in most of the key exchange points and its capabilities matches Quagga's and even overcomes it thanks to some key features along with an almost negligible resource consumption in comparison to other solutions.
+
+After looking for good references and projects about IXPs implementing and analysing Bird Daemon and asking its community, I have triaged some relevant presentations showing Bird's potential and its increasing interest over the years, along with the complexity of the solutions implemented:
+
+\begin{itemize}
+    \item Amsterdam Internet eXchange (AMSIX): 2010 presentation analysing the use of different routing solutions and resource consumption data. \href{http://ripe60.ripe.net/presentations/Jasinska-_Ab_Using_Route_Servers.pdf}{\nolinkurl{http://ripe60.ripe.net/presentations/Jasinska-\_Ab\_Using\_Route\_Servers.pdf}}
+    
+    \item AMSIX (II): 2012 presentation analysing different routing implementations in a specific testbed. \href{https://ams-ix.net/downloads/ams-ix-route-server-implementations-performance.pdf}{https://ams-ix.net/downloads/ams-ix-route-server-implementations-performance.pdf}
+
+    \item CZ.NIC (Bird core developers): 2013 presentation in NANOG57 conference about the latest version of Bird Daemon, key IXP using it and features added since the previous NANOG conference the developers attended to. \href{https://www.nanog.org/meetings/nanog57/presentations/Wednesday/wed.general.Filip.BIRD.16.pdf}{\nolinkurl{https://www.nanog.org/meetings/nanog57/presentations/Wednesday/wed.general.Filip.BIRD.16.pdf}}
+
+    \item DE-CIX: 2016 presentation in RIPE73 conference about scaling Bird servers to load-balance queries. \url{https://ripe73.ripe.net/presentations/115-e-bru-20161026-RIPE73-scaling-bird-routeservers-final.pdf}
+    
+    \item DE-CIX: 2017 presentation in Euro-IX conference showing a framework developed in order to generate stress tests in large-scale BGP sessions to automate these tests with minimum impact in their infrastructure. \url{https://euro-ix.net/m/filer_public/81/dd/81dda868-dd3b-46be-8ee2-9881d112af5a/de-cix_route_server_testframework_euro-ix_30.pdf}
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \chapter{Kanban Project Management using Taiga.io Service}
 \label{app:sec:kanban}
@@ -28,7 +70,7 @@ Because of this project's scope and time-frame, the size of the team (me) and th
     \label{fig:kepic}
 \end{figure}
 
-This view presents the information about the big tasks represented in project's schedule, who is working on each one, other useful information and how far it is the task of being delivered.
+This view presents the information about the big tasks represented in project's schedule, who is working on each one, other useful information and how far is the task from being delivered.
 \newpage
 
 \subsection{EPIC Detail View}
@@ -68,7 +110,7 @@ The Kanban Board shows the state of the User Stories being addressed, in which s
     \caption{Kanban current cycle/sprint tasks board view}
     \label{fig:kcycle}
 \end{figure}
-The Cycle/Sprint View presents the user stories being addressed in priority order (in the left) and all the involved Tasks required to complete each of these user stories, to who are assigned and their state. This is a detailed view of the Kanban Board View.
+The Cycle/Sprint View presents the user stories being addressed in priority order (in the left) and all the involved Tasks required to complete each of these user stories, to who they are assigned and their state. This is a detailed view of the Kanban Board View.
 
 \end{landscape}
 

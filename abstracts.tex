@@ -4,10 +4,10 @@
 \centering
 \begin{tabular}{|>{\columncolor[gray]{0.8}}p{3.7cm}|p{9cm}|}
 \hline
-Títol del treball: & Optimització del Firmware LEDE per desplegaments basats en xarxes cablejades utilitzant BIRD Daemode la integració gràfica de la configuració BIRD-BMX i anàlisis respecte desplegaments en Quagga \\ \hline
-Project's Title: & LEDE Firmware optimization for wired deployments using BGP (Bird Daemon) and BMX for routing by enhancing and extending Bird Daemon's configuration and UI integration \\ \hline
+Títol del treball: & Optimitzaci\'{o} del Firmware LEDE per desplegaments basats en xarxes cablejades utilitzant Bird Daemon i BMX6; Extensi\'{o} de la integraci\'{o} gr\`{a}fica de la configuraci\'{o} i an\`{a}lisis respecte desplegaments en Quagga \\ \hline
+Project's Title: & LEDE Firmware optimization for wired deployments using BGP and BMX6 routing protocols by enhancing and extending Bird Daemon's configuration and UI integration \\ \hline
 Nom de l'autor: & Eloi Carb\'{o} Sol\'{e} \\ \hline
-Nom del consultor: & Víctor Oncins Biosca \\ \hline
+Nom del consultor: & V\'{i}ctor Oncins Biosca \\ \hline
 Data de lliurament: & 06/2017\\ \hline
 \`{A}rea del Treball Final: & Sistemes Distribu\"{i}ts \\ \hline
 Titulació: & M\`{a}ster Universitari en Programari Lliure \\ \hline
@@ -18,20 +18,24 @@ Paraules clau: & OpenWrt, Bird Daemon, Guifi.net, Xarxes comunit\`{a}ries \\ \hl
 \newpage
 \section*{Resum del Projecte}
 \thispagestyle{empty}
-En aquest treball s'ha 
+En aquest treball s’ha millorat la integraci\'{o} de l'eina Bird Daemon en sistemes LEDE/OpenWrt. Aquesta eina permet a administradors de xarxes comunitaries controlar seccions on diferents topologies i protocols d'enrutament convergeixen i requereixen de m\`{e}todes, generalment manuals, per intercanviar prefixes i discriminaci\'{o} de tr\`{a}nsit de la xarxa per al seu bon funcionament.
 
+Les millores aplicades al paquet complementari bird-openwrt,  es basen en continuar  l'automatitzaci\'{o} de la configuraci\'{o} d'aquest programari, que consta de la seva pr\`{o}pia sintaxis, i en augmentar el nombre de funcionalitats que es poden configurar des de l'entorn gr\`{a}fic (web) del sistema. Amb aix\`{o} redu\"{i}m tant la necessitat d'aprendre la sintaxis espec\'{i}fica del programari com d'haver d'accedir a línia de comandes per configurar manualment el sistema, reduint la possibilitat d'introducci\'{o} errors.
 
+Per altra banda, s'han analitzat possibles l\'{i}nies d'implementació per tal d'obtenir informació de les sessions establertes per Bird Daemon. Aquesta informaci\'{o} en viu permetria monitoritzar tant els protocols i els prefixos compartits, com possibles problemes al sistema i a la informaci\'{o} hist\`{o}rica.
 
-
-\noindent\rule{\textwidth}{0.4pt}
+Finalment, els resultats obtinguts per aquest projecte són l'actualització del paquet bird-openwrt amb la inclusi\'{o} de millores mencionades, aix\'{i} com un nombre de noves funcionalitats que s'implementaran en el futur i una proposta per a un projecte per tal d'integrar informació dels protocols en viu mitjançant interf\'{i}cie web, seguint les conclusions de l'an\`{a}lisi fet.
+\newpage
 
 \section*{Abstract}
 \thispagestyle{empty}
+This project has enhanced current Bird Daemon's integration with the OpenWrt/LEDE firmware system. This utility allows network administrators to manage network sections where different routing protocols and technologies may coexist, thus requiring mechanisms to exchange their network prefixes and to allow routing through configured filters to ensure network´s correct behaviour.
 
-lorem ipsum
+This integration is managed through the bird-openwrt package, which automates Bird's configuration syntax and presents it through a web-based environment. This package's improvements have been focused on adding graphical integration to Bird's features and to reduce the number of instances where an administrator is required to go to command line in order to tweak system's settings to configure a specific behaviour.
 
-\noindent\rule{\textwidth}{0.4pt}
+Moreover, there is a theoretical analysis of the future implementation paths to include monitoring capabilities and to integrate them in the graphical environment. 
 
+Finally, this project's results have been an update to bird-openwrt package including the mentioned enhancements and a project's proposal and a series of recommendations to implement monitoring capabilities to bird-openwrt package.
 
 \newpage
 \thispagestyle{empty}
@@ -41,5 +45,5 @@ lorem ipsum
     \includegraphics[width=0.2\textwidth]{images/CC/ccbysa}
 \end{figure}
 \noindent
-Aquesta obra està subjecta a una llicència de \href{https://creativecommons.org/licenses/by-nc-nd/3.0/es/}{Reconeixement-NoComercial-SenseObraDerivada} 3.0 Espanya de Creative Commons.
+Aquesta obra est\`{a} subjecta a una llic\`{e}ncia de \href{https://creativecommons.org/licenses/by-sa/3.0/es/legalcode.ca}{Reconeixement-CompartirIgual} 3.0 Espanya de Creative Commons.
 
