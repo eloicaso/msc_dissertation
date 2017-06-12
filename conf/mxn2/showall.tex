@@ -1,0 +1,98 @@
+\begin{lstlisting}[language=bash, caption={Birdc4 show protocols all}]
+BIRD 1.6.3 ready.
+name     proto    table    state  since       info
+kernel1  Kernel   bgpTable up     11:42:37
+  Preference:     10
+  Input filter:   ACCEPT
+  Output filter:  accept_zone1_prefix
+  Routes:         0 imported, 171 exported, 0 preferred
+  Route change stats:     received   rejected   filtered    ignored   accepted
+    Import updates:              0          0          0          0          0
+    Import withdraws:            0          0        ---          0          0
+    Export updates:          44755          9      43166        ---       1580
+    Export withdraws:        11277        ---        ---        ---        414
+
+kernel2  Kernel   master   up     11:42:37
+  Preference:     10
+  Input filter:   ACCEPT
+  Output filter:  ACCEPT
+  Routes:         53 imported, 2939 exported, 18 preferred
+  Route change stats:     received   rejected   filtered    ignored   accepted
+    Import updates:            475          0          0          0        475
+    Import withdraws:          422          0        ---          0        422
+    Export updates:          25485        398          0        ---      25087
+    Export withdraws:        10332        ---        ---        ---      10155
+
+device1  Device   master   up     11:42:37
+  Preference:     240
+  Input filter:   ACCEPT
+  Output filter:  REJECT
+  Routes:         0 imported, 0 exported, 0 preferred
+  Route change stats:     received   rejected   filtered    ignored   accepted
+    Import updates:              0          0          0          0          0
+    Import withdraws:            0          0        ---          0          0
+    Export updates:              0          0          0        ---          0
+    Export withdraws:            0        ---        ---        ---          0
+
+direct1  Direct   master   up     11:42:37
+  Preference:     240
+  Input filter:   ACCEPT
+  Output filter:  REJECT
+  Routes:         2 imported, 0 exported, 3 preferred
+  Route change stats:     received   rejected   filtered    ignored   accepted
+    Import updates:              2          0          0          0          2
+    Import withdraws:            0          0        ---          0          0
+    Export updates:              0          0          0        ---          0
+    Export withdraws:            0        ---        ---        ---          0
+
+pipe1    Pipe     master   up     11:42:37    => bgpTable
+  Preference:     70
+  Input filter:   accept_from_peer_BCNUPFPobleNou
+  Output filter:  reject_no_zone2_prefix
+  Routes:         2939 imported, 4 exported
+  Route change stats:     received   rejected   filtered    ignored   accepted
+    Import updates:          48675         17      23571          0      25087
+    Import withdraws:        24361          0        ---      14194      10155
+    Export updates:          25566      25087        462          1         16
+    Export withdraws:        10577          0        ---        410         12
+
+BCNUPFPobleNou BGP      bgpTable up     11:42:42    Established
+  Preference:     100
+  Input filter:   ebgp_in
+  Output filter:  ebgp_out
+  Routes:         2939 imported, 113 exported, 5776 preferred
+  Route change stats:     received   rejected   filtered    ignored   accepted
+    Import updates:          25120          0          0         33      25087
+    Import withdraws:        10174          0        ---         19      10155
+    Export updates:          44745      24174          0        ---      20571
+    Export withdraws:        11274        ---        ---        ---      15381
+  BGP state:          Established
+    Neighbor address: 172.25.61.1
+    Neighbor AS:      65328
+    Neighbor ID:      10.139.173.65
+    Neighbor caps:    refresh AS4
+    Session:          external AS4
+    Source address:   172.25.61.2
+    Hold timer:       158/180
+    Keepalive timer:  24/60
+
+UOCBGPMesh BGP      bgpTable up     11:42:38    Established
+  Preference:     100
+  Input filter:   ibgp_in
+  Output filter:  ibgp_out
+  Routes:         144 imported, 2838 exported, 112 preferred
+  Route change stats:     received   rejected   filtered    ignored   accepted
+    Import updates:          23575          0          0          4      23571
+    Import withdraws:        14196          0        ---          2      14194
+    Export updates:          44755      20572          0        ---      24183
+    Export withdraws:        11277        ---        ---        ---      13433
+  BGP state:          Established
+    Neighbor address: 10.90.236.97
+    Neighbor AS:      92099
+    Neighbor ID:      10.90.236.97
+    Neighbor caps:    refresh enhanced-refresh restart-aware AS4
+    Session:          internal multihop AS4
+    Source address:   10.90.236.1
+    Hold timer:       201/240
+    Keepalive timer:  47/80
+\end{lstlisting}

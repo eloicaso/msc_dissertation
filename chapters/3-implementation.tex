@@ -164,7 +164,7 @@ New Page showing contents in Bird's configured Log file. This page is automatica
     \centering
     \includegraphics[width=\textwidth]{images/bird0.3/log}
     \caption{Log Page: service restart example}
-    \label{fig:statusp}
+    \label{fig:logp}
 \end{figure}
 
 This page has been implemented using mixed capabilities from LUCI and LUCI2. Because of the requirement to show a rolling Log page with a reasonably regular auto-refresh process, it was necessary to use JavaScript's XHR capabilities embedded in the HTML page itself together with Lua code to read the file and send the text as a PlainText HTML response (object).

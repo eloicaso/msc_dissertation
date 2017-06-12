@@ -10,7 +10,7 @@ With this introduction in mind, the following sections will explain how this pac
 
 
 \subsection{Configuration of the \textit{translation} tests (future work)}
-To perform configuration integrity tests in current package, it is required to repeat the execution of \texttt{/etc/bird\{4|6\}/init.d/bird4 restart} in order to trigger the UCI-bird.conf translation from a target UCI file. The code to do this translation has been refactored in an functional manner to allow future unit tests or, at least, make it easier to integrate in an automated test framework or process. For example, an automated CI/CD build process could build an update of the package, push it into a test node, execute the translation process and compare it against the previous (or a stable) version, as well as check its correctness by querying Bird's status.
+To perform configuration integrity tests in current package, it is required to repeat the execution of \texttt{/etc/bird\{4|6\}/init.d/bird4 restart} in order to trigger the UCI-bird.conf translation from a target UCI file. The code to do this translation has been refactored in an functional manner to allow future unit tests or, at least, make it easier to integrate it in an automated test framework or process. For example, an automated CI/CD build process could build an update of the package, push it into a test node, execute the translation process and compare it against the previous (or a stable) version, as well as check its correctness by querying Bird's status.
 
 \subsubsection{Reviewing v0.2 against v0.3}
 Testing the outputs from the old and new packages, and taking into account that there are some manual changes in the old one, the following example is configured as follows:
@@ -43,7 +43,7 @@ As shown in this \textit{diff} snippet, almost all the translated configuration 
 Bird Daemon provides an error exit code together with different text outputs in order to highlight errors in the configuration. Although most of the times it can be easily spotted using Bird's feedback, there are also instances where the Daemon's documentation may be required to fix them.
 
 \subsubsection{Bird Daemon Error examples}
-Most common errors that an administrator may need to resolve are:
+The most common errors that an administrator may need to resolve are:
 
 \begin{itemize}
 \item A configured field has incorrect syntax.
@@ -81,7 +81,7 @@ Bird Daemon will succeed starting up but, if we check the log information in the
 \end{itemize}
 
 
-\section{Package behaviour testing} 
+\section{Package's behaviour testing} 
 \subsection{Simple Scenario: Single BGP Session connected to Guifi.net}
 As part of the acceptance tests, a VM was set up by a sysadmin in UOC's network to act as a pre-production machine. This VM is connected to a \textit{Mikrotik} Router acting as Gateway to \textit{Guifi.net} but this scenario does not connect or communicate through any Mesh Network using BMX6, so it is an end point. More detailed information an a graphic is available on section \ref{sub:sub:idt}.
 
@@ -95,7 +95,7 @@ Using Bird Remote Control we can verify Bird's BGP instance. As key information:
 
 \begin{itemize}
     \item BGP Instance: BGPImportALL
-    \item Filters applied: \textit{ebgp\_in} and \textit{bgp\_out} to allow only Guifi.net routes (10.0.0.0/8).
+    \item Filters applied: \textit{ebgp\_in} and \textit{bgp\_out} to allow only Guifi.net routes (\texttt{10.0.0.0/8}).
     \item We are connected to our neighbour 10.90.224.65 with Autonomous System ID 59361
     \item  The number of routes received fluctuates but the data shown presents exactly 2999 routes imported, but this number fluctuates.
     \item This fluctuation has already reached our configured Import Limit (HIT) and that generated warnings.
@@ -119,18 +119,89 @@ Some examples of this BGP session working are the following:
 \input{code/trace3}
 \end{itemize}
 
+\newpage
+\subsection{Target Network Scenario: Final package complete testing}
+\label{sub:fulltest}
+As introduced in the section \ref{sub:sub:fpt}, a number of virtual nodes and network resources have been created in order to be able to test the final package in a network almost identical to our target one. This network's configuration has been really challenging because it reflects the complexity that we could find in any other real network, including issues as: to require tunnels to pass through external networks, use of virtual resources to generate specific topologies, external firewalls rules blocking our target network's traffic, etc. Although it has required a lot of debugging in order to align the network's configuration and leave it in the right state to test our Package, all this modifications are out of the scope of the project and are recorded here for reference and better understanding of what a network administrator is required to do.
 
-\subsection{Target Network Scenario: Final package complete testing.}
-As introduced in the section \ref{sub:sub:fpt}, a number of virtual nodes and network resources have been created in order to be able to test the final package in a mirror to this project's target topology and connected to Guifi.net.
+All the configuration files modified to do this test are available in the Appendix \ref{app:ch:full} separated by node.
 
-Therefore, it is really valuable to be able to test this solution in an experimental location and with no possible harm to the network, to determine project's success.
+The following items will describe the main challenges faced during this environment's creation and alignment:
+\begin{itemize}
+    \item External Firewall's changes have been required to allow the correct communication between the nodes MXN1 and MXN2  to their respective Guifi.net Peers.
+    \item BMX6 protocol has been configured in each node of the mesh network.
+        \begin{itemize}
+            \item All: export node's internal network (\texttt{10.90.236.X/27}) and import any Guifi.net route (\texttt{10.0.0.0/8}).
+            \item Mesh Exchange Nodes: advertise the Guifi.net network (\texttt{10.0.0.0/8}) to the internal nodes, representing themselves as \textit{gateways} to the extenal network.
+            \item BMX6's Table Plugin has been set to use the Kernel Routing Table \texttt{251}. By forcing BMX6 to use a specific Kernel Routing Table, Bird is capable to use that specific Kernel Routing Table and exchange routes with BMX6.
+            \item Specific Firewall rules have been set in order to permit BMX6 traffic (add \texttt{option device 'bmx+'} to the \texttt{WAN Zone}), thus allowing transit.
+        \end{itemize}
+     \item An L2TP Tunnel has been configured between the second Mesh Exchange Node (MXN2) and UPF's Guifi.net node. This has been required to pass through UPF's private network and connect to Guifi.net.
+\end{itemize}
+
+Once all these external elements are configured correctly, we can start defining and configuring all the required configuration that applies to this project's scope.
+\begin{itemize}
+    \item Kernel Routing Tables and interfaces.
+    \item BGP Peers
+    \item Bird Internal pipes to communicate Bird Routing Tables
+\end{itemize}
+For this section, we will assume that the network settings are configured as shown in the figure \ref{fig:devnet}.
 
 
+\begin{landscape}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.7\hsize]{images/tables}
+    \caption{Bird Daemon Protocols' configuration.}
+    \label{fig:tables}
+\end{figure}
+This diagram represents MXN1's configuration. However, MXN2's configuration is almost identical apart from being connected to the BGP Peer \texttt{BCNUPFPobleNou}. 
+\end{landscape}
+\newpage
 
 
+Summarising this diagram's flow, Bird is configured as follows:
+
+\begin{itemize}
+    \item \textbf{Bird Routing Table bgpTable(251)} \footnote{OS Kernel's Routing Table 251 is shared between Bird Daemon and BMX6 Protocol and used to exchange routes.} : this internal table is used by both BGP Peers as their main table. Bird will use this internal table to exchange routes between different internal protocols and tables.
+    \item \textbf{Bird Routing Table Master}: this is Bird's default internal table and is used by \texttt{UOCBGPMesh} BGP IGP Session and other Bird protocols.
+    \item \textbf{PIPE Protocol}: this internal protocol will exchange routes between the table bgpTable and Master. It is filtered to avoid bgpTable to get any external route available in the Master table.
+    \item \textbf{Kernel Protocol for bgpTable}: This protocol will exchange routes between the OS Kernel Routing Table and Bird's bgpTable. It is filtered to avoid the OS Table to get routes from the IGP BGP Session.
+    \item \textbf{Kernel Protocol for Master Table}: This protocol will exchange routes between default's OS Kernel Routing Table and Bird's Master Table. This protocol is not filtered because it has already been filtered by the PIPE Protocol.
+    \item \textbf{BGP Session UOCBGPMesh}: IGP BGP Session established with the second Mesh Exchange Node. This session will encapsulate the Mesh network as one single AS. This protocol has been filtered in order to allow pass only to Guifi.net prefixes (\texttt{10.0.0.0/8}).
+    \item \textbf{BGP Session BCNRamblaPobleNou}: EGP BGP Session established with UOC's Infrastructure Node (our gateway to Guifi.net). This protocol only exports and imports routes from Guifi.net, however, the imported ones will be marked with Router's ID to avoid loops or malfunctioning.
+\end{itemize}
+
+After configuring both Mesh Exchange Nodes with the described configuration, the network's behaviour has been tested with successful results shown in the next section. However, a last minute Bug has been found during this test:
+
+\textit{Next Hop Self} is a common BGP attribute used in IGP sessions to fix gateway's advertisements between the AS's internal nodes. This option has been configured on both \texttt{UOCBGPMesh} BGP Sessions, but the routes were not being configured as expected. After reviewing the configuration and comparing it with the translation, it has been found that this attribute was not being propagated. The root cause has been found already (\texttt{get next\_hop\_self} call deleted by mistake) and will be fixed before releasing the code to the community.
 
 
+\subsubsection{Test Results}
+In order to prove the correct behaviour of this configuration, a number of different \texttt{traceroute} actions have been done:
 
+\begin{itemize}
+    \item Internal Test: from the Infrastructure Node in UOC's side to the Infrastructure Node in UPF's side:
+    \input{code/in1in2}
+    As shown in this code snippet, the connection goes from the MXN1 through the mesh to the MXN2 and continues to the UPF Infrastructure Node successfully, thus demonstrating the correct pass of routes through it.
+    
+    \item External Test (I): Contact external BGP clients from a Mesh client:
+    \input{code/meshtoext}
+    \item External Test (II): Connectivity test for each Mesh Client:
+    \input{code/pingtest}
+\end{itemize}
 
+The next two tests shows an example of what happens if an external client finds a better path (e.g. shorter or with better connection) to go to a specific node which, would avoid our network:
 
-
+\begin{itemize}
+    \item External Peer connected and providing a better path:
+    \input{code/truncatedroute}
+    As can be seen in route's path, on step 5, the route jumps from AcerRouter to UPF's node, without going through UOC's network.
+    
+    However, if we disable this node, the client is not able to find better alternative paths and goes through the BMX6 mesh network.
+    \item External Peer disconnected and no alternative paths to our network:
+    \input{code/fullroute}
+    This second time, the client has not found any alternative paths and, after step 5, it jumped to an intermediate node (step 6), to our Infrastructure Node in the UOC (step 7), to our exchange node MXN1 (step 8), to our second exchange node MXN2 (step 9) and finally, it has arrived to the UPF Infrastructure node in step 10.
+    
+    Comparatively, it is clear and reasonable to avoid 4 extra network hops in comparison to the alternative path.
+\end{itemize}

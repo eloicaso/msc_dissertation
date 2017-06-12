@@ -1,17 +1,6 @@
 \newpage
 \begin{appendices}
 
-\chapter{Bird Daemon's Configuration using v0.3 Package - UOC's VM in Guifi.net}
-\label{app:ch:bdcuoc}
-
-\section{UCI Configuration}
-\input{code/uoc_vm1}
-
-\section{Bird Configuration}
-\input{code/uoc_vm2}
-
-
-
 \chapter{Bird Daemon vs. other solutions analysis from IXNs perspective}
 \label{app:ch:blinks}
 
@@ -30,30 +19,6 @@ After looking for good references and projects about IXPs implementing and analy
     
     \item DE-CIX: 2017 presentation in Euro-IX conference showing a framework developed in order to generate stress tests in large-scale BGP sessions to automate these tests with minimum impact in their infrastructure. \url{https://euro-ix.net/m/filer_public/81/dd/81dda868-dd3b-46be-8ee2-9881d112af5a/de-cix_route_server_testframework_euro-ix_30.pdf}
 \end{itemize}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 \chapter{Kanban Project Management using Taiga.io Service}
@@ -131,4 +96,46 @@ The Cycle/Sprint View presents the user stories being addressed in priority orde
     \caption{Privoxy enabled service.}
     \label{fig:priven}
 \end{figure}
+
+\chapter{Bird Daemon's Configuration using v0.3 Package - UOC's VM in Guifi.net}
+\label{app:ch:bdcuoc}
+
+\section{UCI Configuration}
+\input{code/uoc_vm1}
+
+\section{Bird Configuration}
+\input{code/uoc_vm2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Final Package's Tests configuration files}
+\label{app:ch:full}
+Configuration files used in the tests explained in the Section \ref{sub:fulltest}.
+
+\section{Mesh eXchange Node 1 (MXN1)}
+\input{conf/mxn1/network}
+\input{conf/mxn1/bmx6}
+\input{conf/mxn1/filters}
+\input{conf/mxn1/functions}
+\input{conf/mxn1/birduci}
+\input{conf/mxn1/birdraw}
+\input{conf/mxn1/showall}
+
+
+\section{Mesh eXchange Node 2 (MXN2)}
+\input{conf/mxn2/network}
+\input{conf/mxn2/bmx6}
+\input{conf/mxn2/filters}
+\input{conf/mxn2/functions}
+\input{conf/mxn2/birduci}
+\input{conf/mxn2/birdraw}
+\input{conf/mxn1/showall}
+
+\section{Mesh Client Node 2}
+\input{conf/mesh1/network}
+\input{conf/mesh1/bmx6}
+
+\section{Mesh Client Node 2}
+\input{conf/mesh2/network}
+\input{conf/mesh2/bmx6}
 \end{appendices}

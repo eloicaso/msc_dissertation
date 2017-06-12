@@ -1,0 +1,44 @@
+\begin{lstlisting}[language=bash, caption={Bird Functions}]
+filter ebgp_in {
+
+        krt_prefsrc = 10.90.236.1;
+
+        if match_guifi_prefix() then accept;
+        else reject;
+}
+
+filter ebgp_out {
+
+        if match_guifi_prefix() then accept;
+        else reject;
+}
+
+filter ibgp_in {
+        if match_guifi_prefix() then accept;
+        else reject;
+}
+
+filter ibgp_out {
+        if match_guifi_prefix() then accept;
+        else reject;
+}
+
+filter accept_from_peer_BCNUPFPobleNou {
+        if proto="BCNUPFPobleNou" then accept;
+        else reject;
+}
+
+filter reject_no_zone2_prefix {
+        if match_zone2_prefix() then accept;
+        else reject;
+}
+
+filter accept_zone1_prefix {
+        if match_zone1_prefix() then accept;
+        else reject;
+}
+
+filter reject_from_peer_UOCBGPMesh {
+        if proto="UOCBGPMesh" then reject;
+        else accept;
+\end{lstlisting}

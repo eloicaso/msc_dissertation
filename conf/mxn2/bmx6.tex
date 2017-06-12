@@ -1,0 +1,59 @@
+\begin{lstlisting}[language=bash, caption={BMX6}]
+config bmx6 'general'
+        option tun4Address '10.90.236.1/27'
+        option tun6Address '2012:0:0:a7f9:0:0:0:1/64'
+
+config plugin 'bmx6_config_plugin'
+        option plugin 'bmx6_config.so'
+
+config plugin 'bmx6_json_plugin'
+        option plugin 'bmx6_json.so'
+
+config plugin 'bmx6_sms_plugin'
+        option plugin 'bmx6_sms.so'
+
+config plugin 'bmx6_table_plugin'
+        option plugin 'bmx6_table.so'
+
+config syncSms
+        option syncSms 'chat'
+
+config dev 'mesh_1'
+        option dev 'eth1'
+        option linklayer '1'
+        option rateMin '56000000'
+        option rateMax '56000000'
+
+config tunDev 'tmain'
+        option tunDev 'tmain'
+        option tun4Address '10.90.236.1/27'
+        option tun6Address '2012:0:0:a7f9:0:0:0:1/64'
+
+config tunOut 'mesh_cloud'
+        option network '10.0.0.0/8'
+        option minPrefixLen '24'
+        option tunOut 'cloud'
+
+config tunOut 'mesh_cloud6'
+        option tunOut 'cloud6'
+        option network '::/0'
+        option minPrefixLen '48'
+
+config tunIn 'mesh_offer'
+        option tunIn 'offer'
+        option network '10.0.0.0/8'
+
+config redistTable 'bgp'
+        option redistTable 'bgp'
+        option table '251'
+        option network '10.0.0.0/8'
+        option aggregatePrefixLen '24'
+        option minPrefixLen '8'
+        option maxPrefixLen '29'
+        option all '1'
+
+config tunOut
+        option tunOut 'community'
+        option network '10.0.0.0/8'
+        option maxPrefixLen '8'
+\end{lstlisting}

@@ -1,0 +1,94 @@
+\begin{lstlisting}[language=bash, caption={Birdc RAW Configuration}]
+#Bird4 configuration using UCI:
+
+log "/tmp/bird4.log" all;
+
+#Router ID
+router id 10.90.236.97;
+
+#Secondary tables
+table bgpTable;
+table master;
+
+#Functions Section:
+include "/etc/bird4/functions/function-20170507-1038";
+#End of Functions --
+
+#Filters Section:
+include "/etc/bird4/filters/filter-20170507-0951";
+#End of Filters --
+
+#kernel1 configuration:
+protocol kernel kernel1 {
+#   disabled;
+    table bgpTable;
+    kernel table 251;
+    learn;
+    persist;
+    scan time 10;
+    import all;
+    export filter accept_zone1_prefix;
+}
+
+#kernel2 configuration:
+protocol kernel kernel2 {
+#   disabled;
+    learn;
+    persist;
+    scan time 10;
+    import all;
+    export all;
+}
+
+#device1 configuration:
+protocol device {
+#   disabled;
+    scan time 10;
+}
+
+#direct1 configuration:
+protocol direct {
+#   disabled;
+    interface "br-lan", "eth3";
+}
+
+#pipe1 configuration:
+protocol pipe pipe1 {
+#   disabled;
+    table master;
+    peer table bgpTable;
+    mode transparent;
+    import filter accept_from_peer_BCNRamblaPobleNou;
+    export filter reject_no_zone2_prefix;
+}
+
+#bgpCommon template:
+template bgp bgpCommon {
+    local as 92099;
+    import all;
+    export all;
+#    rr client;
+}
+
+#BCNRamblaPobleNou configuration:
+protocol bgp BCNRamblaPobleNou from bgpCommon {
+#   disabled;
+    table bgpTable;
+    import filter ebgp_in;
+    export filter ebgp_out;
+#    rr client;
+    neighbor 172.25.35.25 as 59361;
+}
+
+#UOCBGPMesh configuration:
+protocol bgp UOCBGPMesh from bgpCommon {
+#   disabled;
+    table bgpTable;
+    import filter ibgp_in;
+    export filter ibgp_out;
+    igp table master;
+    next hop self;
+#    rr client;
+    neighbor 10.90.236.1 as 92099;
+}
+\end{lstlisting}

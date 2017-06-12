@@ -1,0 +1,83 @@
+\begin{lstlisting}[language=bash, caption={Bird UCI}]
+config bird 'bird'
+        option use_UCI_config '1'
+        option UCI_config_file '/tmp/bird4.conf'
+        option UCI_config_File '/tmp/bird4.conf'
+
+config global 'global'
+        option log_file '/tmp/bird4.log'
+        option log 'all'
+        option router_id '10.90.236.1'
+
+config table
+        option name 'master'
+
+config kernel 'kernel1'
+        option import 'all'
+        option scan_time '10'
+        option learn '1'
+        option disabled '0'
+        option table 'bgpTable'
+        option kernel_table '251'
+        option export 'filter accept_zone1_prefix'
+
+config device 'device1'
+        option scan_time '10'
+        option disabled '0'
+
+config bgp_template 'bgpCommon'
+        option export_trigger '0'
+        option receive_trigger '0'
+        option local_as '92099'
+        option import 'all'
+        option export 'all'
+        option import_trigger '0'
+
+config bgp 'BCNUPFPobleNou'
+        option export_trigger '0'
+        option receive_trigger '0'
+        option template 'bgpCommon'
+        option neighbor_address '172.25.61.1'
+        option neighbor_as '65328'
+        option import_trigger '0'
+        option import 'filter ebgp_in'
+        option export 'filter ebgp_out'
+        option table 'bgpTable'
+        option disabled '0'
+
+config bgp 'UOCBGPMesh'
+        option import_trigger '0'
+        option export_trigger '0'
+        option receive_trigger '0'
+        option disabled '0'
+        option template 'bgpCommon'
+        option neighbor_address '10.90.236.97'
+        option neighbor_as '92099'
+        option table 'bgpTable'
+        option import 'filter ibgp_in'
+        option export 'filter ibgp_out'
+        option igp_table 'master'
+        option next_hop_self '0'
+
+config table
+        option name 'bgpTable'
+
+config kernel 'kernel2'
+        option disabled '0'
+        option learn '1'
+        option import 'all'
+        option export 'all'
+        option scan_time '10'
+
+config direct 'direct1'
+        option disabled '0'
+        option interface '"eth1", "l2tp-upfl"'
+
+config pipe 'pipe1'
+        option disabled '0'
+        option mode 'transparent'
+        option table 'master'
+        option peer_table 'bgpTable'
+        option import 'filter accept_from_peer_BCNUPFPobleNou'
+        option export 'filter reject_no_zone2_prefix'
+\end{lstlisting}

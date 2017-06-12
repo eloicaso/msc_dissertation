@@ -1,0 +1,23 @@
+\begin{lstlisting}[language=bash, caption={Bird Functions}]
+function match_guifi_prefix()
+{
+        return net ~ [ 10.0.0.0/8{9,32} ];
+}
+
+function match_zone1_prefix() {
+        return net ~ [
+                10.1.24.0/21{24,28},
+                10.139.6.0/23{24,28},
+                10.139.16.0/20{24,28},
+                10.139.36.0/22{24,28},
+                10.139.173.0/24{24,28},
+                10.90.224.0/20{24,28},
+                10.228.192.0/20{24,28},
+                10.38.140.0/22{24,28}
+        ];
+
+}
+
+function match_zone2_prefix() {
+        return net ~ [ 10.90.236.0/23{24,28} ];
+\end{lstlisting}
