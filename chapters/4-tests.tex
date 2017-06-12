@@ -1,9 +1,9 @@
 \chapter{Tests Results}
 \label{ch:tresults}
 
-\section{Package Testing}
+\section{Package functionality testing}
 Testing an integration/translation Package, and this one specifically, is a rather complex task to evaluate as Bird configuration files are modular and desired settings can be achieved in different ways.
-Even more, although a \textit{it works/it does not work} policy could be accepted, it does not mean that there are no other possible implementations that could work in a better way.
+Even more, although an \textit{it works/it does not work} policy could be accepted, it does not mean that there are no other possible implementations that could work in a better way.
 For example, filters and functions can be either written in the \textit{.conf} file or included using \texttt{\%include} mechanism, being the second one a better approach as it enhances code readability as well as it avoids bloating the configuration file unnecessarily.
 
 With this introduction in mind, the following sections will explain how this package has been tested following Bird's configuration base requirements and service behaviour and some \textit{future work} ideas to achieve automatic and unit tests.
@@ -80,30 +80,57 @@ Bird Daemon will succeed starting up but, if we check the log information in the
 
 \end{itemize}
 
-\subsection{Real Scenario: VM with simple BGP configuration connected to Guifi.net}
-As part of the acceptance tests, a VM was set up by a sysadmin in the Universitat Oberta de Catalunya to act as a pre-production machine. This VM is connected to a \textit{Mikrotik} Router acting as Gateway to \textit{Guifi.net} but this scenario does not connect or communicate through any Mesh Network using BMX6, so it is an end point.
 
-The configuration of this system is almost identical, component-wise, to the ones available in Guifi.net. However, this system will only route itself (1 route) and import any.
+\section{Package behaviour testing} 
+\subsection{Simple Scenario: Single BGP Session connected to Guifi.net}
+As part of the acceptance tests, a VM was set up by a sysadmin in UOC's network to act as a pre-production machine. This VM is connected to a \textit{Mikrotik} Router acting as Gateway to \textit{Guifi.net} but this scenario does not connect or communicate through any Mesh Network using BMX6, so it is an end point. More detailed information an a graphic is available on section \ref{sub:sub:idt}.
 
-Bird UCI configuration set through the web UI and its translation into Bird4 configuration can be reviewed in appendix \ref{app:ch:bdcuoc}.
+The configuration of this system is almost identical, component-wise, to the ones available in Guifi.net. However, this system will only export its own route and import any received.
 
-This VM is communicating to Guifi.net through a Mikrotik which is already doing some filtering but, in any case, it is still able to import 3000+ Routes and export itself:
+Bird UCI configuration set through the web UI and its translation into Bird4 configuration can be reviewed in appendix \ref{app:ch:bdcuoc}. After setting up the BGP session, we have started receiving 3000+ routes and exporting our own:
 
 \input{code/vm_bgp}
 
-Using Bird Lightweight Remote Control (\textbf{birdcl4}) we can verify Bird's BGP instance. As key information:
+Using Bird Remote Control we can verify Bird's BGP instance. As key information:
 
 \begin{itemize}
     \item BGP Instance: BGPImportALL
-    \item Filters applied: \textit{ebgp\_in} and \textit{bgp\_out}
+    \item Filters applied: \textit{ebgp\_in} and \textit{bgp\_out} to allow only Guifi.net routes (10.0.0.0/8).
     \item We are connected to our neighbour 10.90.224.65 with Autonomous System ID 59361
-    \item  The number of routes received fluctuates but the data shown presents 2999 routes imported.
-    \item We do not know when, but the import Limit reached (HIT) and that generated warnings.
+    \item  The number of routes received fluctuates but the data shown presents exactly 2999 routes imported, but this number fluctuates.
+    \item This fluctuation has already reached our configured Import Limit (HIT) and that generated warnings.
     From our Package's Log Page:
-    \texttt{2017-05-21 22:09:13 <WARN> Protocol BGPImportALL hits route import limit (3000), action: warn}
-    \item We are exporting 1 Route.
+    \texttt{2017-05-21 22:09:13 <WARN> Protocol BGPImportALL hits route import limit (3000), action: warn}. It has been configured to warn the administrator, but Bird allows it to be set to block the protocol.
+    \item As an endpoint with no extra routes, we are exporting just one.
 \end{itemize}
 
 As a health check, we can query Bird of its last reconfiguration, reboot time or status using \texttt{bircl4 status}:
 
 \input{code/vm_birds}
+
+Some examples of this BGP session working are the following:
+
+\begin{itemize}
+    \item \texttt{Traceroute} to the node BCNLlenguadoc17Rack. Node close to our node:
+\input{code/trace1}
+    \item \texttt{Traceroute} to the node AV-Ajuntament-Avinyonet. This node is located in the Hall of a village located about 50km from Barcelona.
+\input{code/trace2}
+    \item \texttt{Traceroute} from the external node BCNLaFabraRd1:
+\input{code/trace3}
+\end{itemize}
+
+
+\subsection{Target Network Scenario: Final package complete testing.}
+As introduced in the section \ref{sub:sub:fpt}, a number of virtual nodes and network resources have been created in order to be able to test the final package in a mirror to this project's target topology and connected to Guifi.net.
+
+Therefore, it is really valuable to be able to test this solution in an experimental location and with no possible harm to the network, to determine project's success.
+
+
+
+
+
+
+
+
+
+

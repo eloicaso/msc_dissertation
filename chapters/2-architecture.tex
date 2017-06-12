@@ -51,6 +51,7 @@ Although it has not been possible to test Package's improvements in the target p
 Nevertheless, this Package's improvements have been tested in two different environments connected directly with Guifi.net thanks to \acrlong{uoc} and V\'{i}ctor's support, who have provided and helped me configuring a number of Virtual Machines, virtual network resources and also agreed permission to get through another university's network, \acrlong{upf}, in order to connect to a different network section, but still in Barcelona, thus following the same approach of different BGP Peers being able to route and share prefixes. 
 
 \subsubsection{Internal Development Testing}
+\label{sub:sub:idt}
 Package development tests have been done inside UOC's network using a really simple network topology where our target Bird Node VM is connected to Guifi.net using UOC's Infrastructure Node (UOC receives/announces 3000+ BGP Routes). 
 
 \begin{figure}[H]
@@ -61,6 +62,7 @@ Package development tests have been done inside UOC's network using a really sim
 	\end{figure}
 
 \subsubsection{Final Package Testing}
+\label{sub:sub:fpt}
 As can be seen in the Figure \ref{fig:devnet}, the final testing environment is a virtual mirror of the target network. This environment has been created in order to do the final tests after \textit{releasing} the final version of the Package to test it without the risk of damaging the production network or flooding unwanted routes to Guifi.net. This network section routes to two Infrastructure Super Nodes connected to two geographically-separated Barcelona well-known Universities, being almost, if not exactly, a mirror of what our target network is.
 
 The components provided in order to achieve this network have been:
