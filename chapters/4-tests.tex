@@ -169,7 +169,7 @@ Summarising this diagram's flow, Bird is configured as follows:
     \item \textbf{Kernel Protocol for bgpTable}: This protocol will exchange routes between the OS Kernel Routing Table and Bird's bgpTable. It is filtered to avoid the OS Table to get routes from the IGP BGP Session.
     \item \textbf{Kernel Protocol for Master Table}: This protocol will exchange routes between default's OS Kernel Routing Table and Bird's Master Table. This protocol is not filtered because it has already been filtered by the PIPE Protocol.
     \item \textbf{BGP Session UOCBGPMesh}: IGP BGP Session established with the second Mesh Exchange Node. This session will encapsulate the Mesh network as one single AS. This protocol has been filtered in order to allow pass only to Guifi.net prefixes (\texttt{10.0.0.0/8}).
-    \item \textbf{BGP Session BCNRamblaPobleNou}: EGP BGP Session established with UOC's Infrastructure Node (our gateway to Guifi.net). This protocol only exports and imports routes from Guifi.net, however, the imported ones will be marked with Router's ID to avoid loops or malfunctioning.
+    \item \textbf{BGP Session BCNRamblaPobleNou}: EGP BGP Session established with UOC's Infrastructure Node (our gateway to Guifi.net). This protocol only exports and imports routes from Guifi.net. However, the imported ones will be marked with Router's ID to avoid loops or malfunctioning.
 \end{itemize}
 
 After configuring both Mesh Exchange Nodes with the described configuration, the network's behaviour has been tested with successful results shown in the next section. However, a last minute Bug has been found during this test:
